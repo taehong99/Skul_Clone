@@ -125,7 +125,7 @@ MonoBehaviour:
   coyoteTime: 0.2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   dashPower: 18
   dashDuration: 0.2
   dashCooldown: 0.3
@@ -139,7 +139,7 @@ MonoBehaviour:
   skullCooldown: 2
   skullMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   swapDuration: 1.5
 --- !u!212 &312421311748159014
 SpriteRenderer:

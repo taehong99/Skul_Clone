@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject skullPrefab;
     [SerializeField] float skullCooldown;
     [SerializeField] LayerMask skullMask;
+    [SerializeField] RuntimeAnimatorController defaultController;
+    [SerializeField] RuntimeAnimatorController headlessController;
     float cooldownTimer = 0f;
     
     [Header("Player Swap")]
@@ -239,6 +241,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator ThrowSkullRoutine()
     {
         cooldownTimer = skullCooldown;
+        animator.runtimeAnimatorController = headlessController;
         Vector2 direction = (facingDir == FacingDir.Left) ? Vector2.left : Vector2.right;
         thrownSkull = Instantiate(skullPrefab, transform.position, Quaternion.identity);
         thrownSkull.GetComponent<Skull>().SetDirection(direction);
@@ -249,6 +252,7 @@ public class PlayerController : MonoBehaviour
         }
         Destroy(thrownSkull);
         cooldownTimer = 0;
+        animator.runtimeAnimatorController = defaultController;
     }
 
     private void TeleportToSkull()
@@ -265,6 +269,7 @@ public class PlayerController : MonoBehaviour
         StopCoroutine(throwSkullRoutine);
         Destroy(thrownSkull);
         cooldownTimer = 0;
+        animator.runtimeAnimatorController = defaultController;
     }
 
     private IEnumerator SwapAttack()
