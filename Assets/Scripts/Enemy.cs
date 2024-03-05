@@ -1,23 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-    public int health;
+    [SerializeField] int baseHP;
+    private int hp;
+    public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
+    public event UnityAction<int> OnHPChanged;
+
     [SerializeField] float knockbackForce;
 
     Animator animator;
 
     private void Awake()
     {
+        HP = baseHP;
         animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-        if(health <= 0)
+        HP -= damage;
+        if(HP <= 0)
         {
             Die();
         }
