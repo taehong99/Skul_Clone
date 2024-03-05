@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IDamageable
 {
     public int health;
+    [SerializeField] float knockbackForce;
 
     Animator animator;
 
@@ -20,15 +21,17 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             Die();
         }
+        KnockBack();
         animator.SetTrigger($"hit{Random.Range(0, 2)}");
+    }
+
+    public void KnockBack()
+    {
+        Vector2 knockDirection = Manager.Game.Player.facingDir == PlayerController.FacingDir.Left ? Vector2.left : Vector2.right;
+        transform.Translate(Vector2.Lerp(Vector2.zero, knockDirection, knockbackForce));
     }
 
     public void Die() {
         animator.SetTrigger("dead");
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
     }
 }

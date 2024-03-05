@@ -16,7 +16,6 @@ public class FlashWhenHit : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
-        Debug.Log("Flashed");
         StartCoroutine(FlashWhite());
     }
 
