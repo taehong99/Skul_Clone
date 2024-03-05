@@ -233,9 +233,10 @@ public class PlayerController : MonoBehaviour
 
         for(int i = 0; i < count; i++)
         {
-            if (colliders[i].GetComponent(typeof(IDamageable)) != null)
+            IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
+            foreach(IDamageable damageable in damageables)
             {
-                colliders[i].GetComponent<IDamageable>().TakeDamage(attackDamage);
+                damageable.TakeDamage(attackDamage);
             }
         }
     }
