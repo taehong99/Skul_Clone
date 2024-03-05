@@ -12,14 +12,14 @@ public class Skull : MonoBehaviour
 
     Vector2 dir;
     Rigidbody2D rb2d;
-    Collider2D collider;
+    Collider2D _collider;
     bool isFlying = true;
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        collider = GetComponent<CircleCollider2D>();
-        collider.enabled = false;
+        _collider = GetComponent<CircleCollider2D>();
+        _collider.enabled = false;
     }
 
     private void Start()
@@ -51,6 +51,6 @@ public class Skull : MonoBehaviour
         rb2d.AddForce(direction * bounceForce, ForceMode2D.Impulse);
         isFlying = false;
         collisionCount--;
-        collider.enabled = true;
+        _collider.enabled = true;
     }
 }

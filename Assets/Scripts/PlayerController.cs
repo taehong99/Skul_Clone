@@ -12,13 +12,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player State Machine")]
     [SerializeField] StateMachine playerSM;
-    // Properties for the states
-    public StateMachine fsm => playerSM;
+    public StateMachine fsm => playerSM; // Properties for the states
     public Rigidbody2D Rb2d => rb2d;
     public Animator Animator => animator;
     public Vector2 MoveDir => moveDir;
     public bool IsGrounded => isGrounded;
     public bool IsDashing => isDashing;
+    public void ToggleIsAttacking(bool b)
+    {
+        isAttacking = b;
+    }
 
     [Header("Player Move")]
     [SerializeField] float moveSpeed;
@@ -47,7 +50,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackRange;
     [SerializeField] int attackDamage;
     [SerializeField] LayerMask hittableMask;
-    bool isAttacking;
+    public bool isAttacking;
 
     [Header("Player Skills")]
     [SerializeField] GameObject skullPrefab;
@@ -99,7 +102,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         animator.SetFloat("ySpeed", rb2d.velocity.y);
-        if (isDashing || isAttacking)
+        if (isDashing)
             return;
         
         Move();
@@ -136,6 +139,12 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 newVel = rb2d.velocity;
         newVel.x = moveDir.x * moveSpeed;
+
+        if (isAttacking && isGrounded)
+        {
+            newVel.x = 0;
+        }
+
         rb2d.velocity = newVel;
     }
     private void Flip()
@@ -300,9 +309,6 @@ public class PlayerController : MonoBehaviour
     #region Inputs
     private void OnMove(InputValue value)
     {
-        if (isAttacking)
-            return;
-
         moveDir = value.Get<Vector2>();
         animator.SetFloat("xSpeed", Mathf.Abs(moveDir.x));
         Flip();
