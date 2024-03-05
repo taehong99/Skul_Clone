@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum TriggerType { AttackTrigger, DashTrigger }
+public enum TriggerType { AttackTrigger, DashTrigger, SwapTrigger }
 [Serializable]
 public class StateMachine
 {
@@ -15,6 +15,7 @@ public class StateMachine
     public JumpState jumpState;
     public AttackState attackState;
     public DashState dashState;
+    public SwapState swapState;
 
     // event to notify other objects of the state change
     //public event Action<IState> stateChanged;
@@ -28,6 +29,7 @@ public class StateMachine
         this.idleState = new IdleState(player);
         this.attackState = new AttackState(player);
         this.dashState = new DashState(player);
+        this.swapState = new SwapState(player);
     }
 
     // set the starting state

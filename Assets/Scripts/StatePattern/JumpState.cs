@@ -65,6 +65,9 @@ public class JumpState : IState
             case TriggerType.DashTrigger:
                 player.fsm.TransitionTo(player.fsm.dashState);
                 break;
+            case TriggerType.SwapTrigger:
+                player.fsm.TransitionTo(player.fsm.swapState);
+                break;
         }
     }
 }

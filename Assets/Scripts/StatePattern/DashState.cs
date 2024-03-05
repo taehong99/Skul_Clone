@@ -38,6 +38,9 @@ public class DashState : IState
                 break;
             case TriggerType.DashTrigger:
                 break;
+            case TriggerType.SwapTrigger:
+                player.fsm.TransitionTo(player.fsm.swapState);
+                break;
         }
     }
 }

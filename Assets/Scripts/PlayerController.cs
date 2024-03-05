@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveDir => moveDir;
     public bool IsGrounded => isGrounded;
     public bool IsDashing => isDashing;
+    public bool IsSwapping => isSwapping;
     public void ToggleIsAttacking(bool b)
     {
         isAttacking = b;
@@ -59,9 +60,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RuntimeAnimatorController defaultController;
     [SerializeField] RuntimeAnimatorController headlessController;
     float cooldownTimer = 0f;
+    bool isSwapping;
     
     [Header("Player Swap")]
     [SerializeField] float swapDuration;
+    [SerializeField] float swapSpeed;
 
     [Header("Misc")]
     Rigidbody2D rb2d;
@@ -140,7 +143,7 @@ public class PlayerController : MonoBehaviour
         Vector2 newVel = rb2d.velocity;
         newVel.x = moveDir.x * moveSpeed;
 
-        if (isAttacking && isGrounded)
+        if ((isAttacking && isGrounded) || isSwapping) // prevent movement while attacking
         {
             newVel.x = 0;
         }
@@ -149,6 +152,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Flip()
     {
+        if (isSwapping)
+            return;
+
         Vector3 newScale = new Vector3(1, 1, 1);
         if (moveDir.x < 0)
         {
@@ -283,9 +289,8 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator SwapAttack()
     {
-        animator.SetBool("isSwapping", true);
-
-        isAttacking = true;
+        isSwapping = true;
+        playerSM.Trigger(TriggerType.SwapTrigger);
         float time = 0;
         float originalGravity = rb2d.gravityScale;
         rb2d.gravityScale = 0;
@@ -295,14 +300,13 @@ public class PlayerController : MonoBehaviour
         while (time < swapDuration)
         {
             time += Time.deltaTime;
-            transform.Translate(direction * Time.deltaTime);
+            transform.Translate(direction * swapSpeed * Time.deltaTime);
             yield return null;
         }
 
-        moveDir = Vector2.zero;
+        //moveDir = Vector2.zero;
         rb2d.gravityScale = originalGravity;
-        animator.SetBool("isSwapping", false);
-        isAttacking = false;
+        isSwapping = false;
     }
     #endregion
 
@@ -315,7 +319,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnJump()
     {
-        if (isDashing)
+        if (isSwapping)
             return;
         Jump();
     }
@@ -327,7 +331,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnSwap()
     {
-        if (isAttacking)
+        if (isSwapping)
             return;
         StartCoroutine(SwapAttack());
     }

@@ -1489,6 +1489,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: swapSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: swapDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: defaultController
       value: 
       objectReference: {fileID: 9100000, guid: 167963bd0ca6f4efbae12ec5f5cd55dc, type: 2}
