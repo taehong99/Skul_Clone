@@ -15,6 +15,9 @@ public class AttackState : IState
 
     public void Enter()
     {
+        // Set isAttacking to true
+        player.ToggleIsAttacking(true);
+
         queuedAttackB = false;
 
         // code that runs when we first enter the state
@@ -32,10 +35,13 @@ public class AttackState : IState
 
     public void Update()
     {
-        // attack animation has completed
+        // fix for mysterious bug (jumpAttack doesn't work at highest point)
+        if (player.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "SkulJump")
+            return;
+
+        // if attack animation has completed
         if (player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
-            Debug.Log(player.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
             if (queuedAttackB)
             {
                 player.Animator.Play("SkulAttackB");
@@ -48,7 +54,8 @@ public class AttackState : IState
 
     public void Exit()
     {
-        // code that runs when we exit the state
+        // Set isAttacking to false
+        player.ToggleIsAttacking(false);
     }
 
     public void Trigger(TriggerType trigger)

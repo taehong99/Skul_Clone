@@ -13,7 +13,7 @@ public class IdleState : IState
 
     public void Enter()
     {
-        player.Animator.Play("SkulIdle", 0);
+        player.Animator.Play("SkulIdle");
     }
 
     public void Update()

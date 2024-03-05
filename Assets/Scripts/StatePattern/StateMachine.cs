@@ -43,6 +43,7 @@ public class StateMachine
     // exit this state and enter another
     public void TransitionTo(IState nextState)
     {
+        //Debug.Log($"{curState} -> {nextState}");
         curState.Exit();
         curState = nextState;
         nextState.Enter();
