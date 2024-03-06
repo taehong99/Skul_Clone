@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonsterHpBar : BaseUI
+public class EnemyHPBarUI : BaseUI
 {
     [SerializeField] Enemy enemy;
 

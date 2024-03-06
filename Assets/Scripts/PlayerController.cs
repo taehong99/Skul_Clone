@@ -60,9 +60,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RuntimeAnimatorController defaultController;
     [SerializeField] RuntimeAnimatorController headlessController;
     float cooldownTimer = 0f;
+    public float CooldownRatio => cooldownTimer / skullCooldown; // TODO: refactor this
     bool isSwapping;
     bool canTeleport = false;
-    
+    public bool CanTeleport => canTeleport; // TODO: refactor this
+
     [Header("Player Swap")]
     [SerializeField] float swapDuration;
     [SerializeField] float swapSpeed;
