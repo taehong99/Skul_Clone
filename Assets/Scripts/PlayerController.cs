@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] RuntimeAnimatorController headlessController;
     float cooldownTimer = 0f;
     bool isSwapping;
+    bool canTeleport = false;
     
     [Header("Player Swap")]
     [SerializeField] float swapDuration;
@@ -263,17 +264,22 @@ public class PlayerController : MonoBehaviour
         thrownSkull.GetComponent<Skull>().SetDirection(direction);
         while (cooldownTimer > 0)
         {
+            if(cooldownTimer < (skullCooldown  - 0.5))
+            {
+                canTeleport = true;
+            }
             cooldownTimer -= Time.deltaTime;
             yield return null;
         }
         Destroy(thrownSkull);
+        canTeleport = false;
         cooldownTimer = 0;
         animator.runtimeAnimatorController = defaultController;
     }
 
     private void TeleportToSkull()
     {
-        if(thrownSkull != null)
+        if(canTeleport)
         {
             transform.position = thrownSkull.transform.position;
             PickUpSkull();
@@ -282,6 +288,7 @@ public class PlayerController : MonoBehaviour
 
     private void PickUpSkull()
     {
+        canTeleport = false;
         StopCoroutine(throwSkullRoutine);
         Destroy(thrownSkull);
         cooldownTimer = 0;

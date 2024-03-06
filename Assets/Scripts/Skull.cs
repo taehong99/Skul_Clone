@@ -12,7 +12,7 @@ public class Skull : MonoBehaviour
 
     Vector2 dir;
     Rigidbody2D rb2d;
-    Collider2D _collider;
+    Collider2D _collider; // Circle collider for player interaction (pickup)
     bool isFlying = true;
 
     private void Awake()
@@ -45,6 +45,13 @@ public class Skull : MonoBehaviour
     {
         if (collisionCount == 0)
             return;
+
+        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+        if(damageable != null)
+        {
+            damageable.TakeDamage(5);
+        }
+
         rb2d.gravityScale = 1f;
         Vector2 normal = collision.GetContact(0).normal;
         Vector2 direction = normal.x < 0 ? new Vector2(-0.5f, 1) : new Vector2(0.5f, 1);
