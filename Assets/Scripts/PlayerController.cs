@@ -123,6 +123,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("isGrounded", true);
             isGrounded = true;
+            dashesLeft = 2;
             remainingJumps = jumpCount;
         }
         if (skullMask.Contains(collision.gameObject.layer))
@@ -207,21 +208,27 @@ public class PlayerController : MonoBehaviour
 
     #region Dash
     // TODO: Implement double dash
+    private int dashesLeft = 2;
     private IEnumerator Dash()
     {
-        canDash = false;
-        playerSM.Trigger(TriggerType.DashTrigger);
-        isDashing = true;
-        float originalGravity = rb2d.gravityScale;
-        rb2d.gravityScale = 0;
-        rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
-        yield return new WaitForSeconds(dashDuration);
-        rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
-        rb2d.gravityScale = originalGravity;
-        isDashing = false;
+        if(dashesLeft > 0)
+        {
+            canDash = false;
+            playerSM.Trigger(TriggerType.DashTrigger);
+            isDashing = true;
+            float originalGravity = rb2d.gravityScale;
+            rb2d.gravityScale = 0;
+            rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
+            yield return new WaitForSeconds(dashDuration);
+            rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
+            rb2d.gravityScale = originalGravity;
+            isDashing = false;
 
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
+            yield return new WaitForSeconds(dashCooldown);
+            canDash = true;
+
+            dashesLeft--;
+        }
     }
     #endregion
 
