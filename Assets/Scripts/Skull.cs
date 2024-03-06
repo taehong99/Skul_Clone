@@ -46,10 +46,10 @@ public class Skull : MonoBehaviour
         if (collisionCount == 0)
             return;
 
-        IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-        if(damageable != null)
+        IDamageable[] damageables = collision.gameObject.GetComponents<IDamageable>();
+        foreach (IDamageable damageable in damageables)
         {
-            damageable.TakeDamage(5);
+            damageable.TakeDamage(5); // TODO: add damage variable
         }
 
         rb2d.gravityScale = 1f;
