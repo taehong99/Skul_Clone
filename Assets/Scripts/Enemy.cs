@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, IDamageable
         HP -= damage;
         if(HP <= 0)
         {
-            Die();
+            StartCoroutine(Die());
         }
         KnockBack();
         animator.SetTrigger($"hit{Random.Range(0, 2)}");
@@ -37,7 +37,12 @@ public class Enemy : MonoBehaviour, IDamageable
         transform.Translate(Vector2.Lerp(Vector2.zero, knockDirection, knockbackForce));
     }
 
-    public void Die() {
+    IEnumerator Die() {
         animator.SetTrigger("dead");
+        while(animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }
