@@ -135,12 +135,16 @@ MonoBehaviour:
   hittableMask:
     serializedVersion: 2
     m_Bits: 1
+  isAttacking: 0
   skullPrefab: {fileID: 7068983112045292226, guid: 3e6756e0912924357b133ae17e78aa53, type: 3}
   skullCooldown: 2
   skullMask:
     serializedVersion: 2
     m_Bits: 256
-  swapDuration: 1.5
+  defaultController: {fileID: 9100000, guid: 167963bd0ca6f4efbae12ec5f5cd55dc, type: 2}
+  headlessController: {fileID: 22100000, guid: 1d65d8be089694b5c9f759f4fcd67095, type: 2}
+  swapDuration: 2
+  swapSpeed: 2
 --- !u!212 &312421311748159014
 SpriteRenderer:
   m_ObjectHideFlags: 0
