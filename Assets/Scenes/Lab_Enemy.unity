@@ -279,6 +279,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4052918400808660296, guid: 2e57e4d63c915490fa473432c848b40d, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047571584973300980, guid: 2e57e4d63c915490fa473432c848b40d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 52.69995
@@ -1251,6 +1255,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 167963bd0ca6f4efbae12ec5f5cd55dc, type: 2}
+    - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: dashCooldown
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4757642384457342923, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1358,7 +1366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7888126971783374062, guid: 834e5f1a7dd584af28c455977738dba6, type: 3}
       propertyPath: m_Name
-      value: Dummy
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -195,15 +195,6 @@ public class PlayerController : MonoBehaviour
             rb2d.velocity += jumpVec;
         }
     }
-
-    //private void CheckGround() // For Coyote Time
-    //{
-    //    if(Physics2D.OverlapCircle(groundCheck.position, 0.5f, 0, groundLayer))
-    //    {
-    //        isGrounded = true;
-    //    }
-    //}
-
     #endregion
 
     #region Dash
