@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static PlayerController;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -34,11 +35,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private PlayerController player;
     private Animator animator;
+    private Rigidbody2D rb2d;
 
     private void Awake()
     {
         HP = baseHP;
         animator = GetComponent<Animator>();
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -79,7 +82,16 @@ public class Enemy : MonoBehaviour, IDamageable
     #region Methods
     private void Flip()
     {
-        //
+        Vector3 newScale = new Vector3(1, 1, 1);
+        if (rb2d.velocity.x < 0.1f)
+        {
+            newScale.x = -1;
+            transform.localScale = newScale;
+        }
+        else if (rb2d.velocity.x > 0.1f)
+        {
+            transform.localScale = newScale;
+        }
     }
 
     public void TakeDamage(int damage)
@@ -98,7 +110,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public void KnockBack()
     {
         Vector2 knockDirection = Manager.Game.Player.facingDir == PlayerController.FacingDir.Left ? Vector2.left : Vector2.right;
-        transform.Translate(Vector2.Lerp(Vector2.zero, knockDirection, knockbackForce));
+        rb2d.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
     }
 
     public void StartPatrol()
@@ -113,14 +125,17 @@ public class Enemy : MonoBehaviour, IDamageable
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
+            rb2d.velocity = Vector2.right * moveSpeed;
+            //transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             yield return null;
         }
+
         timer = patrolTime;
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+            rb2d.velocity = Vector2.left * moveSpeed;
+            //transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             yield return null;
         }
         stateMachine.ChangeState(State.Idle);
@@ -183,7 +198,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            enemy.animator.Play("Attack");
             enemy.StartPatrol();
         }
 
@@ -206,8 +220,9 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Update()
         {
             // move towards player
-            Vector2 dir = enemy.player.transform.position.x < enemy.transform.position.x ? Vector2.left : Vector2.right;
-            enemy.transform.Translate(dir * enemy.moveSpeed * Time.deltaTime);
+            Vector2 moveDir = enemy.player.transform.position.x < enemy.transform.position.x ? Vector2.left : Vector2.right;
+            enemy.rb2d.velocity = moveDir * enemy.moveSpeed; 
+            //enemy.transform.Translate(dir * enemy.moveSpeed * Time.deltaTime);
         }
 
         public override void Transition()
