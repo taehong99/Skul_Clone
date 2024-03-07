@@ -253,56 +253,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &153174197
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 153174198}
-  - component: {fileID: 153174199}
-  m_Layer: 0
-  m_Name: SmokeSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &153174198
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153174197}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 369418257}
-  - {fileID: 1662503936}
-  m_Father: {fileID: 1665761361}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &153174199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153174197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 024bee895e4254b8a85fe17cc245fda1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dashSmokeAnimator: {fileID: 543416629}
-  jumpSmokeAnimator: {fileID: 869812739}
-  dashSmokeSpawnPoint: {fileID: 369418257}
-  jumpSmokeSpawnPoint: {fileID: 1662503936}
 --- !u!1 &154893457
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,37 +610,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &369418256
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 369418257}
-  m_Layer: 0
-  m_Name: 'DashSmokeSpawnPoint '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &369418257
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 369418256}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 153174198}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &374448907 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3621961084826417846, guid: 2e57e4d63c915490fa473432c848b40d, type: 3}
@@ -2019,37 +1938,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1662503935
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1662503936}
-  m_Layer: 0
-  m_Name: JumpSmokeSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1662503936
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662503935}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 153174198}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1665761361 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6227069862707281844, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
@@ -2717,18 +2605,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3411059934074002283, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 167963bd0ca6f4efbae12ec5f5cd55dc, type: 2}
-    - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
-      propertyPath: dashCooldown
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 4757642384457342923, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5710382129977146337, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: dashSmokeAnimator
+      value: 
+      objectReference: {fileID: 543416629}
+    - target: {fileID: 5710382129977146337, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: jumpSmokeAnimator
+      value: 
+      objectReference: {fileID: 869812739}
     - target: {fileID: 6227069862707281844, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.29
@@ -2771,10 +2659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6227069862707281844, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 153174198}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
 --- !u!1660057539 &9223372036854775807
