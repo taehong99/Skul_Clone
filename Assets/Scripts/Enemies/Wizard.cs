@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Soldier : Enemy
+public class Wizard : Enemy
 {
+    [Header("Wizard-Specific Variables")]
+    [SerializeField] GameObject fireballPrefab;
+    [SerializeField] Transform fireballSpawnPoint;
+    [SerializeField] float fireInterval;
+    
     Coroutine attackRoutine;
 
     protected override void Attack()
@@ -18,14 +23,12 @@ public class Soldier : Enemy
 
     private IEnumerator AttackRoutine()
     {
-        animator.Play("Stance");
-        yield return new WaitForSeconds(stanceDuration);
         animator.Play("Attack");
-        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        for(int i = 0; i < 3; i++)
         {
-            yield return null;
+            Instantiate(fireballPrefab, fireballSpawnPoint);
+            yield return new WaitForSeconds(fireInterval);
         }
-        yield return new WaitForSeconds(1);
         isAttacking = false;
     }
 }
