@@ -287,6 +287,7 @@ public class Enemy : MonoBehaviour, IDamageable
             float distToPlayer = (enemy.player.transform.position - enemy.transform.position).sqrMagnitude;
             if(distToPlayer < (enemy.attackRange * enemy.attackRange))
             {
+                enemy.rb2d.velocity = Vector2.zero;
                 ChangeState(State.Attack);
             }
         }
