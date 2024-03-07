@@ -14,22 +14,25 @@ AnimatorStateMachine:
     m_Position: {x: 20, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6893153421282601371}
-    m_Position: {x: 20, y: 340, z: 0}
+    m_Position: {x: 20, y: 400, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4263191396452755926}
-    m_Position: {x: -190, y: 340, z: 0}
+    m_Position: {x: -190, y: 400, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2800442844538074057}
-    m_Position: {x: 230, y: 340, z: 0}
+    m_Position: {x: 230, y: 400, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7363840176313481759}
     m_Position: {x: 20, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5117736647746230838}
-    m_Position: {x: 20, y: 480, z: 0}
+    m_Position: {x: 20, y: 540, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7730856932685202752}
-    m_Position: {x: 20, y: 410, z: 0}
+    m_Position: {x: 20, y: 470, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 4899345232619094955}
+    m_Position: {x: 20, y: 330, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -187,6 +190,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 95cc836f34b3df248875d2f8d3642748, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &4899345232619094955
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Walk
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 31e1378933c1a4fb6ade4d2c7ab45cbe, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

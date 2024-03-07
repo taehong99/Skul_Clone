@@ -2,29 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using static PlayerController;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
     public enum State { Idle, Patrol, Chase, Stance, Attack, Dead }
-    private StateMachine<State> stateMachine = new StateMachine<State>();
+    protected StateMachine<State> stateMachine = new StateMachine<State>();
 
     [Header("Stats")]
-    [SerializeField] int baseHP;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float knockbackForce;
+    [SerializeField] protected int baseHP;
+    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float knockbackForce;
+    [SerializeField] protected float playerCheckRange;
 
     [Header("Patrol")]
-    [SerializeField] float patienceTimer; // how long before going from idle to patrol
-    [SerializeField] float patrolTime; // patrol time for each direction
+    [SerializeField] float patienceTimer = 3; // how long before going from idle to patrol
+    [SerializeField] float patrolTime = 2; // patrol time for each direction
 
     [Header("Chase")]
     [SerializeField] LayerMask playerMask;
 
     [Header("Attack")]
-    [SerializeField] float attackRange;
-    [SerializeField] float stanceDuration;
-    [SerializeField] float damage;
+    [SerializeField] protected float attackRange;
+    [SerializeField] protected float stanceDuration;
+    [SerializeField] protected float damage;
 
     [Header("Misc")]
     private int hp;
@@ -36,12 +36,14 @@ public class Enemy : MonoBehaviour, IDamageable
     private PlayerController player;
     private Animator animator;
     private Rigidbody2D rb2d;
+    private SpriteRenderer spriter;
 
     private void Awake()
     {
         HP = baseHP;
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
+        spriter = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -64,33 +66,16 @@ public class Enemy : MonoBehaviour, IDamageable
         Flip();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (playerMask.Contains(collision.gameObject.layer))
-        {
-            stateMachine.ChangeState(State.Chase);
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (playerMask.Contains(collision.gameObject.layer))
-        {
-            stateMachine.ChangeState(State.Idle);
-        }
-    }
-
     #region Methods
     private void Flip()
     {
-        Vector3 newScale = new Vector3(1, 1, 1);
         if (rb2d.velocity.x < 0.1f)
         {
-            newScale.x = -1;
-            transform.localScale = newScale;
+            spriter.flipX = true;
         }
         else if (rb2d.velocity.x > 0.1f)
         {
-            transform.localScale = newScale;
+            spriter.flipX = false;
         }
     }
 
@@ -113,9 +98,10 @@ public class Enemy : MonoBehaviour, IDamageable
         rb2d.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
     }
 
+    Coroutine patrolRoutine;
     public void StartPatrol()
     {
-        StartCoroutine(Patrol());
+        patrolRoutine = StartCoroutine(Patrol());
     }
     private IEnumerator Patrol()
     {
@@ -142,6 +128,17 @@ public class Enemy : MonoBehaviour, IDamageable
         isPatrolling = false;
     }
 
+    protected void CheckForPlayer()
+    {
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, playerCheckRange, playerMask);
+        Debug.Log(collider.gameObject.name);
+        if(collider != null)
+        {
+            StopCoroutine(patrolRoutine);
+            stateMachine.ChangeState(State.Chase);
+        }
+    }
+
     private void Die() {
         GetComponent<Rigidbody2D>().excludeLayers = playerMask;
         Destroy(gameObject);
@@ -150,7 +147,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, playerCheckRange);
     }
     #endregion
 
@@ -171,6 +168,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Debug.Log("Entered Idle");
             enemy.animator.Play("Idle");
             timer = enemy.patienceTimer;
         }
@@ -198,7 +196,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Debug.Log("Entered Patrol");
             enemy.StartPatrol();
+        }
+
+        public override void Update()
+        {
+            enemy.CheckForPlayer();
         }
 
         public override void Transition()
@@ -215,6 +219,12 @@ public class Enemy : MonoBehaviour, IDamageable
         public ChaseState(Enemy enemy)
         {
             this.enemy = enemy;
+        }
+
+        public override void Enter()
+        {
+            Debug.Log("Entered Chase");
+            enemy.animator.Play("Walk");
         }
 
         public override void Update()
@@ -247,6 +257,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Debug.Log("Entered Stance");
             time = 0;
             enemy.animator.Play("Stance");
         }
@@ -273,6 +284,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Debug.Log("Entered Attack");
             enemy.animator.Play("Attack");
         }
 
@@ -280,7 +292,7 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             if(enemy.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
-                ChangeState(State.Chase);
+                ChangeState(State.Idle);
             }
         }
     }
@@ -294,6 +306,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Debug.Log("Entered Dead");
             enemy.animator.Play("EnemyDeath");
         }
 
