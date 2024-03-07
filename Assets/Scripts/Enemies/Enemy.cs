@@ -150,7 +150,7 @@ public class Enemy : MonoBehaviour, IDamageable
         isPatrolling = false;
     }
 
-    //protected void CheckForPlayer()
+    //protected void CheckForPlayer() OverlapCircle Version
     //{
     //    Collider2D collider = Physics2D.OverlapCircle(transform.position, playerCheckRange, playerMask);
     //    Debug.Log(collider.gameObject.name);
