@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("Patrol")]
     [SerializeField] float patienceTimer = 3; // how long before going from idle to patrol
     [SerializeField] float patrolTime = 2; // patrol time for each direction
+    bool playerInRange;
 
     [Header("Chase")]
     [SerializeField] LayerMask playerMask;
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] protected float attackRange;
     [SerializeField] protected float stanceDuration;
     [SerializeField] protected float damage;
+    protected bool isAttacking;
 
     [Header("Misc")]
     private int hp;
@@ -33,9 +35,9 @@ public class Enemy : MonoBehaviour, IDamageable
     private int animIndex = 0;
     private bool isPatrolling;
 
-    private PlayerController player;
-    private Animator animator;
-    private Rigidbody2D rb2d;
+    protected PlayerController player;
+    protected Animator animator;
+    protected Rigidbody2D rb2d;
     private SpriteRenderer spriter;
 
     private void Awake()
@@ -53,7 +55,6 @@ public class Enemy : MonoBehaviour, IDamageable
         stateMachine.AddState(State.Idle, new IdleState(this));
         stateMachine.AddState(State.Patrol, new PatrolState(this));
         stateMachine.AddState(State.Chase, new ChaseState(this));
-        stateMachine.AddState(State.Stance, new StanceState(this));
         stateMachine.AddState(State.Attack, new AttackState(this));
         stateMachine.AddState(State.Dead, new DeadState(this));
 
@@ -66,10 +67,25 @@ public class Enemy : MonoBehaviour, IDamageable
         Flip();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (playerMask.Contains(collision.gameObject.layer))
+        {
+            playerInRange = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (playerMask.Contains(collision.gameObject.layer))
+        {
+            playerInRange = false;
+        }
+    }
+
     #region Methods
     private void Flip()
     {
-        if (rb2d.velocity.x < 0.1f)
+        if (rb2d.velocity.x < -0.1f)
         {
             spriter.flipX = true;
         }
@@ -94,16 +110,22 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void KnockBack()
     {
+        if (knockbackForce == 0)
+            return;
         Vector2 knockDirection = Manager.Game.Player.facingDir == PlayerController.FacingDir.Left ? Vector2.left : Vector2.right;
         rb2d.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
     }
 
     Coroutine patrolRoutine;
-    public void StartPatrol()
+    private void StartPatrol()
     {
         patrolRoutine = StartCoroutine(Patrol());
     }
-    private IEnumerator Patrol()
+    private void StopPatrol()
+    {
+        StopCoroutine(patrolRoutine);
+    }
+    protected virtual IEnumerator Patrol()
     {
         isPatrolling = true;
         float timer = patrolTime;
@@ -128,15 +150,25 @@ public class Enemy : MonoBehaviour, IDamageable
         isPatrolling = false;
     }
 
-    protected void CheckForPlayer()
+    //protected void CheckForPlayer()
+    //{
+    //    Collider2D collider = Physics2D.OverlapCircle(transform.position, playerCheckRange, playerMask);
+    //    Debug.Log(collider.gameObject.name);
+    //    if(collider != null)
+    //    {
+    //        StopCoroutine(patrolRoutine);
+    //        stateMachine.ChangeState(State.Chase);
+    //    }
+    //}
+
+    protected virtual void Attack()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, playerCheckRange, playerMask);
-        Debug.Log(collider.gameObject.name);
-        if(collider != null)
-        {
-            StopCoroutine(patrolRoutine);
-            stateMachine.ChangeState(State.Chase);
-        }
+        Debug.Log("Attack!");
+    }
+
+    protected virtual void StopAttack()
+    {
+        Debug.Log("Attack disrupted!");
     }
 
     private void Die() {
@@ -147,7 +179,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, playerCheckRange);
+        //Gizmos.DrawWireSphere(transform.position, playerCheckRange);
     }
     #endregion
 
@@ -202,15 +234,24 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Update()
         {
-            enemy.CheckForPlayer();
+            
         }
 
         public override void Transition()
         {
-            if (!enemy.isPatrolling)
+            if (enemy.playerInRange)
+            {
+                ChangeState(State.Chase);
+            }
+            else if (!enemy.isPatrolling)
             {
                 ChangeState(State.Idle);
             }
+        }
+
+        public override void Exit()
+        {
+            enemy.StopPatrol();
         }
     }
 
@@ -237,38 +278,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Transition()
         {
-            // if player in range, attack
+            // if player outside of watch range, idle
+            if (!enemy.playerInRange) {
+                ChangeState(State.Idle);
+            }
+            // if player in attack range, attack
             float distToPlayer = (enemy.player.transform.position - enemy.transform.position).sqrMagnitude;
             if(distToPlayer < (enemy.attackRange * enemy.attackRange))
-            {
-                ChangeState(State.Stance);
-            }
-        }
-    }
-
-    private class StanceState : EnemyState
-    {
-        float time;
-
-        public StanceState(Enemy enemy)
-        {
-            this.enemy = enemy;
-        }
-
-        public override void Enter()
-        {
-            Debug.Log("Entered Stance");
-            time = 0;
-            enemy.animator.Play("Stance");
-        }
-
-        public override void Update() {
-            time += Time.deltaTime;
-        }
-
-        public override void Transition()
-        {
-            if(time >= enemy.stanceDuration)
             {
                 ChangeState(State.Attack);
             }
@@ -285,15 +301,21 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Attack");
-            enemy.animator.Play("Attack");
+            enemy.isAttacking = true;
+            enemy.Attack();
         }
 
         public override void Transition()
         {
-            if(enemy.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+            if (!enemy.isAttacking)
             {
                 ChangeState(State.Idle);
             }
+        }
+
+        public override void Exit()
+        {
+            enemy.StopAttack();
         }
     }
 
