@@ -229,6 +229,7 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Patrol");
+            enemy.animator.Play("Walk");
             enemy.StartPatrol();
         }
 
