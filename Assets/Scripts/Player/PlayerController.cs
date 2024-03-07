@@ -72,6 +72,7 @@ public class PlayerController : MonoBehaviour
     [Header("Misc")]
     Rigidbody2D rb2d;
     Animator animator;
+    SmokeSpawner smokeSpawner;
     Collider2D[] colliders = new Collider2D[15];
 
 
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour
     {
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        smokeSpawner = GetComponentInChildren<SmokeSpawner>();
         canDash = true;
 
         // Cache jump vector once to prevent repetitive math operations
@@ -181,6 +183,8 @@ public class PlayerController : MonoBehaviour
     {
         if(coyoteTimeCounter <= 0 && remainingJumps == 0)
             return;
+        if (remainingJumps == 1) // double jump smoke effect
+            smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Jump);
 
         remainingJumps--;
         coyoteTimeCounter = 0;
@@ -204,6 +208,7 @@ public class PlayerController : MonoBehaviour
     {
         if(dashesLeft > 0)
         {
+            smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Dash);
             canDash = false;
             playerSM.Trigger(TriggerType.DashTrigger);
             isDashing = true;
