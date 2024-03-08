@@ -39,8 +39,8 @@ public class Soldier : Enemy
     public void AttackFrame()
     {
         Collider2D collider = Physics2D.OverlapCircle(transform.position, attackRange, playerMask);
-        IDamageable damageable = collider.GetComponent<IDamageable>();
-        if(damageable != null)
+        IDamageable[] damageables = collider.GetComponents<IDamageable>();
+        foreach (IDamageable damageable in damageables)
         {
             // attack right
             if(transform.localScale.x == 1)

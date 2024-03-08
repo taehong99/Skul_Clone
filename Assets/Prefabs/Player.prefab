@@ -144,8 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 024bee895e4254b8a85fe17cc245fda1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashSmokeAnimator: {fileID: 0}
-  jumpSmokeAnimator: {fileID: 0}
   dashSmokeSpawnPoint: {fileID: 5782034302103755205}
   jumpSmokeSpawnPoint: {fileID: 8693850217297520341}
 --- !u!1 &1622875887238447740
@@ -194,6 +192,7 @@ GameObject:
   - component: {fileID: 5707368567994423615}
   - component: {fileID: 3411059934074002283}
   - component: {fileID: 1511299340062430591}
+  - component: {fileID: 3301717711289265076}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -434,3 +433,15 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &3301717711289265076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4757642384457342923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fb87d64b05e242638f2b7c13d626dcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
