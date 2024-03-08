@@ -40,6 +40,7 @@ public class Enemy : MonoBehaviour, IDamageable
     protected Animator animator;
     protected Rigidbody2D rb2d;
     private SpriteRenderer spriter;
+    private LedgeChecker ledgeChecker;
 
     private void Awake()
     {
@@ -47,6 +48,14 @@ public class Enemy : MonoBehaviour, IDamageable
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
+        ledgeChecker = GetComponentInChildren<LedgeChecker>();
+
+        GameObject playerChecker = new GameObject("PlayerChecker");
+        playerChecker.transform.SetParent(transform);
+        playerChecker.transform.localPosition = Vector3.zero;
+        CircleCollider2D collider = playerChecker.AddComponent<CircleCollider2D>();
+        collider.isTrigger = true;
+        collider.radius = playerCheckRange;
     }
 
     private void Start()
@@ -84,6 +93,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
     #region Methods
+    #region Flips
     private void Flip()
     {
         Vector3 newScale = transform.localScale;
@@ -101,6 +111,15 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             OnFlipped?.Invoke();
         }
+
+        transform.localScale = newScale;
+    }
+
+    private void FlipOnDemand()
+    {
+        Vector2 newScale = transform.localScale;
+
+        newScale.x = -newScale.x;
 
         transform.localScale = newScale;
     }
@@ -125,6 +144,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
         transform.localScale = newScale;
     }
+
+    #endregion
 
     public void TakeDamage(int damage)
     {
@@ -156,10 +177,12 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         StopCoroutine(patrolRoutine);
     }
+    float timer;
+    bool flipped;
     protected virtual IEnumerator Patrol()
     {
         isPatrolling = true;
-        float timer = patrolTime;
+        timer = patrolTime;
 
         while (timer >= 0)
         {
@@ -167,6 +190,12 @@ public class Enemy : MonoBehaviour, IDamageable
             rb2d.velocity = Vector2.right * moveSpeed;
             //transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             yield return null;
+        }
+        rb2d.velocity = Vector2.zero;
+
+        if (!flipped)
+        {
+            FlipOnDemand();
         }
 
         timer = patrolTime;
@@ -177,6 +206,7 @@ public class Enemy : MonoBehaviour, IDamageable
             //transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             yield return null;
         }
+        
         stateMachine.ChangeState(State.Idle);
         isPatrolling = false;
     }
@@ -232,6 +262,7 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Idle");
+            enemy.rb2d.velocity = Vector2.zero;
             enemy.animator.Play("Idle");
             timer = enemy.patienceTimer;
         }
@@ -260,6 +291,7 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Patrol");
+            enemy.ledgeChecker.OnReachedEndOfLedge += ReachedEndOfLedge;
             enemy.animator.Play("Walk");
             enemy.StartPatrol();
         }
@@ -283,7 +315,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Exit()
         {
+            enemy.ledgeChecker.OnReachedEndOfLedge -= ReachedEndOfLedge;
             enemy.StopPatrol();
+        }
+
+        private void ReachedEndOfLedge()
+        {
+            enemy.timer = 0;
+            enemy.flipped = true;
         }
     }
 
@@ -297,6 +336,7 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Chase");
+            enemy.ledgeChecker.OnReachedEndOfLedge += ReachedEndOfLedge;
             enemy.animator.Play("Walk");
         }
 
@@ -321,6 +361,17 @@ public class Enemy : MonoBehaviour, IDamageable
                 enemy.rb2d.velocity = Vector2.zero;
                 ChangeState(State.Attack);
             }
+        }
+
+        public override void Exit()
+        {
+            enemy.ledgeChecker.OnReachedEndOfLedge -= ReachedEndOfLedge;
+            enemy.StopPatrol();
+        }
+
+        private void ReachedEndOfLedge()
+        {
+            ChangeState(State.Idle);
         }
     }
 
