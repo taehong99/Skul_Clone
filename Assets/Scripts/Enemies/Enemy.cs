@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour, IDamageable
     protected Rigidbody2D rb2d;
     private SpriteRenderer spriter;
     private LedgeChecker ledgeChecker;
+    private PooledObject enemyHitEffectPrefab;
 
     private void Awake()
     {
@@ -50,6 +51,7 @@ public class Enemy : MonoBehaviour, IDamageable
         rb2d = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         ledgeChecker = GetComponentInChildren<LedgeChecker>();
+        enemyHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/EnemyHitEffect");
 
         GameObject playerChecker = new GameObject("PlayerChecker");
         playerChecker.transform.SetParent(transform);
@@ -150,6 +152,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
+        Manager.Pool.GetPool(enemyHitEffectPrefab, transform.position, Quaternion.identity);
+
         HP -= damage;
         if (HP <= 0)
         {

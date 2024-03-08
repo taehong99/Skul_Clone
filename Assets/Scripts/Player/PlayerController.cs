@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -76,11 +77,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] float swapDuration;
     [SerializeField] float swapSpeed;
 
+    [Header("Effects")]
+    SmokeSpawner smokeSpawner;
+    PooledObject playerHitEffectPrefab;
+
     [Header("Misc")]
     Rigidbody2D rb2d;
     Animator animator;
-    SmokeSpawner smokeSpawner;
     Collider2D[] colliders = new Collider2D[15];
+
 
 
     private void Awake()
@@ -90,6 +95,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
+        playerHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect");
         canDash = true;
 
         // Cache jump vector once to prevent repetitive math operations
@@ -257,6 +263,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     public void TakeDamage(int damage)
     {
+        Manager.Pool.GetPool(playerHitEffectPrefab, transform.position, Quaternion.identity);
         HP -= damage;
         if (HP <= 0)
         {
