@@ -182,12 +182,13 @@ public class Enemy : MonoBehaviour, IDamageable
     protected virtual IEnumerator Patrol()
     {
         isPatrolling = true;
-        timer = patrolTime;
-
+        timer = Random.Range(patrolTime - 1, patrolTime + 1.5f);
+        Vector2 firstDir = Random.Range(0, 2) == 0 ? Vector2.right : Vector2.left;
+        Vector2 secondDir = -firstDir;
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            rb2d.velocity = Vector2.right * moveSpeed;
+            rb2d.velocity = firstDir * moveSpeed;
             //transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -198,11 +199,11 @@ public class Enemy : MonoBehaviour, IDamageable
             FlipOnDemand();
         }
 
-        timer = patrolTime;
+        timer = Random.Range(patrolTime - 1, patrolTime + 1.5f);
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            rb2d.velocity = Vector2.left * moveSpeed;
+            rb2d.velocity = secondDir * moveSpeed;
             //transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             yield return null;
         }
