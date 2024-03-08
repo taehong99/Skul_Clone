@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private int hp;
     public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
     public event UnityAction<int> OnHPChanged;
+    public event UnityAction OnFlipped;
     private int animIndex = 0;
     private bool isPatrolling;
 
@@ -85,14 +86,44 @@ public class Enemy : MonoBehaviour, IDamageable
     #region Methods
     private void Flip()
     {
+        Vector3 newScale = transform.localScale;
+
         if (rb2d.velocity.x < -0.1f)
         {
-            spriter.flipX = true;
+            newScale.x = -1;
         }
         else if (rb2d.velocity.x > 0.1f)
         {
-            spriter.flipX = false;
+            newScale.x = 1;
         }
+
+        if(newScale.x != transform.localScale.x)
+        {
+            OnFlipped?.Invoke();
+        }
+
+        transform.localScale = newScale;
+    }
+
+    private void FacePlayer()
+    {
+        Vector3 newScale = transform.localScale;
+
+        if (player.transform.position.x > transform.position.x) // player is to the right
+        {
+            newScale.x = 1;
+        }
+        else // player is to the left
+        {
+            newScale.x = -1;
+        }
+
+        if (newScale.x != transform.localScale.x)
+        {
+            OnFlipped?.Invoke();
+        }
+
+        transform.localScale = newScale;
     }
 
     public void TakeDamage(int damage)
@@ -304,6 +335,7 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             Debug.Log("Entered Attack");
             enemy.isAttacking = true;
+            enemy.FacePlayer();
             enemy.Attack();
         }
 

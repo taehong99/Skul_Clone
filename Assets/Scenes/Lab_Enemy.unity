@@ -852,6 +852,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3520655045015148802, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5239255948974330896, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
       propertyPath: m_Name
       value: Knight
@@ -2822,6 +2826,10 @@ PrefabInstance:
     - target: {fileID: 224465567792788888, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
       propertyPath: moveSpeed
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224465567792788888, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
+      propertyPath: patrolTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224465567792788888, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
       propertyPath: patienceTimer
