@@ -1,8 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     public enum FacingDir
     {
@@ -23,6 +24,12 @@ public class PlayerController : MonoBehaviour
     {
         isAttacking = b;
     }
+
+    [Header("Player Stats")]
+    [SerializeField] int startingHP;
+    private int hp;
+    public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
+    public UnityAction<int> OnHPChanged;
 
     [Header("Player Move")]
     [SerializeField] float moveSpeed;
@@ -78,6 +85,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        hp = startingHP;
+
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
@@ -244,6 +253,15 @@ public class PlayerController : MonoBehaviour
             {
                 damageable.TakeDamage(attackDamage);
             }
+        }
+    }
+    public void TakeDamage(int damage)
+    {
+        HP -= damage;
+        if (HP <= 0)
+        {
+            //Die
+            return;
         }
     }
     #endregion

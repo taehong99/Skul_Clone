@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 7628743362835745697}
   - component: {fileID: 6687017924961621562}
   - component: {fileID: 301199616047492307}
+  - component: {fileID: 6829950400711030190}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -230,6 +231,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6829950400711030190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3621961084826417846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2385befd26906448fae47dd99e15db90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillSlot: 0
 --- !u!1 &3642706668382451823
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6047571584973300980}
   - component: {fileID: 8481159023102758251}
+  - component: {fileID: 1208612018951420347}
   m_Layer: 5
   m_Name: HealthUI
   m_TagString: Untagged
@@ -266,7 +281,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 324, y: 52.7}
+  m_AnchoredPosition: {x: 324, y: 52.69995}
   m_SizeDelta: {x: 390, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481159023102758251
@@ -315,11 +330,24 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1208612018951420347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3642706668382451823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4dde24b7f484c8d9f0eabc12f5509e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!1 &4406071667947410092
 GameObject:
   m_ObjectHideFlags: 0
