@@ -20,12 +20,13 @@ public class Enemy : MonoBehaviour, IDamageable
     bool playerInRange;
 
     [Header("Chase")]
-    [SerializeField] LayerMask playerMask;
+    [SerializeField] protected LayerMask playerMask;
 
     [Header("Attack")]
     [SerializeField] protected float attackRange;
     [SerializeField] protected float stanceDuration;
-    [SerializeField] protected float damage;
+    [SerializeField] protected int damage;
+    public int Damage => damage;
     protected bool isAttacking;
 
     [Header("Misc")]
@@ -58,7 +59,7 @@ public class Enemy : MonoBehaviour, IDamageable
         collider.radius = playerCheckRange;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         player = Manager.Game.Player;
 
@@ -240,8 +241,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        //Gizmos.DrawWireSphere(transform.position, playerCheckRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, playerCheckRange);
     }
     #endregion
 
