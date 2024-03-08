@@ -7,9 +7,11 @@ public class SpawnEnemy : MonoBehaviour
     enum EnemyType { Soldier, Knight, Wizard }
     [SerializeField] EnemyType enemyToSpawn;
     private GameObject enemyPrefab;
+    private PooledObject spawnEffectPrefab;
 
     private void Start()
     {
+        spawnEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/EnemyEffect");
         switch (enemyToSpawn)
         {
             case EnemyType.Soldier:
@@ -28,6 +30,8 @@ public class SpawnEnemy : MonoBehaviour
 
     public void Spawn()
     {
+        GameObject go = Manager.Pool.GetPool(spawnEffectPrefab, transform.position, Quaternion.identity).gameObject;
+        go.GetComponent<Animator>().Play("EnemyAppear");
         Instantiate(enemyPrefab, transform.position, transform.rotation);
     }
 

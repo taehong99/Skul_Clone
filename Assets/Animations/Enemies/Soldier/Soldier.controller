@@ -22,12 +22,6 @@ AnimatorStateMachine:
     m_State: {fileID: 2800442844538074057}
     m_Position: {x: 230, y: 400, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -7363840176313481759}
-    m_Position: {x: 20, y: 180, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -5117736647746230838}
-    m_Position: {x: 20, y: 540, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: 7730856932685202752}
     m_Position: {x: 20, y: 470, z: 0}
   - serializedVersion: 1
@@ -42,59 +36,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 30, y: 100, z: 0}
   m_ExitPosition: {x: 580, y: 240, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -7363840176313481759}
---- !u!1102 &-7363840176313481759
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyAppear
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ebc06bd97865a4c4bb944a383c045772, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
---- !u!1102 &-5117736647746230838
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyDeath
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 5b79b0b3319a84039a87a1dc48442e0d, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_DefaultState: {fileID: 469841946624579735}
 --- !u!1102 &-4263191396452755926
 AnimatorState:
   serializedVersion: 6
