@@ -158,8 +158,7 @@ public class Enemy : MonoBehaviour, IDamageable
             stateMachine.ChangeState(State.Dead);
             return;
         }
-        animator.Play($"Hit{animIndex}");
-        animIndex ^= 1;
+        
         KnockBack();
     }
 
@@ -167,8 +166,12 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         if (knockbackForce == 0)
             return;
+        
         Vector2 knockDirection = Manager.Game.Player.facingDir == PlayerController.FacingDir.Left ? Vector2.left : Vector2.right;
         rb2d.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
+        stateMachine.ChangeState(State.Idle);
+        animator.Play($"Hit{animIndex}");
+        animIndex ^= 1;
     }
 
     Coroutine patrolRoutine;
