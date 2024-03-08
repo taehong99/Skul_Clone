@@ -7,8 +7,8 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        GameObject go = GameObject.FindGameObjectWithTag("Player");
-        player = go.GetComponent<PlayerController>();
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        player = playerObject.GetComponent<PlayerController>();
     }
 
     public void Test()

@@ -10,7 +10,8 @@ public class DamageTextSpawner : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        damageText = Resources.Load<DamageText>("Prefabs/DamageText");
+        //damageText = Resources.Load<DamageText>("Prefabs/DamageText");
+        damageText = Manager.Resource.Load<DamageText>("Prefabs/DamageText");
     }
 
     public void TakeDamage(int damage)
