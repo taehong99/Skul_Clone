@@ -9,6 +9,7 @@ public class PlayerHPBarUI : BaseUI
     [SerializeField] PlayerController player;
     private int maxHP;
 
+
     private void Start()
     {
         maxHP = player.HP;
