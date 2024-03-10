@@ -13,32 +13,51 @@ public class BossHands : MonoBehaviour
     private BossHand leftHand;
     private BossHand rightHand;
 
+    [SerializeField] private VoidEventChannelSO sweepReady;
+
     private void Awake()
     {
         leftHand = transform.GetChild(0).GetComponent<BossHand>();
         rightHand = transform.GetChild(1).GetComponent<BossHand>();
-        stateMachine.AddState(State.Spawn, new SpawnState(this));
-    }
-
-    private void Start()
-    {
-        
     }
 
     #region Actions
     // Actions called by BossController
     public void Spawn()
     {
-        stateMachine.Start(State.Spawn);
+        StartCoroutine(SpawnRoutine());
     }
 
     public void Slide()
     {
-        Debug.Log("Called");
         leftHand.Slide();
         rightHand.Slide();
     }
 
+    public void Idle()
+    {
+        leftHand.Idle();
+        rightHand.Idle();
+    }
+
+    public void SweepAttack()
+    {
+        PrepareSweep();
+        if (Manager.Game.Player.transform.position.x <= 0)
+        {
+            sweepReady.OnEventRaised += leftHand.Sweep;
+        }
+        else
+        {
+            sweepReady.OnEventRaised += rightHand.Sweep;
+        }
+    }
+
+    public void PrepareSweep()
+    {
+        leftHand.LeaveScreen();
+        rightHand.LeaveScreen();
+    }
     #endregion
 
     private IEnumerator SpawnRoutine()
@@ -46,23 +65,5 @@ public class BossHands : MonoBehaviour
         leftHand.Spawn();
         yield return new WaitForSeconds(handSpawnDelay);
         rightHand.Spawn();
-    }
-
-    private class BossHandState : BaseState<State>
-    {
-        protected BossHands hands;
-    }
-
-    private class SpawnState : BossHandState
-    {
-        public SpawnState(BossHands hands)
-        {
-            this.hands = hands;
-        }
-
-        public override void Enter()
-        {
-            hands.StartCoroutine(hands.SpawnRoutine());
-        }
     }
 }

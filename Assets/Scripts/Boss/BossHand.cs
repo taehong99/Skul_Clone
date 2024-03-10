@@ -8,6 +8,7 @@ public class BossHand : MonoBehaviour
 
     [Header("Event Channels")]
     [SerializeField] private VoidEventChannelSO handSpawned;
+    [SerializeField] private VoidEventChannelSO sweepReady;
 
     [Header("Rise Values")]
     [SerializeField] float targetY;
@@ -19,9 +20,17 @@ public class BossHand : MonoBehaviour
     [SerializeField] float shakeMagnitude;
     [SerializeField] float shakeInterval;
 
+    [Header("Sweep Values")]
+    [SerializeField] float distanceToEdge;
+    [SerializeField] float leaveSpeed;
+    [SerializeField] float sweepDelay;
+    [SerializeField] float sweepDistance;
+    [SerializeField] float sweepSpeed;
+
     [Header("Misc")]
     [SerializeField] Type type;
     Animator animator;
+    public Animator Animator => animator;
     SpriteRenderer spriter;
 
     Coroutine shakeRoutine;
@@ -39,8 +48,6 @@ public class BossHand : MonoBehaviour
 
     private void OnEnable()
     {
-        //shakeRoutine = StartCoroutine(ShakeRoutine());
-        //riseRoutine = StartCoroutine(RiseRoutine());
     }
 
     private void OnDisable()
@@ -50,12 +57,34 @@ public class BossHand : MonoBehaviour
 
     public void Spawn()
     {
+        StopAllCoroutines();
         riseRoutine = StartCoroutine(RiseRoutine());
     }
     
     public void Slide()
     {
+        StopAllCoroutines();
         StartCoroutine(SlideRoutine());
+    }
+
+    public void Idle()
+    {
+        StopAllCoroutines();
+        StartCoroutine(IdleRoutine());
+    }
+
+    public void LeaveScreen()
+    {
+        StopAllCoroutines();
+        leaveScreenRoutine = StartCoroutine(LeaveScreenRoutine());
+    }
+
+    public void Sweep()
+    {
+        if (this == null)
+            return;
+        StopAllCoroutines();
+        StartCoroutine(SweepRoutine());
     }
 
     private IEnumerator RiseRoutine()
@@ -91,6 +120,72 @@ public class BossHand : MonoBehaviour
         {
             transform.Translate(-transform.right * Time.deltaTime, Space.World);
             t += Time.deltaTime * 2;
+            yield return null;
+        }
+    }
+
+    private IEnumerator IdleRoutine()
+    {
+        animator.Play("Phase1Idle");
+
+        float t = 0;
+        while (t < 1)
+        {
+            transform.Translate(transform.right * Time.deltaTime, Space.World);
+            transform.Translate(transform.up * Time.deltaTime, Space.World);
+            t += Time.deltaTime * 2;
+            yield return null;
+        }
+        
+        yield return null;
+    }
+
+    private IEnumerator Slam()
+    {
+        yield return null;
+    }
+
+    Coroutine leaveScreenRoutine;
+    private IEnumerator LeaveScreenRoutine()
+    {
+        animator.Play("Phase1Sweep");
+        Vector2 targetPos = transform.position + -transform.right * distanceToEdge;
+        while (Vector2.Distance(transform.position, targetPos) > 0.01)
+        {
+            float step = leaveSpeed * Time.deltaTime;
+            
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+            yield return null;
+        }
+        sweepReady.RaiseEvent();
+    }
+
+    private IEnumerator SweepRoutine()
+    {
+        Vector2 targetPos = transform.position + transform.right * sweepDistance;
+        while (Vector2.Distance(transform.position, targetPos) > 0.01)
+        {
+            float step = sweepSpeed * Time.deltaTime;
+            Debug.Log(step);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+            yield return null;
+        }
+    }
+
+    private IEnumerator Respawn()
+    {
+        yield return null;
+    }
+    private IEnumerator LerpToDestination(Transform transform, Vector2 offset, float speed)
+    {
+        float t = 0;
+        Vector2 startPos = transform.localPosition;
+        Vector2 endPos = -transform.right;
+        endPos += offset;
+        while (t < 1)
+        {
+            transform.localPosition = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * speed;
             yield return null;
         }
     }

@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BossBody : MonoBehaviour
 {
-    public enum State { Spawn, Idle, Attack }
-    private StateMachine<State> stateMachine = new StateMachine<State>();
-
     [Header("Rise Values")]
     [SerializeField] float riseTargetY;
     [SerializeField] float riseSpeed;
@@ -15,6 +12,11 @@ public class BossBody : MonoBehaviour
     [SerializeField] float fallTargetY;
     [SerializeField] float fallSpeed;
 
+    [Header("Idle Values")]
+    [SerializeField] float idleTargetY;
+    [SerializeField] float idleSpeed;
+    [SerializeField] float idleOffset;
+
     [Header("Misc")]
     [SerializeField] private VoidEventChannelSO bodySpawned;
     Animator animator;
@@ -22,12 +24,6 @@ public class BossBody : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        stateMachine.AddState(State.Spawn, new SpawnState(this));
-    }
-
-    private void Start()
-    {
-        
     }
 
     public void Rise()
@@ -38,6 +34,11 @@ public class BossBody : MonoBehaviour
     public void Fall()
     {
         StartCoroutine(FallRoutine());   
+    }
+
+    public void Idle()
+    {
+        StartCoroutine(IdleRoutine());
     }
 
     private IEnumerator RiseRoutine()
@@ -69,20 +70,37 @@ public class BossBody : MonoBehaviour
         }
     }
 
-    private class BossBodyState : BaseState<State>
+    private IEnumerator IdleRoutine()
     {
-        protected BossBody body;
-    }
-
-    private class SpawnState : BossBodyState
-    {
-        public SpawnState(BossBody body)
+        // Go to Default Position
+        float t = 0;
+        Vector2 startPos = transform.position;
+        Vector2 endPos = startPos;
+        endPos.y = idleTargetY;
+        while (t < 1)
         {
-            this.body = body;
+            transform.position = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * riseSpeed;
+            yield return null;
         }
-
-        public override void Enter()
+        
+        // Up Down Movement
+        t = 0;
+        startPos = transform.position;
+        endPos = startPos;
+        endPos.y = endPos.y + idleOffset;
+        while (t < 1)
         {
+            transform.position = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * riseSpeed;
+            yield return null;
+        }
+        t = 0;
+        while (t < 1)
+        {
+            transform.position = Vector2.Lerp(endPos, startPos, t);
+            t += Time.deltaTime * riseSpeed;
+            yield return null;
         }
     }
 }

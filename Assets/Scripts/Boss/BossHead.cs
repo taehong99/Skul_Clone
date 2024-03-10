@@ -5,20 +5,25 @@ using UnityEngine;
 
 public class BossHead : MonoBehaviour
 {
-    public enum State { Spawn, Idle, Attack }
-    private StateMachine<State> stateMachine = new StateMachine<State>();
-
     [Header("Spawn Values")]
     [SerializeField] float nodSpeed;
-    [SerializeField] float nodDuration;
+    [SerializeField] float nodOffset;
     [SerializeField] float jawOpenGap;
     [SerializeField] float jawOpenSpeed;
     [SerializeField] float screamDuration;
     [SerializeField] float shakeSpeed;
     [SerializeField] float shakeMagnitude;
 
+    [Header("Idle Values")]
+    [SerializeField] float targetIdleY;
+    [SerializeField] float idleSpeed;
+    [SerializeField] float idleOffset;
+    [SerializeField] float jawMovementOffset;
+    [SerializeField] float jawMovementSpeed;
+
     [Header("Misc")]
     [SerializeField] private VoidEventChannelSO screamFinished;
+    [SerializeField] private VoidEventChannelSO idleFinished;
     private BossFace face;
     private BossJaw jaw;
 
@@ -32,19 +37,20 @@ public class BossHead : MonoBehaviour
     {
         StartCoroutine(ScreamRoutine());
     }
+    public void Idle()
+    {
+        StartCoroutine(IdleRoutine());
+        jawMovementRoutine = StartCoroutine(JawMovementRoutine());
+    }
 
     private IEnumerator ScreamRoutine()
     {
-        float t = 0;
-        while (t < nodDuration)
-        {
-            transform.Translate(-transform.up * Time.deltaTime * nodSpeed, Space.World);
-            t += Time.deltaTime * nodSpeed;
-            yield return null;
-        }
-
+        // head moves a little bit down
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, -nodOffset), nodSpeed));
+        
+        // head shakes while boss screams
         headShakeRoutine = StartCoroutine(HeadShakeRoutine());
-        yield return(StartCoroutine(JawOpenRoutine()));
+        yield return(StartCoroutine(ScreamJawOpenRoutine()));
         StopCoroutine(headShakeRoutine);
 
         screamFinished.RaiseEvent();
@@ -65,41 +71,51 @@ public class BossHead : MonoBehaviour
         }
     }
 
-    private IEnumerator JawOpenRoutine()
+    private IEnumerator ScreamJawOpenRoutine()
+    {
+        yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, -jawOpenGap), jawOpenSpeed));
+
+        yield return new WaitForSeconds(screamDuration);
+
+        yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, jawOpenGap), jawOpenSpeed));
+    }
+
+    private IEnumerator IdleRoutine()
+    {
+        // Move to Default Position
+        float yOffset = targetIdleY - transform.localPosition.y;
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, yOffset), nodSpeed));
+
+        // Up Down Movement
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, idleOffset), idleSpeed));
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, -idleOffset), idleSpeed));
+
+        Debug.Log("reached");
+        idleFinished.RaiseEvent();
+    }
+
+    Coroutine jawMovementRoutine;
+    private IEnumerator JawMovementRoutine()
+    {
+        // jaw up and down motion
+        while (true)
+        {
+            yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, -jawMovementOffset), jawMovementSpeed));
+            yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, jawMovementOffset), jawMovementSpeed));
+        }
+    }
+
+    private IEnumerator LerpToDestination(Transform transform, Vector2 offset, float speed)
     {
         float t = 0;
+        Vector2 startPos = transform.localPosition;
+        Vector2 endPos = startPos;
+        endPos += offset;
         while (t < 1)
         {
-            jaw.transform.Translate(-transform.up * Time.deltaTime * jawOpenGap, Space.World);
-            t += Time.deltaTime * jawOpenSpeed;
+            transform.localPosition = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * speed;
             yield return null;
-        }
-        yield return new WaitForSeconds(screamDuration);
-        t = 0;
-        while (t < 1)
-        {
-            jaw.transform.Translate(transform.up * Time.deltaTime * jawOpenGap, Space.World);
-            t += Time.deltaTime * jawOpenSpeed;
-            yield return null;
-        }
-    }
-
-    // States
-    private class BossHeadState : BaseState<State>
-    {
-        protected BossHead head;
-    }
-
-    private class SpawnState : BossHeadState
-    {
-        public SpawnState(BossHead head)
-        {
-            this.head = head;
-        }
-
-        public override void Enter()
-        {
-
         }
     }
 }

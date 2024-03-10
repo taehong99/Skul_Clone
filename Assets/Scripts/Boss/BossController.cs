@@ -13,6 +13,7 @@ public class BossController : MonoBehaviour
     [SerializeField] private VoidEventChannelSO handSpawned;
     [SerializeField] private VoidEventChannelSO bodySpawned;
     [SerializeField] private VoidEventChannelSO screamFinished;
+    [SerializeField] private VoidEventChannelSO idleFinished;
 
     [SerializeField] int hp;
 
@@ -81,7 +82,23 @@ public class BossController : MonoBehaviour
 
         public override void Enter()
         {
-            
+            StartIdle();
+        }
+
+        private void StartIdle()
+        {
+            boss.idleFinished.OnEventRaised += StartAttack;
+            boss.hands.Idle();
+            boss.body.Idle();
+            boss.head.Idle();
+        }
+
+        private void StartAttack()
+        {
+            if (boss.hands != null)
+            {
+                boss.hands.SweepAttack();
+            }
         }
     }
 }
