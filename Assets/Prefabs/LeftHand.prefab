@@ -100,12 +100,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSpawned: {fileID: 0}
+  sweepReady: {fileID: 0}
   targetY: -2
   riseSpeed: 1
   shakeAmount: 1
   shakeSpeed: 50
   shakeMagnitude: 0.1
   shakeInterval: 0.08
+  distanceToEdge: 0
+  leaveSpeed: 0
+  sweepDelay: 0
+  sweepDistance: 0
+  sweepSpeed: 0
   type: 0
 --- !u!50 &2176257400327333684
 Rigidbody2D:

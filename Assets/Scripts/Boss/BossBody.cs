@@ -13,12 +13,23 @@ public class BossBody : MonoBehaviour
     [SerializeField] float fallSpeed;
 
     [Header("Idle Values")]
-    [SerializeField] float idleTargetY;
+    [SerializeField] Vector2 idleTargetPos;
     [SerializeField] float idleSpeed;
     [SerializeField] float idleOffset;
 
+    [Header("Sweep Attack Values")]
+    [SerializeField] float leanOffset;
+    [SerializeField] float leanSpeed;
+    [SerializeField] float tiltAngle;
+
+    [Header("Slam Attack Values")]
+    [SerializeField] float slamRiseTargetY;
+    [SerializeField] float slamRiseSpeed;
+    [SerializeField] float slamDipSpeed;
+    [SerializeField] float shakeSpeed;
+    [SerializeField] float shakeMagnitude;
+
     [Header("Misc")]
-    [SerializeField] private VoidEventChannelSO bodySpawned;
     Animator animator;
 
     private void Awake()
@@ -26,80 +37,116 @@ public class BossBody : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void Rise()
+    // Body Spawn
+    public IEnumerator RiseRoutine()
     {
-        StartCoroutine(RiseRoutine());
+        // Rise on Spawn
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, riseTargetY), riseSpeed));
     }
 
-    public void Fall()
+    public IEnumerator FallRoutine()
     {
-        StartCoroutine(FallRoutine());   
+        // Fall back to default position on Spawn
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, fallTargetY), fallSpeed));
     }
 
-    public void Idle()
-    {
-        StartCoroutine(IdleRoutine());
-    }
-
-    private IEnumerator RiseRoutine()
-    {
-        float t = 0;
-        Vector2 startPos = transform.position;
-        Vector2 endPos = transform.position;
-        endPos.y = riseTargetY;
-        while (t < 1)
-        {
-            transform.position = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * riseSpeed;
-            yield return null;
-        }
-        bodySpawned.RaiseEvent();
-    }
-
-    private IEnumerator FallRoutine()
-    {
-        float t = 0;
-        Vector2 startPos = transform.position;
-        Vector2 endPos = transform.position;
-        endPos.y = fallTargetY;
-        while (t < 1)
-        {
-            transform.position = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * fallSpeed;
-            yield return null;
-        }
-    }
-
-    private IEnumerator IdleRoutine()
+    public IEnumerator IdleRoutine()
     {
         // Go to Default Position
+        yield return StartCoroutine(LerpToDestination(transform, idleTargetPos, riseSpeed));
+
+        // Up Down Movement
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, transform.position.y + idleOffset), idleSpeed));
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, transform.position.y - idleOffset), idleSpeed));
+    }
+
+    // Body Sweep
+    public IEnumerator PrepareSweepRoutine(Side dir)
+    {
+        // Leaning motion
+        if(dir == Side.Left)
+        {
+            yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x - leanOffset, transform.position.y), leanSpeed));
+        }
+        else
+        {
+            yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x + leanOffset, transform.position.y), leanSpeed));
+        }
+    }
+    public IEnumerator SweepRoutine(Side dir)
+    {
+        // Motion during sweep
+        if (dir == Side.Left)
+        {
+            Vector2 targetPos = transform.position;
+            targetPos.x += leanOffset * 2;
+            Quaternion targetRot = Quaternion.Euler(0, 0, -tiltAngle);
+            yield return StartCoroutine(TiltToDestination(transform, targetPos, targetRot, leanSpeed));
+        }
+        else
+        {
+            Vector2 targetPos = transform.position;
+            targetPos.x -= leanOffset * 2;
+            Quaternion targetRot = Quaternion.Euler(0, 0, tiltAngle);
+            yield return StartCoroutine(TiltToDestination(transform, targetPos, targetRot, leanSpeed));
+        }
+    }
+    public IEnumerator MoveToIdleRoutine()
+    {
+        Vector2 targetPos = idleTargetPos;
+        Quaternion targetRot = Quaternion.identity;
+        yield return StartCoroutine(TiltToDestination(transform, targetPos, targetRot, leanSpeed));
+    }
+
+    // Body Slam
+    public IEnumerator SlamRiseRoutine()
+    {
+        bodyShakeRoutine = StartCoroutine(BodyShakeRoutine());
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, slamRiseTargetY), slamRiseSpeed));
+        StopCoroutine(bodyShakeRoutine);
+    }
+    public IEnumerator SlamDipRoutine()
+    {
+        yield return StartCoroutine(LerpToDestination(transform, idleTargetPos, slamDipSpeed));
+    }
+    Coroutine bodyShakeRoutine;
+    public IEnumerator BodyShakeRoutine()
+    {
+        float t = 0;
+        while (true)
+        {
+            float offsetX = Mathf.Sin(Time.time * shakeSpeed) * shakeMagnitude;
+            float offsetY = Mathf.Cos(Time.time * shakeSpeed) * shakeMagnitude;
+            transform.position = new Vector2(transform.position.x + offsetX, transform.position.y + offsetY);
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    // Body Util
+    private IEnumerator LerpToDestination(Transform transform, Vector2 target, float speed)
+    {
         float t = 0;
         Vector2 startPos = transform.position;
-        Vector2 endPos = startPos;
-        endPos.y = idleTargetY;
+        Vector2 endPos = target;
         while (t < 1)
         {
-            transform.position = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * riseSpeed;
+            transform.localPosition = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * speed;
             yield return null;
         }
-        
-        // Up Down Movement
-        t = 0;
-        startPos = transform.position;
-        endPos = startPos;
-        endPos.y = endPos.y + idleOffset;
+    }
+
+    private IEnumerator TiltToDestination(Transform transform, Vector2 targetPos, Quaternion targetRot, float speed)
+    {
+        float t = 0;
+        transform.GetPositionAndRotation(out Vector3 startPos, out Quaternion startRot);
         while (t < 1)
         {
-            transform.position = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * riseSpeed;
-            yield return null;
-        }
-        t = 0;
-        while (t < 1)
-        {
-            transform.position = Vector2.Lerp(endPos, startPos, t);
-            t += Time.deltaTime * riseSpeed;
+            transform.localPosition = Vector2.Lerp(startPos, targetPos, t);
+            transform.rotation = Quaternion.Lerp(startRot, targetRot, t);
+            t += Time.deltaTime * speed;
             yield return null;
         }
     }

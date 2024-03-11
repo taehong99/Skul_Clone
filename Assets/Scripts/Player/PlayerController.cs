@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void Attack()
     {
         int count = Physics2D.OverlapCircleNonAlloc(transform.position, attackRange, colliders, hittableMask);
-
+        Debug.Log(count);
         for(int i = 0; i < count; i++)
         {
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();

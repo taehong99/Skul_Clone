@@ -15,47 +15,72 @@ public class BossHead : MonoBehaviour
     [SerializeField] float shakeMagnitude;
 
     [Header("Idle Values")]
-    [SerializeField] float targetIdleY;
+    [SerializeField] Vector2 idleTargetPos;
     [SerializeField] float idleSpeed;
     [SerializeField] float idleOffset;
     [SerializeField] float jawMovementOffset;
     [SerializeField] float jawMovementSpeed;
 
+    [Header("Sweep Attack Values")]
+    [SerializeField] float leanOffset;
+    [SerializeField] float leanSpeed;
+
     [Header("Misc")]
-    [SerializeField] private VoidEventChannelSO screamFinished;
-    [SerializeField] private VoidEventChannelSO idleFinished;
     private BossFace face;
     private BossJaw jaw;
+    private BoxCollider2D hurtbox;
 
     private void Awake()
     {
         face = GetComponentInChildren<BossFace>();
         jaw = GetComponentInChildren<BossJaw>();
+        hurtbox = GetComponent<BoxCollider2D>();
     }
 
-    public void Scream()
+    public void SetHurtBox(bool b)
     {
-        StartCoroutine(ScreamRoutine());
-    }
-    public void Idle()
-    {
-        StartCoroutine(IdleRoutine());
-        jawMovementRoutine = StartCoroutine(JawMovementRoutine());
+        if(b == true)
+        {
+            hurtbox.enabled = true;
+        }
+        else
+        {
+            hurtbox.enabled = false;
+        }
     }
 
-    private IEnumerator ScreamRoutine()
+    public IEnumerator SpawnRoutine()
     {
         // head moves a little bit down
         yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, -nodOffset), nodSpeed));
-        
+
+        // scream
+        yield return StartCoroutine(ScreamRoutine());
+    }
+
+    public IEnumerator PrepareSweepRoutine(Side dir)
+    {
+        // Leaning motion
+        if (dir == Side.Left)
+        {
+            yield return StartCoroutine(LerpToDestination(transform, new Vector2(-leanOffset, 0), leanSpeed));
+        }
+        else
+        {
+            yield return StartCoroutine(LerpToDestination(transform, new Vector2(leanOffset, 0), leanSpeed));
+        }
+
+        Side attackDir = Manager.Game.Player.transform.position.x <= 0 ? Side.Left : Side.Right;
+        Manager.Events.dirEventDic["sweepReady"].RaiseEvent(attackDir);
+    }
+
+    public IEnumerator ScreamRoutine()
+    {
         // head shakes while boss screams
         headShakeRoutine = StartCoroutine(HeadShakeRoutine());
         yield return(StartCoroutine(ScreamJawOpenRoutine()));
         StopCoroutine(headShakeRoutine);
-
-        screamFinished.RaiseEvent();
     }
-
     Coroutine headShakeRoutine;
     private IEnumerator HeadShakeRoutine()
     {
@@ -70,7 +95,6 @@ public class BossHead : MonoBehaviour
             yield return null;
         }
     }
-
     private IEnumerator ScreamJawOpenRoutine()
     {
         yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, -jawOpenGap), jawOpenSpeed));
@@ -80,22 +104,26 @@ public class BossHead : MonoBehaviour
         yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, jawOpenGap), jawOpenSpeed));
     }
 
-    private IEnumerator IdleRoutine()
+    public IEnumerator MoveToIdleRoutine()
+    {
+        Vector2 offset = idleTargetPos - (Vector2)transform.localPosition;
+        yield return StartCoroutine(LerpToDestination(transform, offset, nodSpeed));
+    }
+
+    public IEnumerator IdleRoutine()
     {
         // Move to Default Position
-        float yOffset = targetIdleY - transform.localPosition.y;
-        yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, yOffset), nodSpeed));
+        yield return StartCoroutine(MoveToIdleRoutine());
+        //float yOffset = idleTargetPos.y - transform.localPosition.y;
+        //yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, yOffset), nodSpeed));
 
         // Up Down Movement
         yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, idleOffset), idleSpeed));
         yield return StartCoroutine(LerpToDestination(transform, new Vector2(0, -idleOffset), idleSpeed));
-
-        Debug.Log("reached");
-        idleFinished.RaiseEvent();
     }
 
     Coroutine jawMovementRoutine;
-    private IEnumerator JawMovementRoutine()
+    public IEnumerator JawMovementRoutine()
     {
         // jaw up and down motion
         while (true)

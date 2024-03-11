@@ -6,11 +6,9 @@ public class BossHand : MonoBehaviour
 {
     public enum Type { Left, Right };
 
-    [Header("Event Channels")]
-    [SerializeField] private VoidEventChannelSO handSpawned;
-    [SerializeField] private VoidEventChannelSO sweepReady;
-
     [Header("Rise Values")]
+    [SerializeField] Vector2 hidePosition;
+    [SerializeField] Vector2 idlePosition;
     [SerializeField] float targetY;
     [SerializeField] float riseSpeed;
 
@@ -26,6 +24,10 @@ public class BossHand : MonoBehaviour
     [SerializeField] float sweepDelay;
     [SerializeField] float sweepDistance;
     [SerializeField] float sweepSpeed;
+
+    [Header("Slam Values")]
+    [SerializeField] Vector2 slamStartPos;
+    [SerializeField] float slamSpeed;
 
     [Header("Misc")]
     [SerializeField] Type type;
@@ -46,48 +48,7 @@ public class BossHand : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-    }
-
-    private void OnDisable()
-    {
-        StopAllCoroutines();
-    }
-
-    public void Spawn()
-    {
-        StopAllCoroutines();
-        riseRoutine = StartCoroutine(RiseRoutine());
-    }
-    
-    public void Slide()
-    {
-        StopAllCoroutines();
-        StartCoroutine(SlideRoutine());
-    }
-
-    public void Idle()
-    {
-        StopAllCoroutines();
-        StartCoroutine(IdleRoutine());
-    }
-
-    public void LeaveScreen()
-    {
-        StopAllCoroutines();
-        leaveScreenRoutine = StartCoroutine(LeaveScreenRoutine());
-    }
-
-    public void Sweep()
-    {
-        if (this == null)
-            return;
-        StopAllCoroutines();
-        StartCoroutine(SweepRoutine());
-    }
-
-    private IEnumerator RiseRoutine()
+    public IEnumerator SpawnRiseRoutine()
     {
         float t = 0;
         Vector2 startPos = transform.position;
@@ -109,11 +70,11 @@ public class BossHand : MonoBehaviour
         
         if(type == Type.Right)
         {
-            handSpawned.RaiseEvent();
+            Manager.Events.voidEventDic["handSpawned"].RaiseEvent();
         }
     }
 
-    private IEnumerator SlideRoutine()
+    public IEnumerator SpawnSlideRoutine()
     {
         float t = 0;
         while (t < 1)
@@ -124,7 +85,7 @@ public class BossHand : MonoBehaviour
         }
     }
 
-    private IEnumerator IdleRoutine()
+    public IEnumerator IdleRoutine()
     {
         animator.Play("Phase1Idle");
 
@@ -136,17 +97,27 @@ public class BossHand : MonoBehaviour
             t += Time.deltaTime * 2;
             yield return null;
         }
-        
-        yield return null;
     }
 
-    private IEnumerator Slam()
+    public IEnumerator BackToIdleRoutine(int i)
     {
-        yield return null;
+        if(i == 0) // sweep version
+        {
+            animator.Play("Phase1Idle");
+            spriter.sortingLayerID = SortingLayer.NameToID("Background");
+            transform.localPosition = hidePosition;
+            yield return StartCoroutine(LerpToDestination(transform, idlePosition, riseSpeed));
+            spriter.sortingLayerID = SortingLayer.NameToID("Default");
+        }
+        else // slam version
+        {
+            animator.Play("Phase1Idle");
+            yield return StartCoroutine(LerpToDestination(transform, idlePosition, riseSpeed));
+        }
     }
 
-    Coroutine leaveScreenRoutine;
-    private IEnumerator LeaveScreenRoutine()
+    // Hand Sweep
+    public IEnumerator LeaveScreenRoutine()
     {
         animator.Play("Phase1Sweep");
         Vector2 targetPos = transform.position + -transform.right * distanceToEdge;
@@ -157,26 +128,51 @@ public class BossHand : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
             yield return null;
         }
-        sweepReady.RaiseEvent();
+        if(type == Type.Right)
+        {
+            Side attackDir = Manager.Game.Player.transform.position.x <= 0 ? Side.Left : Side.Right;
+            Manager.Events.dirEventDic["sweepPrep"].RaiseEvent(attackDir);
+        }
     }
-
-    private IEnumerator SweepRoutine()
+    public IEnumerator SweepRoutine()
     {
+        Vector2 origin = transform.position;
         Vector2 targetPos = transform.position + transform.right * sweepDistance;
         while (Vector2.Distance(transform.position, targetPos) > 0.01)
         {
             float step = sweepSpeed * Time.deltaTime;
-            Debug.Log(step);
             transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
             yield return null;
         }
+        transform.position = origin;
     }
 
-    private IEnumerator Respawn()
+    // Hand Slam
+    public IEnumerator PrepareSlamRoutine()
+    {
+        if(type == Type.Left)
+            animator.Play("Phase1LeftSlam");
+        else
+            animator.Play("Phase1RightSlam");
+
+        yield return StartCoroutine(LerpToDestination(transform, slamStartPos, riseSpeed)); 
+    }
+    public IEnumerator SlamRoutine()
+    {
+        Vector2 targetPos = Manager.Game.Player.transform.position;
+        targetPos.y = -1;
+
+        yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed)); ;
+    }
+
+    // Phase Transition
+    public IEnumerator TransitionFreezeRoutine()
     {
         yield return null;
     }
-    private IEnumerator LerpToDestination(Transform transform, Vector2 offset, float speed)
+
+    // Hand Util
+    private IEnumerator LerpWithOffset(Transform transform, Vector2 offset, float speed)
     {
         float t = 0;
         Vector2 startPos = transform.localPosition;
@@ -185,6 +181,18 @@ public class BossHand : MonoBehaviour
         while (t < 1)
         {
             transform.localPosition = Vector2.Lerp(startPos, endPos, t);
+            t += Time.deltaTime * speed;
+            yield return null;
+        }
+    }
+
+    private IEnumerator LerpToDestination(Transform transform, Vector2 destination, float speed)
+    {
+        float t = 0;
+        Vector2 startPos = transform.localPosition;
+        while (t < 1)
+        {
+            transform.localPosition = Vector2.Lerp(startPos, destination, t);
             t += Time.deltaTime * speed;
             yield return null;
         }

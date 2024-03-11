@@ -7,13 +7,8 @@ public class BossHands : MonoBehaviour
 {
     const float handSpawnDelay = 1.5f;
 
-    public enum State { Spawn, Idle, Attack }
-    private StateMachine<State> stateMachine = new StateMachine<State>();
-
-    private BossHand leftHand;
-    private BossHand rightHand;
-
-    [SerializeField] private VoidEventChannelSO sweepReady;
+    public BossHand leftHand;
+    public BossHand rightHand;
 
     private void Awake()
     {
@@ -21,49 +16,62 @@ public class BossHands : MonoBehaviour
         rightHand = transform.GetChild(1).GetComponent<BossHand>();
     }
 
-    #region Actions
-    // Actions called by BossController
-    public void Spawn()
+    // Hands Spawn
+    public IEnumerator SpawnRoutine()
     {
-        StartCoroutine(SpawnRoutine());
+        StartCoroutine(leftHand.SpawnRiseRoutine());
+        yield return new WaitForSeconds(handSpawnDelay);
+        yield return StartCoroutine(rightHand.SpawnRiseRoutine());
+    }
+    public IEnumerator SlideRoutine()
+    {
+        StartCoroutine(leftHand.SpawnSlideRoutine());
+        yield return StartCoroutine(rightHand.SpawnSlideRoutine());
+    }
+    public IEnumerator IdleRoutine()
+    {
+        StartCoroutine(leftHand.IdleRoutine());
+        yield return StartCoroutine(rightHand.IdleRoutine());
+    }
+    public IEnumerator BackToIdleRoutine(int i)
+    {
+        StartCoroutine(leftHand.BackToIdleRoutine(i));
+        yield return StartCoroutine(rightHand.BackToIdleRoutine(i));
     }
 
-    public void Slide()
+    // Hands Sweep
+    public IEnumerator PrepareSweepRoutine()
     {
-        leftHand.Slide();
-        rightHand.Slide();
+        StartCoroutine(leftHand.LeaveScreenRoutine());
+        yield return StartCoroutine(rightHand.LeaveScreenRoutine());
     }
-
-    public void Idle()
+    public IEnumerator SweepRoutine(Side side)
     {
-        leftHand.Idle();
-        rightHand.Idle();
-    }
-
-    public void SweepAttack()
-    {
-        PrepareSweep();
-        if (Manager.Game.Player.transform.position.x <= 0)
+        if (side == Side.Left)
         {
-            sweepReady.OnEventRaised += leftHand.Sweep;
+            yield return StartCoroutine(leftHand.SweepRoutine());
         }
         else
         {
-            sweepReady.OnEventRaised += rightHand.Sweep;
+            yield return StartCoroutine(rightHand.SweepRoutine());
         }
     }
 
-    public void PrepareSweep()
+    // Hands Slam
+    public IEnumerator PrepareSlamRoutine()
     {
-        leftHand.LeaveScreen();
-        rightHand.LeaveScreen();
+        StartCoroutine(leftHand.PrepareSlamRoutine());
+        yield return StartCoroutine(rightHand.PrepareSlamRoutine());
     }
-    #endregion
-
-    private IEnumerator SpawnRoutine()
+    public IEnumerator SlamRoutine(Side side)
     {
-        leftHand.Spawn();
-        yield return new WaitForSeconds(handSpawnDelay);
-        rightHand.Spawn();
+        if (side == Side.Left)
+        {
+            yield return StartCoroutine(leftHand.SlamRoutine());
+        }
+        else
+        {
+            yield return StartCoroutine(rightHand.SlamRoutine());
+        }
     }
 }
