@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     Rigidbody2D rb2d;
     Animator animator;
     Collider2D[] colliders = new Collider2D[15];
+    Collider2D playerCollider;
+    Collider2D platformCollider;
     public LayerMask mask;
 
 
@@ -95,6 +97,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
+        playerCollider = GetComponent<BoxCollider2D>();
         playerHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect");
         canDash = true;
 
@@ -156,6 +159,23 @@ public class PlayerController : MonoBehaviour, IDamageable
             isGrounded = false;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Platform down jump
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        {
+            platformCollider = collision.collider;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        {
+            platformCollider = null;
+        }
+    }
+
     #endregion
 
     #region Movement
@@ -196,7 +216,14 @@ public class PlayerController : MonoBehaviour, IDamageable
     // BASIC JUMP
     private void Jump()
     {
-        if(coyoteTimeCounter <= 0 && remainingJumps == 0)
+        if (moveDir.y == -1 && platformCollider != null)
+        {
+            Debug.Log("Down Jumped");
+            StartCoroutine(TemporaryIgnoreCollision());
+            return;
+        }
+
+        if (coyoteTimeCounter <= 0 && remainingJumps == 0)
             return;
         if (remainingJumps == 1) // double jump smoke effect
             smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Jump);
@@ -214,6 +241,17 @@ public class PlayerController : MonoBehaviour, IDamageable
             rb2d.velocity += jumpVec;
         }
     }
+
+    // Platform down jump
+    IEnumerator TemporaryIgnoreCollision()
+    {
+        Debug.Log("ignore ");
+        Collider2D coll = platformCollider;
+        Physics2D.IgnoreCollision(playerCollider, coll, true);
+        yield return new WaitForSeconds(0.5f);
+        Physics2D.IgnoreCollision(playerCollider, coll, false);
+    }
+
     #endregion
 
     #region Dash

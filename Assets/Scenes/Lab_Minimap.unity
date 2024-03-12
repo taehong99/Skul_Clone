@@ -339,7 +339,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &134587085
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 154893458}
   - component: {fileID: 154893460}
   - component: {fileID: 154893459}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -883,6 +883,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7014619277944938422, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7593336224680849501, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -890,6 +894,10 @@ PrefabInstance:
     - target: {fileID: 7593336224680849501, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8945408696760018256, guid: 6e26f7d509e7f473fa45f7aab5dada69, type: 3}
+      propertyPath: damage
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2530,7 +2538,7 @@ GameObject:
   - component: {fileID: 1695690736}
   - component: {fileID: 1695690738}
   - component: {fileID: 1695690737}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3299,6 +3307,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1554752411984520618, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2344045563437987184, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
       propertyPath: m_Name
       value: Soldier
@@ -3311,6 +3323,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4470480924477861024, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5771168630997832490, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3318,6 +3334,10 @@ PrefabInstance:
     - target: {fileID: 5771168630997832490, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5973992107693064976, guid: 8150c6c923872409f90c4aff77e66060, type: 3}
+      propertyPath: m_BodyType
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3332,6 +3352,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 2112
+      objectReference: {fileID: 0}
     - target: {fileID: 4757642384457342923, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: m_Name
       value: Player

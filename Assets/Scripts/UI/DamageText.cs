@@ -31,7 +31,7 @@ public class DamageText : MonoBehaviour
     {
         tmpText.color = color;
     }
-
+    
     IEnumerator Bounce()
     {
         float timer = 0f;
