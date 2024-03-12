@@ -5,13 +5,6 @@ using UnityEngine;
 public class Soldier : Enemy
 {
     Coroutine attackRoutine;
-    Collider2D hitbox;
-
-    protected override void Start()
-    {
-        base.Start();
-        hitbox = GetComponentsInChildren<BoxCollider2D>()[1];
-    }
 
     protected override void Attack()
     {
@@ -39,6 +32,8 @@ public class Soldier : Enemy
     public void AttackFrame()
     {
         Collider2D collider = Physics2D.OverlapCircle(transform.position, attackRange, playerMask);
+        if(collider == null)
+            return;
         IDamageable[] damageables = collider.GetComponents<IDamageable>();
         foreach (IDamageable damageable in damageables)
         {

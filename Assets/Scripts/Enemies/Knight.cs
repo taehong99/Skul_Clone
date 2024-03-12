@@ -60,4 +60,30 @@ public class Knight : Enemy
         rb2d.velocity = Vector2.zero;
         isAttacking = false;
     }
+
+    public void AttackFrame()
+    {
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, attackRange, playerMask);
+        if (collider == null)
+            return;
+        IDamageable[] damageables = collider.GetComponents<IDamageable>();
+        foreach (IDamageable damageable in damageables)
+        {
+            // attack right
+            if (transform.localScale.x == 1)
+            {
+                if (collider.gameObject.transform.position.x >= transform.position.x)
+                {
+                    damageable.TakeDamage(damage);
+                }
+            }
+            else//attack left
+            {
+                if (collider.gameObject.transform.position.x <= transform.position.x)
+                {
+                    damageable.TakeDamage(damage);
+                }
+            }
+        }
+    }
 }
