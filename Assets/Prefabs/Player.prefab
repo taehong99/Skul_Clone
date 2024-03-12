@@ -258,6 +258,9 @@ MonoBehaviour:
   headlessController: {fileID: 22100000, guid: 1d65d8be089694b5c9f759f4fcd67095, type: 2}
   swapDuration: 2
   swapSpeed: 2
+  mask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!212 &312421311748159014
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -2244,6 +2244,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 206773446415568745, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4652694649725975740, guid: 218ab0f1086554c9482edb2549234d64, type: 3}
       propertyPath: attackDamage
       value: 100
@@ -2334,6 +2338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1824511404}
+  - component: {fileID: 1824511405}
   m_Layer: 0
   m_Name: Platforms
   m_TagString: Untagged
@@ -2358,6 +2363,18 @@ Transform:
   - {fileID: 1978971517}
   m_Father: {fileID: 1756180054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1824511405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824511403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b65987f6e154032b2d4ad140a354e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1886063499
 GameObject:
   m_ObjectHideFlags: 0
@@ -3168,9 +3185,25 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 743911983
       objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 887
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: type
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: damage
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: slamSpeed
@@ -3226,6 +3259,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: slamStartPos.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: slamColliderRadius
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7225581142590691482, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
@@ -3290,8 +3327,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 734200211}
     m_Modifications:
     - target: {fileID: 2930023474932599347, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0bc2f9d9ba8855d4c90833f2a2671ad8, type: 3}
+    - target: {fileID: 2930023474932599347, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: m_SortingOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 887
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728492101264476671, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: damage
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: slamSpeed
@@ -3347,6 +3404,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
       propertyPath: slamStartPos.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4730621711533768199, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}
+      propertyPath: slamColliderRadius
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7225581142590691482, guid: 9f2c05852939c6b4d9b7cfad3fc2cfc2, type: 3}

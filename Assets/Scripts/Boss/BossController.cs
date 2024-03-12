@@ -108,7 +108,8 @@ public class BossController : MonoBehaviour, IDamageable
             {
                 yield return boss.StartCoroutine(boss.body.IdleRoutine());
                 yield return new WaitForSeconds(1f);
-                yield return boss.StartCoroutine(StartAttack(Random.Range(0, 2))); // TODO: Set to random.range
+                //yield return boss.StartCoroutine(StartAttack(Random.Range(0, 2))); // TODO: Set to random.range
+                yield return boss.StartCoroutine(StartAttack(1));
             }
         }
 

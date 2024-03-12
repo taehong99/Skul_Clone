@@ -28,12 +28,15 @@ public class BossHand : MonoBehaviour
     [Header("Slam Values")]
     [SerializeField] Vector2 slamStartPos;
     [SerializeField] float slamSpeed;
+    [SerializeField] float slamColliderRadius;
 
     [Header("Misc")]
     [SerializeField] Type type;
+    [SerializeField] int damage;
     Animator animator;
     public Animator Animator => animator;
     SpriteRenderer spriter;
+    BoxCollider2D hitbox;
 
     Coroutine shakeRoutine;
     Coroutine riseRoutine;
@@ -42,9 +45,20 @@ public class BossHand : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
+        hitbox = GetComponent<BoxCollider2D>();
+        hitbox.enabled = false;
         if(type == Type.Right)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        IDamageable[] damageables = collision.transform.GetComponents<IDamageable>();
+        foreach(IDamageable damageable in damageables)
+        {
+            damageable.TakeDamage(damage);
         }
     }
 
@@ -136,6 +150,7 @@ public class BossHand : MonoBehaviour
     }
     public IEnumerator SweepRoutine()
     {
+        hitbox.enabled = true;
         Vector2 origin = transform.position;
         Vector2 targetPos = transform.position + transform.right * sweepDistance;
         while (Vector2.Distance(transform.position, targetPos) > 0.01)
@@ -145,6 +160,7 @@ public class BossHand : MonoBehaviour
             yield return null;
         }
         transform.position = origin;
+        hitbox.enabled = false;
     }
 
     // Hand Slam
@@ -162,7 +178,20 @@ public class BossHand : MonoBehaviour
         Vector2 targetPos = Manager.Game.Player.transform.position;
         targetPos.y = -1;
 
-        yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed)); ;
+        yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed));
+
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.mask);
+        IDamageable[] damageables = collider.transform.GetComponents<IDamageable>();
+        foreach(IDamageable damageable in damageables)
+        {
+            damageable.TakeDamage(damage);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, slamColliderRadius);
     }
 
     // Phase Transition

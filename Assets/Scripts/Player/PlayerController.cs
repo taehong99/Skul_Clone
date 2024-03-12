@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     Rigidbody2D rb2d;
     Animator animator;
     Collider2D[] colliders = new Collider2D[15];
-
+    public LayerMask mask;
 
 
     private void Awake()
@@ -251,7 +251,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void Attack()
     {
         int count = Physics2D.OverlapCircleNonAlloc(transform.position, attackRange, colliders, hittableMask);
-        Debug.Log(count);
         for(int i = 0; i < count; i++)
         {
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();

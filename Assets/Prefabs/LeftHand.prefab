@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4730621711533768199}
   - component: {fileID: 2176257400327333684}
   - component: {fileID: 3679547427197258777}
+  - component: {fileID: 4728492101264476671}
   m_Layer: 0
   m_Name: LeftHand
   m_TagString: Untagged
@@ -99,8 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b927d8977edca4abe8820bfc2c4fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handSpawned: {fileID: 0}
-  sweepReady: {fileID: 0}
+  hidePosition: {x: 0, y: 0}
+  idlePosition: {x: 0, y: 0}
   targetY: -2
   riseSpeed: 1
   shakeAmount: 1
@@ -112,6 +113,8 @@ MonoBehaviour:
   sweepDelay: 0
   sweepDistance: 0
   sweepSpeed: 0
+  slamStartPos: {x: 0, y: 0}
+  slamSpeed: 0
   type: 0
 --- !u!50 &2176257400327333684
 Rigidbody2D:
@@ -161,3 +164,48 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!61 &4728492101264476671
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8753948673201985868}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.2690977, y: -0.00000023841858}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 8, y: 8}
+    newSize: {x: 8, y: 8}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4.5017376, y: 4.7708344}
+  m_EdgeRadius: 0

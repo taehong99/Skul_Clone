@@ -31,10 +31,17 @@ public class BossBody : MonoBehaviour
 
     [Header("Misc")]
     Animator animator;
+    BossPlatforms platforms;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        platforms = GetComponentInChildren<BossPlatforms>();
+    }
+
+    private void Start()
+    {
+        platforms.SetPlatforms(false);
     }
 
     // Body Spawn
@@ -52,6 +59,9 @@ public class BossBody : MonoBehaviour
 
     public IEnumerator IdleRoutine()
     {
+        // Activate platforms
+        platforms.SetPlatforms(true);
+
         // Go to Default Position
         yield return StartCoroutine(LerpToDestination(transform, idleTargetPos, riseSpeed));
 
@@ -63,8 +73,11 @@ public class BossBody : MonoBehaviour
     // Body Sweep
     public IEnumerator PrepareSweepRoutine(Side dir)
     {
+        // Deactivate platforms
+        platforms.SetPlatforms(false);
+
         // Leaning motion
-        if(dir == Side.Left)
+        if (dir == Side.Left)
         {
             yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x - leanOffset, transform.position.y), leanSpeed));
         }
@@ -96,11 +109,17 @@ public class BossBody : MonoBehaviour
         Vector2 targetPos = idleTargetPos;
         Quaternion targetRot = Quaternion.identity;
         yield return StartCoroutine(TiltToDestination(transform, targetPos, targetRot, leanSpeed));
+
+        // Activate platforms
+        platforms.SetPlatforms(true);
     }
 
     // Body Slam
     public IEnumerator SlamRiseRoutine()
     {
+        // Deactivate platforms
+        platforms.SetPlatforms(false);
+
         bodyShakeRoutine = StartCoroutine(BodyShakeRoutine());
         yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, slamRiseTargetY), slamRiseSpeed));
         StopCoroutine(bodyShakeRoutine);
