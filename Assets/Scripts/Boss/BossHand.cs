@@ -11,6 +11,7 @@ public class BossHand : MonoBehaviour
     [SerializeField] Vector2 idlePosition;
     [SerializeField] float targetY;
     [SerializeField] float riseSpeed;
+    [SerializeField] float grabShakeDuration;
 
     [Header("Shake Values")]
     [SerializeField] float shakeAmount;
@@ -29,10 +30,13 @@ public class BossHand : MonoBehaviour
     [SerializeField] Vector2 slamStartPos;
     [SerializeField] float slamSpeed;
     [SerializeField] float slamColliderRadius;
+    [SerializeField] float slamShakeDuration;
 
     [Header("Misc")]
     [SerializeField] Type type;
     [SerializeField] int damage;
+    [SerializeField] Vector3 originalRotation;
+    [SerializeField] RuntimeAnimatorController phase2Controller;
     Animator animator;
     public Animator Animator => animator;
     SpriteRenderer spriter;
@@ -47,10 +51,12 @@ public class BossHand : MonoBehaviour
         spriter = GetComponent<SpriteRenderer>();
         hitbox = GetComponent<BoxCollider2D>();
         hitbox.enabled = false;
-        if(type == Type.Right)
-        {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
+        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += Transform;
+    }
+
+    public void Transform()
+    {
+        animator.runtimeAnimatorController = phase2Controller;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -81,11 +87,7 @@ public class BossHand : MonoBehaviour
         }
         animator.Play("Rest");
         spriter.sortingLayerID = SortingLayer.NameToID("Default");
-        
-        if(type == Type.Right)
-        {
-            Manager.Events.voidEventDic["handSpawned"].RaiseEvent();
-        }
+        Manager.Game.Shaker.Shake(grabShakeDuration);
     }
 
     public IEnumerator SpawnSlideRoutine()
@@ -145,12 +147,12 @@ public class BossHand : MonoBehaviour
         if(type == Type.Right)
         {
             Side attackDir = Manager.Game.Player.transform.position.x <= 0 ? Side.Left : Side.Right;
-            Manager.Events.dirEventDic["sweepPrep"].RaiseEvent(attackDir);
         }
     }
     public IEnumerator SweepRoutine()
     {
         hitbox.enabled = true;
+
         Vector2 origin = transform.position;
         Vector2 targetPos = transform.position + transform.right * sweepDistance;
         while (Vector2.Distance(transform.position, targetPos) > 0.01)
@@ -171,14 +173,22 @@ public class BossHand : MonoBehaviour
         else
             animator.Play("Phase1RightSlam");
 
+        transform.rotation = Quaternion.Euler(originalRotation);
         yield return StartCoroutine(LerpToDestination(transform, slamStartPos, riseSpeed)); 
     }
-    public IEnumerator SlamRoutine()
+    public IEnumerator SlamRoutine(Vector2 targetPos)
     {
-        Vector2 targetPos = Manager.Game.Player.transform.position;
-        targetPos.y = -1;
+        // Transition slam
+        if (targetPos == Vector2.zero)
+        {
+            Vector2 destination = transform.position;
+            destination.y = -1;
+            yield return StartCoroutine(LerpToDestination(transform, destination, slamSpeed));
+            yield break;
+        }
 
         yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed));
+        Manager.Game.Shaker.Shake(slamShakeDuration);
 
         Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.mask);
         IDamageable[] damageables = collider.transform.GetComponents<IDamageable>();
@@ -194,9 +204,12 @@ public class BossHand : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, slamColliderRadius);
     }
 
-    // Phase Transition
+    // Hand Phase Transition
     public IEnumerator TransitionFreezeRoutine()
     {
+        animator.Play("Phase1Sweep");
+        transform.localPosition = idlePosition;
+        transform.localRotation = Quaternion.Euler(0, transform.localRotation.y * 180, -45);
         yield return null;
     }
 

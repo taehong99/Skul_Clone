@@ -30,18 +30,28 @@ public class BossBody : MonoBehaviour
     [SerializeField] float shakeMagnitude;
 
     [Header("Misc")]
+    [SerializeField] Sprite phase2Sprite;
     Animator animator;
+    SpriteRenderer spriter;
     BossPlatforms platforms;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        platforms = GetComponentInChildren<BossPlatforms>();
+        spriter = GetComponent<SpriteRenderer>();
+        
     }
 
     private void Start()
     {
+        platforms = GetComponentInChildren<BossPlatforms>();
         platforms.SetPlatforms(false);
+        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += Transform;
+    }
+
+    public void Transform()
+    {
+        spriter.sprite = phase2Sprite;
     }
 
     // Body Spawn
@@ -141,6 +151,13 @@ public class BossBody : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
+    }
+
+    // Body Phase Transition
+    public IEnumerator TransitionFreezeRoutine()
+    {
+        transform.position = idleTargetPos;
+        yield return null;
     }
 
     // Body Util

@@ -65,13 +65,30 @@ public class BossHands : MonoBehaviour
     }
     public IEnumerator SlamRoutine(Side side)
     {
+        Vector2 targetPos = Manager.Game.Player.transform.position;
+        targetPos.y = -1;
+
         if (side == Side.Left)
         {
-            yield return StartCoroutine(leftHand.SlamRoutine());
+            yield return StartCoroutine(leftHand.SlamRoutine(targetPos));
         }
         else
         {
-            yield return StartCoroutine(rightHand.SlamRoutine());
+            yield return StartCoroutine(rightHand.SlamRoutine(targetPos));
         }
+    }
+
+    // Hands Phase Transition
+    public IEnumerator TransitionFreezeRoutine()
+    {
+        StartCoroutine(leftHand.TransitionFreezeRoutine());
+        StartCoroutine(rightHand.TransitionFreezeRoutine());
+        yield return null;
+    }
+
+    public IEnumerator TransitionSlamRoutine()
+    {
+        StartCoroutine(leftHand.SlamRoutine(Vector2.zero));
+        yield return StartCoroutine(rightHand.SlamRoutine(Vector2.zero));
     }
 }

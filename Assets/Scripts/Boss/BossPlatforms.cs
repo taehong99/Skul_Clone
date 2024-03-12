@@ -6,7 +6,7 @@ public class BossPlatforms : MonoBehaviour
 {
     BoxCollider2D[] platforms;
 
-    private void Start()
+    private void Awake()
     {
         platforms = GetComponentsInChildren<BoxCollider2D>();
     }

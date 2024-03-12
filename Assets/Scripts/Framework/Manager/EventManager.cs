@@ -9,12 +9,8 @@ public class EventManager : Singleton<EventManager>
 
     private void Start()
     {
-        voidEventDic.Add("handSpawned", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/HandSpawnedEvent"));
-        voidEventDic.Add("bodySpawned", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/BodySpawnedEvent"));
-        voidEventDic.Add("screamFinished", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/ScreamFinishedEvent"));
-        voidEventDic.Add("idleFinished", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/IdleFinishedEvent"));
-        dirEventDic.Add("sweepPrep", Manager.Resource.Load<DirectionEventChannelSO>("Data/EventChannels/SweepPrepEvent"));
-        dirEventDic.Add("sweepReady", Manager.Resource.Load<DirectionEventChannelSO>("Data/EventChannels/SweepReadyEvent"));
+        voidEventDic.Add("phase2Started", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/Phase2StartedEvent"));
+        voidEventDic.Add("whiteFlash", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/WhiteFlashEvent"));
     }
 
     private void OnDestroy()

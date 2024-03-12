@@ -16,6 +16,7 @@ public class BossHead : MonoBehaviour
 
     [Header("Idle Values")]
     [SerializeField] Vector2 idleTargetPos;
+    [SerializeField] Vector2 idleJawPos;
     [SerializeField] float idleSpeed;
     [SerializeField] float idleOffset;
     [SerializeField] float jawMovementOffset;
@@ -24,6 +25,9 @@ public class BossHead : MonoBehaviour
     [Header("Sweep Attack Values")]
     [SerializeField] float leanOffset;
     [SerializeField] float leanSpeed;
+
+    [Header("Freeze Values")]
+    [SerializeField] Vector2 faceFreezeLocalPos;
 
     [Header("Misc")]
     private BossFace face;
@@ -71,15 +75,18 @@ public class BossHead : MonoBehaviour
         }
 
         Side attackDir = Manager.Game.Player.transform.position.x <= 0 ? Side.Left : Side.Right;
-        Manager.Events.dirEventDic["sweepReady"].RaiseEvent(attackDir);
     }
 
     public IEnumerator ScreamRoutine()
     {
+        Manager.Game.Shaker.ToggleShake();
+
         // head shakes while boss screams
         headShakeRoutine = StartCoroutine(HeadShakeRoutine());
         yield return(StartCoroutine(ScreamJawOpenRoutine()));
         StopCoroutine(headShakeRoutine);
+
+        Manager.Game.Shaker.ToggleShake();
     }
     Coroutine headShakeRoutine;
     private IEnumerator HeadShakeRoutine()
@@ -107,6 +114,10 @@ public class BossHead : MonoBehaviour
     public IEnumerator MoveToIdleRoutine()
     {
         Vector2 offset = idleTargetPos - (Vector2)transform.localPosition;
+        Vector2 faceOffset = Vector2.zero - (Vector2)face.transform.localPosition;
+        Vector2 jawOffset = idleJawPos - (Vector2)jaw.transform.localPosition;
+        StartCoroutine(LerpToDestination(face.transform, faceOffset, nodSpeed));
+        StartCoroutine(LerpToDestination(jaw.transform, jawOffset, nodSpeed));
         yield return StartCoroutine(LerpToDestination(transform, offset, nodSpeed));
     }
 
@@ -131,6 +142,13 @@ public class BossHead : MonoBehaviour
             yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, -jawMovementOffset), jawMovementSpeed));
             yield return StartCoroutine(LerpToDestination(jaw.transform, new Vector2(0, jawMovementOffset), jawMovementSpeed));
         }
+    }
+
+    // Head Phase Transition
+    public IEnumerator TransitionFreezeRoutine()
+    {
+        face.transform.localPosition = faceFreezeLocalPos;
+        yield return null;
     }
 
     private IEnumerator LerpToDestination(Transform transform, Vector2 offset, float speed)

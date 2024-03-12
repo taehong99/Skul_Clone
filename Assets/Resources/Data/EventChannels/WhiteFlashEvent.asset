@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c29af865a454fe4db34db80aafdb81b, type: 3}
-  m_Name: BodySpawnedEvent
+  m_Name: WhiteFlashEvent
   m_EditorClassIdentifier: 
