@@ -21,6 +21,10 @@ public class DamageTextSpawner : MonoBehaviour, IDamageable
     public void Spawn(int damage)
     {
         DamageText text = Instantiate(damageText, transform.position, transform.rotation);
+        if (gameObject.CompareTag("Player"))
+        {
+            text.SetColor(Color.red);
+        }
         text.SetText(damage);
     }
 }

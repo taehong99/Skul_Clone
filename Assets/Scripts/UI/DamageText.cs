@@ -27,6 +27,11 @@ public class DamageText : MonoBehaviour
         tmpText.text = input.ToString();
     }
 
+    public void SetColor(Color color)
+    {
+        tmpText.color = color;
+    }
+
     IEnumerator Bounce()
     {
         float timer = 0f;
