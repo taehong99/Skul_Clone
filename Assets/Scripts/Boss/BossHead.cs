@@ -35,7 +35,10 @@ public class BossHead : BossBodyPart
     [SerializeField] float duckSpeed;
     [SerializeField] Vector2 riseTargetPos;
     [SerializeField] float riseSpeed;
-    
+
+    [Header("Death Values")]
+    [SerializeField] Vector2 deathTargetPos;
+    [SerializeField] float deathSpeed;
 
     [Header("Misc")]
     private BossFace face;
@@ -49,6 +52,12 @@ public class BossHead : BossBodyPart
         jaw = GetComponentInChildren<BossJaw>();
         gem = GetComponentInChildren<BossGem>();
         hurtbox = GetComponent<BoxCollider2D>();
+    }
+
+    public void StopCoroutines()
+    {
+        StopAllCoroutines();
+        gem.StopAllCoroutines();
     }
 
     public void SetHurtBox(bool b)
@@ -172,11 +181,18 @@ public class BossHead : BossBodyPart
     }
     #endregion
 
-    #region Transition
-    public IEnumerator TransitionFreezeRoutine()
+    #region Transitions
+    // Head Phase Transition
+    public void TransitionFreezeRoutine()
     {
         face.transform.localPosition = faceFreezeLocalPos;
-        yield return null;
+    }
+
+    // Head Dead Transition
+    public void DeathTransition()
+    {
+        StartCoroutine(JawClose());
+        StartCoroutine(LerpToDestination(transform, deathTargetPos, deathSpeed));
     }
     #endregion
 

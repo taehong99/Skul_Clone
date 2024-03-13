@@ -32,10 +32,14 @@ public class BossHand : BossBodyPart
     [SerializeField] float slamColliderRadius;
     [SerializeField] float slamShakeDuration;
 
+    [Header("Dead Values")]
+    [SerializeField] Vector2 deadPosition;
+
     [Header("Misc")]
     [SerializeField] Type type;
     [SerializeField] int damage;
     [SerializeField] Vector3 originalRotation;
+    RuntimeAnimatorController originalController;
     [SerializeField] RuntimeAnimatorController phase2Controller;
     Animator animator;
     public Animator Animator => animator;
@@ -50,13 +54,21 @@ public class BossHand : BossBodyPart
         animator = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         hitbox = GetComponent<BoxCollider2D>();
+        originalController = animator.runtimeAnimatorController;
         hitbox.enabled = false;
-        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += Transform;
+        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += TransformP2;
+        Manager.Events.voidEventDic["bossDefeated"].OnEventRaised += TransformDead;
     }
 
-    public void Transform()
+    public void TransformP2()
     {
         animator.runtimeAnimatorController = phase2Controller;
+    }
+
+    public void TransformDead()
+    {
+        animator.runtimeAnimatorController = originalController;
+        animator.Play("Rest");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -199,12 +211,11 @@ public class BossHand : BossBodyPart
     }
 
     // Hand Phase Transition
-    public IEnumerator TransitionFreezeRoutine()
+    public void TransitionFreezeRoutine()
     {
         animator.Play("Phase1Sweep");
         transform.localPosition = idlePosition;
         transform.localRotation = Quaternion.Euler(0, transform.localRotation.y * 180, -45);
-        yield return null;
     }
 
     // Phase 2 Special Attack
@@ -213,5 +224,13 @@ public class BossHand : BossBodyPart
         yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, targetY), riseSpeed));
         animator.Play("Rest");
         yield return null;
+    }
+
+    // Hand Phase Transition
+    public void TransitionDeadRoutine()
+    {
+        animator.Play("Rest");
+        transform.localPosition = deadPosition;
+        transform.localRotation = Quaternion.Euler(0, transform.localRotation.y * 180, 0);
     }
 }

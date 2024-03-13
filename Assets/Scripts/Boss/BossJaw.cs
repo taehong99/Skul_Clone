@@ -5,16 +5,23 @@ using UnityEngine;
 public class BossJaw : MonoBehaviour
 {
     [SerializeField] Sprite phase2Sprite;
+    [SerializeField] Sprite deadSprite;
     SpriteRenderer spriter;
 
     private void Start()
     {
         spriter = GetComponent<SpriteRenderer>();
-        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += Transform;
+        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += TransformP2;
+        Manager.Events.voidEventDic["bossDefeated"].OnEventRaised += TransformDead;
     }
 
-    public void Transform()
+    private void TransformP2()
     {
         spriter.sprite = phase2Sprite;
+    }
+
+    private void TransformDead()
+    {
+        spriter.sprite = deadSprite;
     }
 }

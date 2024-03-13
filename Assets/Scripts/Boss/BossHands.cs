@@ -85,11 +85,10 @@ public class BossHands : MonoBehaviour
     }
 
     // Hands Phase Transition
-    public IEnumerator TransitionFreezeRoutine()
+    public void TransitionFreezeRoutine()
     {
-        StartCoroutine(leftHand.TransitionFreezeRoutine());
-        StartCoroutine(rightHand.TransitionFreezeRoutine());
-        yield return null;
+        leftHand.TransitionFreezeRoutine();
+        rightHand.TransitionFreezeRoutine();
     }
 
     public IEnumerator TransitionSlamRoutine()
@@ -103,5 +102,12 @@ public class BossHands : MonoBehaviour
     {
         StartCoroutine(leftHand.GrabFloor());
         yield return StartCoroutine(rightHand.GrabFloor());
+    }
+
+    // Hands Death Transition
+    public void TransitionDeadRoutine()
+    {
+        leftHand.TransitionDeadRoutine();
+        rightHand.TransitionDeadRoutine();
     }
 }

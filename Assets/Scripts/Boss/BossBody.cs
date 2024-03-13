@@ -29,8 +29,12 @@ public class BossBody : BossBodyPart
     [SerializeField] float shakeSpeed;
     [SerializeField] float shakeMagnitude;
 
+    [Header("Dead Values")]
+    [SerializeField] float faintSpeed;
+
     [Header("Misc")]
     [SerializeField] Sprite phase2Sprite;
+    [SerializeField] Sprite deadSprite;
     Animator animator;
     SpriteRenderer spriter;
     BossPlatforms platforms;
@@ -46,12 +50,18 @@ public class BossBody : BossBodyPart
     {
         platforms = GetComponentInChildren<BossPlatforms>();
         platforms.SetPlatforms(false);
-        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += Transform;
+        Manager.Events.voidEventDic["phase2Started"].OnEventRaised += TransformP2;
+        Manager.Events.voidEventDic["bossDefeated"].OnEventRaised += TransformDead;
     }
 
-    public void Transform()
+    public void TransformP2()
     {
         spriter.sprite = phase2Sprite;
+    }
+
+    public void TransformDead()
+    {
+        spriter.sprite = deadSprite;
     }
 
     // Body Spawn
@@ -154,9 +164,16 @@ public class BossBody : BossBodyPart
     }
 
     // Body Phase Transition
-    public IEnumerator TransitionFreezeRoutine()
+    public void TransitionFreezeRoutine()
     {
         transform.position = idleTargetPos;
-        yield return null;
+    }
+
+    // Body Dead Transition
+    public IEnumerator FallDown()
+    {
+        Vector2 targetPos = new Vector2(-1, -1);
+        Quaternion targetRot = Quaternion.Euler(0, 0, 35);
+        yield return StartCoroutine(TiltToDestination(transform, targetPos, targetRot, faintSpeed));
     }
 }

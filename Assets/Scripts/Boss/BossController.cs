@@ -31,6 +31,7 @@ public class BossController : MonoBehaviour, IDamageable
     BossHead head;
     BossHands hands;
     BossProjectileSpawner projectileSpawner;
+    BossShinies shinies;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class BossController : MonoBehaviour, IDamageable
         head = GetComponentInChildren<BossHead>();
         hands = GetComponentInChildren<BossHands>();
         projectileSpawner = GetComponent<BossProjectileSpawner>();
+        shinies = GetComponentInChildren<BossShinies>();
     }
 
     private void Start()
@@ -65,6 +67,7 @@ public class BossController : MonoBehaviour, IDamageable
             }
             else
             {
+                Manager.Events.voidEventDic["whiteFlash"].RaiseEvent();
                 stateMachine.ChangeState(State.Dead);
                 OnSecondDeath?.Invoke();
             }
@@ -199,11 +202,11 @@ public class BossController : MonoBehaviour, IDamageable
         private IEnumerator TransitionRoutine()
         {
             // Freeze for a bit
-            boss.StartCoroutine(boss.body.TransitionFreezeRoutine());
-            boss.StartCoroutine(boss.hands.TransitionFreezeRoutine());
-            boss.StartCoroutine(boss.head.TransitionFreezeRoutine());
+            boss.head.TransitionFreezeRoutine();
+            boss.hands.TransitionFreezeRoutine();
+            boss.body.TransitionFreezeRoutine();
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
 
             // Smash ground and become purple
             boss.StartCoroutine(boss.body.SlamRiseRoutine());
@@ -244,7 +247,8 @@ public class BossController : MonoBehaviour, IDamageable
         public override void Exit()
         {
             boss.StopAllCoroutines();
-            boss.hands.StopAllCoroutines();
+            boss.hands.StopCoroutines();
+            boss.head.StopCoroutines();
         }
 
         Coroutine phase2Routine;
@@ -338,6 +342,32 @@ public class BossController : MonoBehaviour, IDamageable
         public override void Enter()
         {
             boss.head.SetHurtBox(false);
+            boss.StartCoroutine(DeadRoutine());
+        }
+
+        private IEnumerator DeadRoutine()
+        {
+            // Freeze for a bit
+            boss.body.TransitionFreezeRoutine();
+            boss.hands.TransitionDeadRoutine();
+            boss.head.TransitionFreezeRoutine();
+
+            yield return new WaitForSeconds(1f);
+
+            // Slowly show shinies
+            boss.StartCoroutine(boss.shinies.TurnOn());
+            yield return new WaitForSeconds(3f);
+
+            // Flash Screen
+            boss.shinies.TurnOff();
+            Manager.Events.voidEventDic["whiteFlash"].RaiseEvent();
+            Manager.Events.voidEventDic["bossDefeated"].RaiseEvent();
+
+            yield return new WaitForSeconds(1f);
+
+            // Fall down
+            boss.StartCoroutine(boss.body.FallDown());
+            boss.head.DeathTransition();
         }
     }
 }
