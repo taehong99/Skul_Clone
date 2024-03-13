@@ -77,9 +77,16 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] float swapDuration;
     [SerializeField] float swapSpeed;
 
+    [Header("Player Interact")]
+    [SerializeField] float interactRange;
+    [SerializeField] LayerMask interactableMask;
+
     [Header("Effects")]
     SmokeSpawner smokeSpawner;
     PooledObject playerHitEffectPrefab;
+
+    [Header("Player Mask")]
+    public LayerMask mask;
 
     [Header("Misc")]
     Rigidbody2D rb2d;
@@ -87,7 +94,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     Collider2D[] colliders = new Collider2D[15];
     Collider2D playerCollider;
     Collider2D platformCollider;
-    public LayerMask mask;
 
 
     private void Awake()
@@ -383,6 +389,23 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     #endregion
 
+    #region Interact
+    private void Interact()
+    {
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, interactRange, interactableMask);
+        if (collider == null || collider.GetComponent<IInteractable>() == null)
+            return;
+
+        collider.GetComponent<IInteractable>().Interact();
+    }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactRange);
+    }
+    #endregion
+
     #region Inputs
     private void OnMove(InputValue value)
     {
@@ -416,10 +439,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         ThrowSkull();
     }
-
     private void OnSkill2()
     {
         TeleportToSkull();
+    }
+    private void OnInteract()
+    {
+        Interact();
     }
 
     #endregion
