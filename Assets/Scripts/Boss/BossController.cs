@@ -17,6 +17,7 @@ public class BossController : MonoBehaviour, IDamageable
     [SerializeField] float phase1SlamCD;
     [SerializeField] float phase2SweepCD;
     [SerializeField] float phase2SlamCD;
+    [SerializeField] float specialAttackDuration;
 
     private int hp;
     public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
@@ -29,6 +30,7 @@ public class BossController : MonoBehaviour, IDamageable
     BossBody body;
     BossHead head;
     BossHands hands;
+    BossProjectileSpawner projectileSpawner;
 
     private void Awake()
     {
@@ -36,6 +38,7 @@ public class BossController : MonoBehaviour, IDamageable
         body = GetComponentInChildren<BossBody>();
         head = GetComponentInChildren<BossHead>();
         hands = GetComponentInChildren<BossHands>();
+        projectileSpawner = GetComponent<BossProjectileSpawner>();
     }
 
     private void Start()
@@ -118,17 +121,23 @@ public class BossController : MonoBehaviour, IDamageable
             phase1Routine = boss.StartCoroutine(Phase1Routine());
         }
 
+        public override void Exit()
+        {
+            boss.StopAllCoroutines();
+            boss.hands.StopAllCoroutines();
+        }
+
         Coroutine phase1Routine;
         private IEnumerator Phase1Routine()
         {
-            boss.StartCoroutine(boss.head.IdleRoutine());
-            boss.StartCoroutine(boss.hands.IdleRoutine());
-            for (int i = 0; i < 3; i++) // TODO: set to while(true) until phase1 hp == 0
+            while(true)
             {
+                boss.StartCoroutine(boss.head.IdleRoutine());
+                boss.StartCoroutine(boss.hands.IdleRoutine());
                 yield return boss.StartCoroutine(boss.body.IdleRoutine());
                 yield return new WaitForSeconds(1f);
-                //yield return boss.StartCoroutine(StartAttack(Random.Range(0, 2))); // TODO: Set to random.range
-                yield return boss.StartCoroutine(StartAttack(0));
+                yield return boss.StartCoroutine(StartAttack(Random.Range(0, 2))); // TODO: Set to random.range
+                //yield return boss.StartCoroutine(StartAttack(0));
             }
         }
 
@@ -171,11 +180,6 @@ public class BossController : MonoBehaviour, IDamageable
                 yield return new WaitForSeconds(0.5f);
                 yield return boss.StartCoroutine(boss.hands.BackToIdleRoutine(1));
             }
-        }
-
-        public override void Exit()
-        {
-            boss.StopAllCoroutines();
         }
     }
 
@@ -233,24 +237,35 @@ public class BossController : MonoBehaviour, IDamageable
         {
             boss.head.SetHurtBox(true);
             boss.HP = boss.startingHP;
-            boss.StartCoroutine(Phase2Routine());
+            
+            phase2Routine = boss.StartCoroutine(Phase2Routine());
         }
+
+        public override void Exit()
+        {
+            boss.StopAllCoroutines();
+            boss.hands.StopAllCoroutines();
+        }
+
+        Coroutine phase2Routine;
+        int attackIndex = 2;
         private IEnumerator Phase2Routine()
         {
-            boss.StartCoroutine(boss.head.IdleRoutine());
-            boss.StartCoroutine(boss.hands.IdleRoutine());
-            for (int i = 0; i < 3; i++) // TODO: set to while(true) until phase1 hp == 0
+            while(true)
             {
+                boss.StartCoroutine(boss.head.IdleRoutine());
+                boss.StartCoroutine(boss.hands.IdleRoutine());
                 yield return boss.StartCoroutine(boss.body.IdleRoutine());
                 yield return new WaitForSeconds(1f);
-                //yield return boss.StartCoroutine(StartAttack(Random.Range(0, 2))); // TODO: Set to random.range
-                yield return boss.StartCoroutine(StartAttack(1));
+                yield return boss.StartCoroutine(StartAttack(attackIndex));
+                attackIndex++;
             }
         }
 
         private IEnumerator StartAttack(int randomAttack)
         {
-            if (randomAttack == 0) // Sweep
+            // P2 Sweep Attack
+            if (randomAttack % 3 == 0) 
             {
                 yield return boss.StartCoroutine(boss.hands.PrepareSweepRoutine());
                 for (int i = 0; i < 2; i++)
@@ -267,7 +282,8 @@ public class BossController : MonoBehaviour, IDamageable
                 }
                 yield return boss.StartCoroutine(boss.hands.BackToIdleRoutine(0));
             }
-            else // Slam
+            // P2 Slam Attack
+            else if (randomAttack % 3 == 1)
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -287,8 +303,32 @@ public class BossController : MonoBehaviour, IDamageable
                 yield return new WaitForSeconds(0.5f);
                 yield return boss.StartCoroutine(boss.hands.BackToIdleRoutine(1));
             }
+            // P2 Special Attack
+            else
+            {
+                // duck and grab ground
+                boss.StartCoroutine(boss.hands.GrabFloor());
+                yield return boss.StartCoroutine(boss.head.Duck());
+
+                // start charging animation while shaking head
+                yield return boss.StartCoroutine(boss.head.Charge());
+                yield return new WaitForSeconds(0.3f);
+
+                // when charge over, lift head quickly and head+body start shaking
+                boss.StartCoroutine(boss.head.LiftHead());
+
+                // spawn projectiles at random places for x seconds
+                boss.projectileSpawner.StartSpawning();
+                yield return new WaitForSeconds(boss.specialAttackDuration);
+                boss.projectileSpawner.StopSpawning();
+
+                boss.head.EndSpecialAttack();
+
+                yield return null;
+            }
         }
     }
+
     private class DeadState : BossState
     {
         public DeadState(BossController boss)

@@ -16,6 +16,12 @@ public class BossHands : MonoBehaviour
         rightHand = transform.GetChild(1).GetComponent<BossHand>();
     }
 
+    public void StopCoroutines()
+    {
+        leftHand.StopAllCoroutines();
+        rightHand.StopAllCoroutines();
+    }
+
     // Hands Spawn
     public IEnumerator SpawnRoutine()
     {
@@ -90,5 +96,12 @@ public class BossHands : MonoBehaviour
     {
         StartCoroutine(leftHand.SlamRoutine(Vector2.zero));
         yield return StartCoroutine(rightHand.SlamRoutine(Vector2.zero));
+    }
+
+    // Hands Phase 2 Special Attack
+    public IEnumerator GrabFloor()
+    {
+        StartCoroutine(leftHand.GrabFloor());
+        yield return StartCoroutine(rightHand.GrabFloor());
     }
 }

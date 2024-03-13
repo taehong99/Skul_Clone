@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossBody : MonoBehaviour
+public class BossBody : BossBodyPart
 {
     [Header("Rise Values")]
     [SerializeField] float riseTargetY;
@@ -158,32 +158,5 @@ public class BossBody : MonoBehaviour
     {
         transform.position = idleTargetPos;
         yield return null;
-    }
-
-    // Body Util
-    private IEnumerator LerpToDestination(Transform transform, Vector2 target, float speed)
-    {
-        float t = 0;
-        Vector2 startPos = transform.position;
-        Vector2 endPos = target;
-        while (t < 1)
-        {
-            transform.localPosition = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * speed;
-            yield return null;
-        }
-    }
-
-    private IEnumerator TiltToDestination(Transform transform, Vector2 targetPos, Quaternion targetRot, float speed)
-    {
-        float t = 0;
-        transform.GetPositionAndRotation(out Vector3 startPos, out Quaternion startRot);
-        while (t < 1)
-        {
-            transform.localPosition = Vector2.Lerp(startPos, targetPos, t);
-            transform.rotation = Quaternion.Lerp(startRot, targetRot, t);
-            t += Time.deltaTime * speed;
-            yield return null;
-        }
     }
 }

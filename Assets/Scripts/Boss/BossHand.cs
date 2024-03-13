@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossHand : MonoBehaviour
+public class BossHand : BossBodyPart
 {
     public enum Type { Left, Right };
 
@@ -198,12 +198,6 @@ public class BossHand : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, slamColliderRadius);
-    }
-
     // Hand Phase Transition
     public IEnumerator TransitionFreezeRoutine()
     {
@@ -213,30 +207,11 @@ public class BossHand : MonoBehaviour
         yield return null;
     }
 
-    // Hand Util
-    private IEnumerator LerpWithOffset(Transform transform, Vector2 offset, float speed)
+    // Phase 2 Special Attack
+    public IEnumerator GrabFloor()
     {
-        float t = 0;
-        Vector2 startPos = transform.localPosition;
-        Vector2 endPos = -transform.right;
-        endPos += offset;
-        while (t < 1)
-        {
-            transform.localPosition = Vector2.Lerp(startPos, endPos, t);
-            t += Time.deltaTime * speed;
-            yield return null;
-        }
-    }
-
-    private IEnumerator LerpToDestination(Transform transform, Vector2 destination, float speed)
-    {
-        float t = 0;
-        Vector2 startPos = transform.localPosition;
-        while (t < 1)
-        {
-            transform.localPosition = Vector2.Lerp(startPos, destination, t);
-            t += Time.deltaTime * speed;
-            yield return null;
-        }
+        yield return StartCoroutine(LerpToDestination(transform, new Vector2(transform.position.x, targetY), riseSpeed));
+        animator.Play("Rest");
+        yield return null;
     }
 }

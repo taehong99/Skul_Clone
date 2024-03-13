@@ -36,6 +36,7 @@ public class FlashUI : BaseUI
             t -= Time.deltaTime * flashSpeed;
             yield return null;
         }
+        SetAlpha(0);
     }
 
     private void SetAlpha(float alpha)

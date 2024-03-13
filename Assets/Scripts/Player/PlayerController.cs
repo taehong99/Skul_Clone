@@ -218,7 +218,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (moveDir.y == -1 && platformCollider != null)
         {
-            Debug.Log("Down Jumped");
             StartCoroutine(TemporaryIgnoreCollision());
             return;
         }
@@ -245,7 +244,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     // Platform down jump
     IEnumerator TemporaryIgnoreCollision()
     {
-        Debug.Log("ignore ");
         Collider2D coll = platformCollider;
         Physics2D.IgnoreCollision(playerCollider, coll, true);
         yield return new WaitForSeconds(0.5f);
