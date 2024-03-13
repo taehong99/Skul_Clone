@@ -28,21 +28,25 @@ public class SpawnEnemy : MonoBehaviour
         }
     }
 
-    public void Spawn()
-    {
-        GameObject go = Manager.Pool.GetPool(spawnEffectPrefab, transform.position, Quaternion.identity).gameObject;
-        go.GetComponent<Animator>().Play("EnemyAppear");
-        Instantiate(enemyPrefab, transform.position, transform.rotation);
-    }
-
     // spawns when parent spawner gets activated
     private void OnEnable()
     {
         GetComponentInParent<EnemySpawner>().OnSpawnEnemies += Spawn;
     }
 
-    private void OnDisable()
+    public void Spawn()
     {
-        GetComponentInParent<EnemySpawner>().OnSpawnEnemies -= Spawn;
+        StartCoroutine(SpawnRoutine());
+    }
+
+    private IEnumerator SpawnRoutine()
+    {
+        GameObject effect = Manager.Pool.GetPool(spawnEffectPrefab, transform.position, Quaternion.identity).gameObject;
+        effect.GetComponent<Animator>().Play("EnemyAppear");
+        while (effect.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.8f)
+        {
+            yield return null;
+        }
+        Instantiate(enemyPrefab, transform.position, transform.rotation);
     }
 }

@@ -29,6 +29,9 @@ public class Enemy : MonoBehaviour, IDamageable
     public int Damage => damage;
     protected bool isAttacking;
 
+    [Header("Death")]
+    private PooledObject deathEffectPrefab;
+
     [Header("Misc")]
     private int hp;
     public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
@@ -50,6 +53,7 @@ public class Enemy : MonoBehaviour, IDamageable
         rb2d = GetComponent<Rigidbody2D>();
         ledgeChecker = GetComponentInChildren<LedgeChecker>();
         enemyHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/EnemyHitEffect");
+        deathEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/EnemyEffect");
 
         GameObject playerChecker = new GameObject("PlayerChecker");
         playerChecker.transform.SetParent(transform);
@@ -421,16 +425,15 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Dead");
-            enemy.animator.Play("EnemyDeath");
+            enemy.StartCoroutine(DeathRoutine());
         }
 
-        public override void Transition()
+        private IEnumerator DeathRoutine()
         {
-            Debug.Log(enemy.animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
-            if(enemy.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
-            {
-                enemy.Die();
-            }
+            GameObject effect = Manager.Pool.GetPool(enemy.deathEffectPrefab, enemy.transform.position, Quaternion.identity).gameObject;
+            effect.GetComponent<Animator>().Play("EnemyDeath");
+            yield return new WaitForSeconds(0.5f);
+            Destroy(enemy.gameObject);
         }
     }
     #endregion

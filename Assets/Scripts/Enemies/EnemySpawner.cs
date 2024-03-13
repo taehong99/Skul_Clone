@@ -9,7 +9,16 @@ public class EnemySpawner : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Player"))
+        {
+            StartCoroutine(SpawnRoutine());
+        }
+    }
+
+    private IEnumerator SpawnRoutine()
+    {
         OnSpawnEnemies?.Invoke();
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 }
