@@ -324,10 +324,10 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 2112
+  dashCount: 2
   dashPower: 18
   dashDuration: 0.2
-  dashCooldown: 0.1
-  canDash: 0
+  dashCooldown: 1
   attackRange: 1
   attackDamage: 1
   hittableMask:

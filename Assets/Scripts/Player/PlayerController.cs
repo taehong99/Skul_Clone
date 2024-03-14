@@ -49,10 +49,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     bool isGrounded;
 
     [Header("Player Dash")]
+    [SerializeField] int dashCount;
     [SerializeField] float dashPower;
     [SerializeField] float dashDuration;
     [SerializeField] float dashCooldown;
-    public bool canDash;
     bool isDashing;
 
     [Header("Player Attack")]
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
         playerCollider = GetComponent<BoxCollider2D>();
         playerHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect");
-        canDash = true;
+        dashesLeft = dashCount;
 
         // Cache jump vector once to prevent repetitive math operations
         jumpVec = Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.fixedDeltaTime;
@@ -149,7 +149,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             animator.SetBool("isGrounded", true);
             isGrounded = true;
-            dashesLeft = 2;
             remainingJumps = jumpCount;
         }
         if (skullMask.Contains(collision.gameObject.layer))
@@ -260,29 +259,40 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     #region Dash
     // TODO: Implement double dash
-    private int dashesLeft = 2;
+    int dashesLeft;
     private IEnumerator Dash()
     {
-        if(dashesLeft > 0)
-        {
-            smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Dash);
-            canDash = false;
-            playerSM.Trigger(TriggerType.DashTrigger);
-            isDashing = true;
-            float originalGravity = rb2d.gravityScale;
-            rb2d.gravityScale = 0;
-            rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
-            yield return new WaitForSeconds(dashDuration);
-            rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
-            rb2d.gravityScale = originalGravity;
-            isDashing = false;
+        if (isDashing || dashesLeft == 0)
+            yield break;
 
-            yield return new WaitForSeconds(dashCooldown);
-            canDash = true;
+        // dash start
+        if(dashCooldownRoutine != null)
+            StopCoroutine(dashCooldownRoutine); // reset cooldown routine
+        dashCooldownRoutine = StartCoroutine(DashCooldownRoutine());
+        smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Dash);
+        playerSM.Trigger(TriggerType.DashTrigger);
+        isDashing = true;
 
-            dashesLeft--;
-        }
+        // dash physics
+        float originalGravity = rb2d.gravityScale;
+        rb2d.gravityScale = 0;
+        rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
+        yield return new WaitForSeconds(dashDuration);
+        rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
+        rb2d.gravityScale = originalGravity;
+
+        // dash end
+        isDashing = false;
+        dashesLeft--;
     }
+
+    Coroutine dashCooldownRoutine;
+    private IEnumerator DashCooldownRoutine()
+    {
+        yield return new WaitForSeconds(dashCooldown);
+        dashesLeft = dashCount;
+    }
+
     #endregion
 
     #region Attack
@@ -421,8 +431,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     private void OnDash()
     {
-        if (!canDash)
-            return;
         StartCoroutine(Dash());
     }
     private void OnSwap()
