@@ -208,18 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d3fdd488583f47a58b1236ddcc0c96d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 10
-  moveSpeed: 5
-  knockbackForce: 2
-  playerCheckRange: 5
-  patienceTimer: 1
-  patrolTime: 2
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  attackRange: 1.5
+  data: {fileID: 11400000, guid: 982f291496c53439eaf952ecfdde4d09, type: 2}
   stanceDuration: 1
-  damage: 1
 --- !u!212 &2906864881160478847
 SpriteRenderer:
   m_ObjectHideFlags: 0

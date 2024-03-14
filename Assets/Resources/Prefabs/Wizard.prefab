@@ -596,18 +596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbcc02749ec64098b8e952b1be7dadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 10
-  moveSpeed: 0
-  knockbackForce: 1
-  playerCheckRange: 0
-  patienceTimer: 2
-  patrolTime: 0
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  attackRange: 5
+  data: {fileID: 11400000, guid: 0ca1d277c53ce47b08c9c764d0b93c28, type: 2}
   stanceDuration: 0
-  damage: 0
   fireballPrefab: {fileID: 7163620842265625391, guid: 08f8b7830af3a41c0904c713df8d38cd, type: 3}
   fireballSpawnPoint: {fileID: 5232119667209491113}
   fireInterval: 1
