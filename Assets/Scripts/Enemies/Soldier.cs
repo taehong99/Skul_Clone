@@ -31,7 +31,7 @@ public class Soldier : Enemy
 
     public void AttackFrame()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, attackRange, playerMask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, data.attackRange, player.mask);
         if(collider == null)
             return;
         IDamageable[] damageables = collider.GetComponents<IDamageable>();
@@ -42,14 +42,14 @@ public class Soldier : Enemy
             {
                 if(collider.gameObject.transform.position.x >= transform.position.x)
                 {
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(data.damage);
                 }
             }
             else//attack left
             {
                 if (collider.gameObject.transform.position.x <= transform.position.x)
                 {
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(data.damage);
                 }
             }
         }
@@ -58,6 +58,6 @@ public class Soldier : Enemy
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, data.attackRange);
     }
 }

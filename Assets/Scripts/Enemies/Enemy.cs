@@ -8,25 +8,14 @@ public class Enemy : MonoBehaviour, IDamageable
     public enum State { Idle, Patrol, Chase, Stance, Attack, Dead }
     protected StateMachine<State> stateMachine = new StateMachine<State>();
 
-    [Header("Stats")]
-    [SerializeField] protected int baseHP;
-    [SerializeField] protected float moveSpeed;
-    [SerializeField] protected float knockbackForce;
-    [SerializeField] protected float playerCheckRange;
+    [Header("Data")]
+    [SerializeField] protected EnemyData data;
 
     [Header("Patrol")]
-    [SerializeField] float patienceTimer = 3; // how long before going from idle to patrol
-    [SerializeField] float patrolTime = 2; // patrol time for each direction
-    bool playerInRange;
-
-    [Header("Chase")]
-    [SerializeField] protected LayerMask playerMask;
+    private bool playerInRange;
 
     [Header("Attack")]
-    [SerializeField] protected float attackRange;
     [SerializeField] protected float stanceDuration;
-    [SerializeField] protected int damage;
-    public int Damage => damage;
     protected bool isAttacking;
 
     [Header("Death")]
@@ -37,7 +26,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
     public event UnityAction<int> OnHPChanged;
     public event UnityAction OnFlipped;
-    private int animIndex = 0;
+    
     private bool isPatrolling;
 
     protected PlayerController player;
@@ -48,7 +37,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        HP = baseHP;
+        HP = data.baseHP;
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         ledgeChecker = GetComponentInChildren<LedgeChecker>();
@@ -60,7 +49,7 @@ public class Enemy : MonoBehaviour, IDamageable
         playerChecker.transform.localPosition = Vector3.zero;
         CircleCollider2D collider = playerChecker.AddComponent<CircleCollider2D>();
         collider.isTrigger = true;
-        collider.radius = playerCheckRange;
+        collider.radius = data.playerCheckRange;
     }
 
     protected virtual void Start()
@@ -84,14 +73,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (playerMask.Contains(collision.gameObject.layer))
+        if (player.mask.Contains(collision.gameObject.layer))
         {
             playerInRange = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (playerMask.Contains(collision.gameObject.layer))
+        if (player.mask.Contains(collision.gameObject.layer))
         {
             playerInRange = false;
         }
@@ -166,13 +155,14 @@ public class Enemy : MonoBehaviour, IDamageable
         KnockBack();
     }
 
+    private int animIndex = 0;
     public void KnockBack()
     {
-        if (knockbackForce == 0)
+        if (data.knockbackForce == 0)
             return;
         
         Vector2 knockDirection = Manager.Game.Player.facingDir == PlayerController.FacingDir.Left ? Vector2.left : Vector2.right;
-        rb2d.AddForce(knockDirection * knockbackForce, ForceMode2D.Impulse);
+        rb2d.AddForce(knockDirection * data.knockbackForce, ForceMode2D.Impulse);
         stateMachine.ChangeState(State.Idle);
         animator.Play($"Hit{animIndex}");
         animIndex ^= 1;
@@ -192,13 +182,13 @@ public class Enemy : MonoBehaviour, IDamageable
     protected virtual IEnumerator Patrol()
     {
         isPatrolling = true;
-        timer = Random.Range(patrolTime - 1, patrolTime + 1.5f);
+        timer = Random.Range(data.patrolTime - 1, data.patrolTime + 1.5f);
         Vector2 firstDir = Random.Range(0, 2) == 0 ? Vector2.right : Vector2.left;
         Vector2 secondDir = -firstDir;
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            rb2d.velocity = firstDir * moveSpeed;
+            rb2d.velocity = firstDir * data.moveSpeed;
             //transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -209,11 +199,11 @@ public class Enemy : MonoBehaviour, IDamageable
             FlipOnDemand();
         }
 
-        timer = Random.Range(patrolTime - 1, patrolTime + 1.5f);
+        timer = Random.Range(data.patrolTime - 1, data.patrolTime + 1.5f);
         while (timer >= 0)
         {
             timer -= Time.deltaTime;
-            rb2d.velocity = secondDir * moveSpeed;
+            rb2d.velocity = secondDir * data.moveSpeed;
             //transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -244,14 +234,14 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
     private void Die() {
-        GetComponent<Rigidbody2D>().excludeLayers = playerMask;
+        GetComponent<Rigidbody2D>().excludeLayers = player.mask;
         Destroy(gameObject);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, playerCheckRange);
+        Gizmos.DrawWireSphere(transform.position, data.playerCheckRange);
     }
     #endregion
 
@@ -275,7 +265,7 @@ public class Enemy : MonoBehaviour, IDamageable
             Debug.Log("Entered Idle");
             enemy.rb2d.velocity = Vector2.zero;
             enemy.animator.Play("Idle");
-            timer = enemy.patienceTimer;
+            timer = enemy.data.patienceTimer;
         }
 
         public override void Update()
@@ -355,7 +345,7 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             // move towards player
             Vector2 moveDir = enemy.player.transform.position.x < enemy.transform.position.x ? Vector2.left : Vector2.right;
-            enemy.rb2d.velocity = moveDir * enemy.moveSpeed; 
+            enemy.rb2d.velocity = moveDir * enemy.data.moveSpeed; 
             //enemy.transform.Translate(dir * enemy.moveSpeed * Time.deltaTime);
         }
 
@@ -367,7 +357,7 @@ public class Enemy : MonoBehaviour, IDamageable
             }
             // if player in attack range, attack
             float distToPlayer = (enemy.player.transform.position - enemy.transform.position).sqrMagnitude;
-            if(distToPlayer < (enemy.attackRange * enemy.attackRange))
+            if(distToPlayer < (enemy.data.attackRange * enemy.data.attackRange))
             {
                 enemy.rb2d.velocity = Vector2.zero;
                 ChangeState(State.Attack);

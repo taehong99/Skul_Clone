@@ -63,7 +63,7 @@ public class Knight : Enemy
 
     public void AttackFrame()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, attackRange, playerMask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, data.attackRange, player.mask);
         if (collider == null)
             return;
         IDamageable[] damageables = collider.GetComponents<IDamageable>();
@@ -74,14 +74,14 @@ public class Knight : Enemy
             {
                 if (collider.gameObject.transform.position.x >= transform.position.x)
                 {
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(data.damage);
                 }
             }
             else//attack left
             {
                 if (collider.gameObject.transform.position.x <= transform.position.x)
                 {
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(data.damage);
                 }
             }
         }
