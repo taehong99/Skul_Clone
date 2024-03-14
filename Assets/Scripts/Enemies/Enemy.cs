@@ -425,14 +425,15 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Enter()
         {
             Debug.Log("Entered Dead");
-            enemy.StartCoroutine(DeathRoutine());
+            DeathEffect();
+            Manager.Events.voidEventDic["enemyKilled"].RaiseEvent();
         }
 
-        private IEnumerator DeathRoutine()
+        private void DeathEffect()
         {
             GameObject effect = Manager.Pool.GetPool(enemy.deathEffectPrefab, enemy.transform.position, Quaternion.identity).gameObject;
+            enemy.transform.SetParent(effect.transform);
             effect.GetComponent<Animator>().Play("EnemyDeath");
-            yield return new WaitForSeconds(0.5f);
             Destroy(enemy.gameObject);
         }
     }
