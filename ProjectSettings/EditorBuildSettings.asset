@@ -9,9 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Lab_Movement.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/CastleScene.unity
+    path: Assets/Scenes/0.CastleScene.unity
     guid: 8d7d3799f9bbc41058dc58629d340094
   - enabled: 1
-    path: Assets/Scenes/Map0.unity
+    path: Assets/Scenes/1.CastleLobby.unity
     guid: 61979ceeedab7470c8637b16d1cf348e
   m_configObjects: {}

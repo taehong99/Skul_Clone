@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 944513669756969361}
   - component: {fileID: 3909335261351175777}
   m_Layer: 8
-  m_Name: Skul_Skill
+  m_Name: SkulProjectile
   m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
