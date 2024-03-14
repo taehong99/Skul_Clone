@@ -37,6 +37,7 @@ public class SpawnEnemy : MonoBehaviour
     public void Spawn()
     {
         StartCoroutine(SpawnRoutine());
+        Manager.Events.voidEventDic["enemySpawned"].RaiseEvent();
     }
 
     private IEnumerator SpawnRoutine()

@@ -13,6 +13,8 @@ public class MinimapUI : BaseUI
     {
         enemyCountText = GetUI<TextMeshProUGUI>("EnemyCount");
         enemyCountText.text = count.ToString();
+        Manager.Events.voidEventDic["enemySpawned"].OnEventRaised += IncreaseCount;
+        Manager.Events.voidEventDic["enemyKilled"].OnEventRaised += DecreaseCount;
     }
 
     public void IncreaseCount()

@@ -9,9 +9,14 @@ public class EventManager : Singleton<EventManager>
 
     private void Start()
     {
+        // boss events
         voidEventDic.Add("phase2Started", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/Phase2StartedEvent"));
         voidEventDic.Add("whiteFlash", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/WhiteFlashEvent"));
         voidEventDic.Add("bossDefeated", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/BossDefeatedEvent"));
+
+        // enemy events
+        voidEventDic.Add("enemySpawned", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemySpawnedEvent"));
+        voidEventDic.Add("enemyKilled", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemyKilledEvent"));
     }
 
     private void OnDestroy()
