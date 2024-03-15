@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkulJumpAttack
+  m_Name: Fall
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,9 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: d7cf6b893b9a0934b85861339d2a47a7, type: 3}
+      value: {fileID: 21300000, guid: 80d29084822f14bb89c471a6daad8376, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: 80bff14d9aa15f64c9febf7daed712df, type: 3}
-    - time: 0.16666667
-      value: {fileID: 21300000, guid: 7310a285907d0df4080cad8a7982fe26, type: 3}
-    - time: 0.25
-      value: {fileID: 21300000, guid: da74390d52287254296d0e7dbdb54f12, type: 3}
+      value: {fileID: 21300000, guid: 8cecc3886a2154f6eaf123e9d9967a4b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,21 +46,19 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: d7cf6b893b9a0934b85861339d2a47a7, type: 3}
-    - {fileID: 21300000, guid: 80bff14d9aa15f64c9febf7daed712df, type: 3}
-    - {fileID: 21300000, guid: 7310a285907d0df4080cad8a7982fe26, type: 3}
-    - {fileID: 21300000, guid: da74390d52287254296d0e7dbdb54f12, type: 3}
+    - {fileID: 21300000, guid: 80d29084822f14bb89c471a6daad8376, type: 3}
+    - {fileID: 21300000, guid: 8cecc3886a2154f6eaf123e9d9967a4b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.33333334
+    m_StopTime: 0.16666667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
-    m_LoopTime: 0
+    m_LoopTime: 1
     m_LoopBlend: 0
     m_LoopBlendOrientation: 0
     m_LoopBlendPositionY: 0
@@ -78,11 +72,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.083333336
-    functionName: Attack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []
