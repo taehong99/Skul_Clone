@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Skul : PlayerController
 {
-    [Header("Skul Swap Effect")]
-    [SerializeField] float swapDuration;
-    [SerializeField] float swapSpeed;
-
+    [Header("Skul Skills")]
     [SerializeField] GameObject skullPrefab;
     [SerializeField] float skullCooldown;
+    [SerializeField] float teleportBuffer;
     [SerializeField] LayerMask skullMask;
     [SerializeField] RuntimeAnimatorController defaultController;
     [SerializeField] RuntimeAnimatorController headlessController;
     bool canTeleport = false;
     public bool CanTeleport => canTeleport; // TODO: refactor this
 
+    [Header("Skul Swap Effect")]
+    [SerializeField] float swapDuration;
+    [SerializeField] float swapSpeed;
+    
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
@@ -27,9 +29,18 @@ public class Skul : PlayerController
     }
 
     #region Skills
+    protected override void UseSkill1()
+    {
+        ThrowSkull();
+    }
+
+    protected override void UseSkill2()
+    {
+        TeleportToSkull();
+    }
+
     Coroutine throwSkullRoutine;
     GameObject thrownSkull = null;
-
     private void ThrowSkull()
     {
         if (cooldownTimer > 0)
@@ -47,7 +58,7 @@ public class Skul : PlayerController
         thrownSkull.GetComponent<SkulProjectile>().SetDirection(direction);
         while (cooldownTimer > 0)
         {
-            if (cooldownTimer < (skullCooldown - 0.5))
+            if (cooldownTimer < (skullCooldown - teleportBuffer))
             {
                 canTeleport = true;
             }
@@ -78,6 +89,15 @@ public class Skul : PlayerController
         animator.runtimeAnimatorController = defaultController;
     }
 
+    #endregion
+
+    #region Swap
+
+    protected override void SwapEffect()
+    {
+        StartCoroutine(SwapAttack());
+    }
+
     private IEnumerator SwapAttack()
     {
         isSwapping = true;
@@ -99,6 +119,6 @@ public class Skul : PlayerController
         rb2d.gravityScale = originalGravity;
         isSwapping = false;
     }
-    #endregion
 
+    #endregion
 }

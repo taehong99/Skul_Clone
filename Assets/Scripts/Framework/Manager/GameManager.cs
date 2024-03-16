@@ -10,15 +10,17 @@ public class GameManager : Singleton<GameManager>
     CameraShake shaker;
     public CameraShake Shaker => shaker;
 
-    private int hp;
-    public int PlayerHP { get { return hp; } set { hp = value; OnPlayerHPChanged?.Invoke(value); } }
+    private int playerHP;
+    public int PlayerHP { get { return playerHP; } set { playerHP = value; OnPlayerHPChanged?.Invoke(value); } }
     public UnityAction<int> OnPlayerHPChanged;
+    public UnityAction OnPlayerDied;
 
     private void Start()
     {
         // Assign player
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject.GetComponent<PlayerController>();
+        playerHP = player.Data.baseHP;
 
         // Assign Camera Shaker
         shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
@@ -29,6 +31,15 @@ public class GameManager : Singleton<GameManager>
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect"), 2, 4);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyHitEffect"), 5, 8);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyEffect"), 5, 8);
+    }
+
+    public void PlayerTakeDamage(int damage)
+    {
+        PlayerHP -= damage;
+        if (PlayerHP <= 0)
+        {
+            OnPlayerDied?.Invoke();
+        }
     }
 
     public void Test()

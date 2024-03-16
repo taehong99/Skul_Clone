@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SkulData
   m_EditorClassIdentifier: 
   baseHP: 100
-  baseDamage: 10
+  damageMultiplier: 1
   attackRange: 1
   moveSpeed: 7
   dashCount: 2
@@ -23,7 +23,7 @@ MonoBehaviour:
   skullIcon: {fileID: 0}
   skill1Icon: {fileID: 0}
   skill2Icon: {fileID: 0}
-  skullName: 
+  skullName: Skul
   type: 
   rarity: 
   swapTitle: 

@@ -7,7 +7,7 @@ public class PlayerData : ScriptableObject
 {
     [Header("Player Stats")]
     public int baseHP;
-    public int baseDamage;
+    public int damageMultiplier;
     public int attackRange;
     public float moveSpeed;
     public int dashCount;

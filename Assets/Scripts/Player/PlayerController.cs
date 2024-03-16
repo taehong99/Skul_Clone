@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+    const float interactRange = 1f;
+
     public enum FacingDir
     {
         Right,
@@ -29,9 +31,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Player Stats")]
     [SerializeField] PlayerData data;
-    private int hp;
-    public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
-    public UnityAction<int> OnHPChanged;
 
     [Header("Player Move")]
     [SerializeField] float moveSpeed;
@@ -57,20 +56,16 @@ public class PlayerController : MonoBehaviour, IDamageable
     bool isDashing;
 
     [Header("Player Attack")]
-    [SerializeField] float attackRange;
-    [SerializeField] int attackDamage;
+    [SerializeField] int baseDamage;
     [SerializeField] LayerMask hittableMask;
     public bool isAttacking;
 
     [Header("Player Skills")]
-    
     protected float cooldownTimer = 0f;
     public float CooldownRatio => cooldownTimer / data.skill1Cooldown; // TODO: refactor this
     protected bool isSwapping;
  
-
     [Header("Player Interact")]
-    [SerializeField] float interactRange;
     [SerializeField] LayerMask interactableMask;
 
     [Header("Effects")]
@@ -263,6 +258,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
         yield return new WaitForSeconds(dashDuration);
         rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
+        Debug.Log(originalGravity);
         rb2d.gravityScale = originalGravity;
 
         // dash end
@@ -286,25 +282,26 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     public void Attack()
     {
-        int count = Physics2D.OverlapCircleNonAlloc(transform.position, attackRange, colliders, hittableMask);
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, data.attackRange, colliders, hittableMask);
         for(int i = 0; i < count; i++)
         {
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
             foreach(IDamageable damageable in damageables)
             {
-                damageable.TakeDamage(attackDamage);
+                damageable.TakeDamage(baseDamage * data.damageMultiplier);
             }
         }
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, data.attackRange);
+    }
+
     public void TakeDamage(int damage)
     {
         Manager.Pool.GetPool(playerHitEffectPrefab, transform.position, Quaternion.identity);
-        HP -= damage;
-        if (HP <= 0)
-        {
-            //Die
-            return;
-        }
+        Manager.Game.PlayerTakeDamage(damage);
     }
     #endregion
 
@@ -312,7 +309,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     protected virtual void UseSkill1() { }
     protected virtual void UseSkill2() { }
-    protected virtual void Swap() { }
+    protected virtual void SwapEffect() { }
 
     #endregion
 
@@ -324,12 +321,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
 
         collider.GetComponent<IInteractable>().Interact();
-    }
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
     #endregion
 
@@ -353,7 +344,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isSwapping)
             return;
-        Swap();
+        SwapEffect();
     }
     private void OnAttack()
     {

@@ -13,7 +13,9 @@ public class PlayerHPBarUI : BaseUI
     {
         game = Manager.Game;
         maxHP = game.PlayerHP;
-        
+        SetHP(maxHP);
+        game.OnPlayerHPChanged += SetHP;
+
         GetUI<Slider>("HealthUI").maxValue = maxHP;
         GetUI<Slider>("HealthUI").value = maxHP;
         GetUI<TextMeshProUGUI>("HealthText").text = $"{maxHP}/{maxHP}";
@@ -21,8 +23,7 @@ public class PlayerHPBarUI : BaseUI
 
     private void OnEnable()
     {
-        SetHP(game.PlayerHP);
-        game.OnPlayerHPChanged += SetHP;
+        
     }
 
     private void OnDisable()
