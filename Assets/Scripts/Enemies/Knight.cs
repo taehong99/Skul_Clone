@@ -63,7 +63,7 @@ public class Knight : Enemy
 
     public void AttackFrame()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, data.attackRange, player.mask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, data.attackRange, player.Mask);
         if (collider == null)
             return;
         IDamageable[] damageables = collider.GetComponents<IDamageable>();

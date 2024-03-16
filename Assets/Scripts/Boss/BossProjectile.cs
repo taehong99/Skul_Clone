@@ -42,7 +42,7 @@ public class BossProjectile : MonoBehaviour
 
     private void DealDamage()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, hitboxRadius, Manager.Game.Player.mask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, hitboxRadius, Manager.Game.Player.Mask);
         if (collider != null)
         {
             IDamageable[] damageables = collider.GetComponents<IDamageable>();

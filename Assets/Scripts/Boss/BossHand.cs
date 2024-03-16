@@ -202,7 +202,7 @@ public class BossHand : BossBodyPart
         yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed));
         Manager.Game.Shaker.Shake(slamShakeDuration);
 
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.mask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.Mask);
         IDamageable[] damageables = collider.transform.GetComponents<IDamageable>();
         foreach(IDamageable damageable in damageables)
         {

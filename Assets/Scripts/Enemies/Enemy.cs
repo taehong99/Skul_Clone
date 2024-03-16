@@ -73,14 +73,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (player.mask.Contains(collision.gameObject.layer))
+        if (player.Mask.Contains(collision.gameObject.layer))
         {
             playerInRange = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (player.mask.Contains(collision.gameObject.layer))
+        if (player.Mask.Contains(collision.gameObject.layer))
         {
             playerInRange = false;
         }
@@ -234,7 +234,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
     private void Die() {
-        GetComponent<Rigidbody2D>().excludeLayers = player.mask;
+        GetComponent<Rigidbody2D>().excludeLayers = player.Mask;
         Destroy(gameObject);
     }
 
