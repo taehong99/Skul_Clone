@@ -6,19 +6,21 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     [Header("Player Stats")]
-    public int baseHP;
-    public int damageMultiplier;
-    public int attackRange;
-    public float moveSpeed;
+    public float damageMultiplier;
+    public float attackRange;
     public int dashCount;
 
     [Header("Skull-Specific Stats")]
+    public GameObject skullPrefab;
     public RuntimeAnimatorController animatorController;
     public float skill1Cooldown;
     public float skill2Cooldown;
 
     [Header("Icons")]
-    public Sprite skullIcon;
+    public Sprite portraitIcon;
+    public Vector2 portraitPosition;
+    public Sprite mainIcon;
+    public Sprite subIcon;
     public Sprite skill1Icon;
     public Sprite skill2Icon;
 
@@ -26,10 +28,22 @@ public class PlayerData : ScriptableObject
     public string skullName;
     public string type;
     public string rarity;
-    public string swapTitle;
-    public string swapDescription;
+
+    [TextArea(3, 10)]
+    public string intro;
+    [TextArea(3, 10)]
+    public string description;
+
     public string skill1Name;
-    public string skill1Description;
     public string skill2Name;
+    public string swapTitle;
+
+    [TextArea(3, 10)]
+    public string skill1Description;
+    [TextArea(3, 10)]
     public string skill2Description;
+    [TextArea(3, 10)]
+    public string swapDescription;
+
+    
 }

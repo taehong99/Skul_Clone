@@ -5,7 +5,7 @@ using UnityEngine;
 public class EventManager : Singleton<EventManager>
 {
     public Dictionary<string, VoidEventChannelSO> voidEventDic = new Dictionary<string, VoidEventChannelSO>();
-    public Dictionary<string, DirectionEventChannelSO> dirEventDic = new Dictionary<string, DirectionEventChannelSO>();
+    public Dictionary<string, PlayerDataEventSO> dataEventDic = new Dictionary<string, PlayerDataEventSO>();
 
     private void Start()
     {
@@ -17,6 +17,10 @@ public class EventManager : Singleton<EventManager>
         // enemy events
         voidEventDic.Add("enemySpawned", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemySpawnedEvent"));
         voidEventDic.Add("enemyKilled", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemyKilledEvent"));
+        
+        // player events
+        dataEventDic.Add("skullPickedUp", Manager.Resource.Load<PlayerDataEventSO>("Data/EventChannels/SkullPickupEvent"));
+        voidEventDic.Add("skullSwapped", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/SkullSwappedEvent"));
     }
 
     private void OnDestroy()
@@ -25,7 +29,7 @@ public class EventManager : Singleton<EventManager>
         {
             entry.Value.OnEventRaised = null;
         }
-        foreach (var entry in dirEventDic)
+        foreach (var entry in dataEventDic)
         {
             entry.Value.OnEventRaised = null;
         }

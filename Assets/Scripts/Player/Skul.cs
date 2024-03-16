@@ -6,13 +6,9 @@ public class Skul : PlayerController
 {
     [Header("Skul Skills")]
     [SerializeField] GameObject skullPrefab;
-    [SerializeField] float skullCooldown;
-    [SerializeField] float teleportBuffer;
     [SerializeField] LayerMask skullMask;
     [SerializeField] RuntimeAnimatorController defaultController;
     [SerializeField] RuntimeAnimatorController headlessController;
-    bool canTeleport = false;
-    public bool CanTeleport => canTeleport; // TODO: refactor this
 
     [Header("Skul Swap Effect")]
     [SerializeField] float swapDuration;
@@ -24,7 +20,7 @@ public class Skul : PlayerController
 
         if (skullMask.Contains(collision.gameObject.layer))
         {
-            PickUpSkull();
+            PickUpProjectile();
         }
     }
 
@@ -43,49 +39,57 @@ public class Skul : PlayerController
     GameObject thrownSkull = null;
     private void ThrowSkull()
     {
-        if (cooldownTimer > 0)
+        if (skill1CooldownTimer > 0)
             return;
+
         animator.Play("Skill1");
         throwSkullRoutine = StartCoroutine(ThrowSkullRoutine());
     }
 
     private IEnumerator ThrowSkullRoutine()
     {
-        cooldownTimer = skullCooldown;
+        skill1CooldownTimer = data.skill1Cooldown;
         animator.runtimeAnimatorController = headlessController;
         Vector2 direction = (facingDir == FacingDir.Left) ? Vector2.left : Vector2.right;
         thrownSkull = Instantiate(skullPrefab, transform.position, Quaternion.identity);
         thrownSkull.GetComponent<SkulProjectile>().SetDirection(direction);
-        while (cooldownTimer > 0)
+        while (skill1CooldownTimer > 0)
         {
-            if (cooldownTimer < (skullCooldown - teleportBuffer))
-            {
-                canTeleport = true;
-            }
-            cooldownTimer -= Time.deltaTime;
+            skill1CooldownTimer -= Time.deltaTime;
             yield return null;
         }
         Destroy(thrownSkull);
-        canTeleport = false;
-        cooldownTimer = 0;
+        skill1CooldownTimer = 0;
         animator.runtimeAnimatorController = defaultController;
     }
 
     private void TeleportToSkull()
     {
-        if (canTeleport)
-        {
-            transform.position = thrownSkull.transform.position;
-            PickUpSkull();
-        }
+        if (skill1CooldownTimer == 0 || skill2CooldownTimer > 0)
+            return;
+
+        StartCoroutine(TeleportRoutine());
     }
 
-    private void PickUpSkull()
+    private IEnumerator TeleportRoutine()
     {
-        canTeleport = false;
+        skill2CooldownTimer = data.skill2Cooldown;
+        transform.position = thrownSkull.transform.position;
+        PickUpProjectile();
+
+        while(skill2CooldownTimer > 0)
+        {
+            skill2CooldownTimer -= Time.deltaTime;
+            yield return null;
+        }
+        skill2CooldownTimer = 0;
+    }
+
+    private void PickUpProjectile()
+    {
         StopCoroutine(throwSkullRoutine);
         Destroy(thrownSkull);
-        cooldownTimer = 0;
+        skill1CooldownTimer = 0;
         animator.runtimeAnimatorController = defaultController;
     }
 

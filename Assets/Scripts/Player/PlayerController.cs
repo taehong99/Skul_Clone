@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour, IDamageable
 {
     const float interactRange = 1f;
+    const float swapCooldown = 5f;
+    const float baseMoveSpeed = 5f;
 
     public enum FacingDir
     {
@@ -16,8 +18,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Player State Machine")]
     protected StateMachine playerSM;
-    public StateMachine fsm => playerSM; // Properties for the states
+    public StateMachine fsm => playerSM; // Properties for the states to access
     public PlayerData Data => data;
+    public PlayerData SubSkullData => subSkullData;
     public Rigidbody2D Rb2d => rb2d;
     public Animator Animator => animator;
     public Vector2 MoveDir => moveDir;
@@ -30,10 +33,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
     [Header("Player Stats")]
-    [SerializeField] PlayerData data;
+    [SerializeField] protected PlayerData data;
 
     [Header("Player Move")]
-    [SerializeField] float moveSpeed;
     Vector2 moveDir;
     public FacingDir facingDir;
 
@@ -61,10 +63,17 @@ public class PlayerController : MonoBehaviour, IDamageable
     public bool isAttacking;
 
     [Header("Player Skills")]
-    protected float cooldownTimer = 0f;
-    public float CooldownRatio => cooldownTimer / data.skill1Cooldown; // TODO: refactor this
+    protected float skill1CooldownTimer = 0f;
+    protected float skill2CooldownTimer = 0f;
+    public float Skill1CooldownRatio => skill1CooldownTimer / data.skill1Cooldown;
+    public float Skill2CooldownRatio => skill1CooldownTimer / data.skill2Cooldown;
+
+    [Header("Player Swap")]
+    protected PlayerData subSkullData;
     protected bool isSwapping;
- 
+    protected float swapCooldownTimer = 0f;
+    public float SwapCooldownRatio => swapCooldownTimer / swapCooldown;
+
     [Header("Player Interact")]
     [SerializeField] LayerMask interactableMask;
 
@@ -102,6 +111,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Start()
     {
         playerSM.Initialize(playerSM.idleState);
+        Manager.Events.dataEventDic["skullPickedUp"].OnEventRaised += PickUpSkull;
     }
 
     private void Update()
@@ -121,7 +131,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isDashing)
             return;
-        
+
         Move();
         JumpFall();
     }
@@ -151,6 +161,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             platformCollider = collision.collider;
         }
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            fsm.TransitionTo(fsm.idleState);
+        }
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -166,7 +180,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Move()
     {
         Vector2 newVel = rb2d.velocity;
-        newVel.x = moveDir.x * moveSpeed;
+        newVel.x = moveDir.x * baseMoveSpeed;
 
         if ((isAttacking && isGrounded) || isSwapping) // prevent movement while attacking
         {
@@ -245,7 +259,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             yield break;
 
         // dash start
-        if(dashCooldownRoutine != null)
+        if (dashCooldownRoutine != null)
             StopCoroutine(dashCooldownRoutine); // reset cooldown routine
         dashCooldownRoutine = StartCoroutine(DashCooldownRoutine());
         smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Dash);
@@ -283,12 +297,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void Attack()
     {
         int count = Physics2D.OverlapCircleNonAlloc(transform.position, data.attackRange, colliders, hittableMask);
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
-            foreach(IDamageable damageable in damageables)
+            foreach (IDamageable damageable in damageables)
             {
-                damageable.TakeDamage(baseDamage * data.damageMultiplier);
+                damageable.TakeDamage(Mathf.CeilToInt(baseDamage * data.damageMultiplier));
             }
         }
     }
@@ -309,6 +323,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     protected virtual void UseSkill1() { }
     protected virtual void UseSkill2() { }
+    
+    private void Swap()
+    {
+        if (subSkullData == null)
+            return;
+
+        PlayerController newSkull = Instantiate(subSkullData.skullPrefab, transform.position, transform.rotation).GetComponent<PlayerController>();
+        Manager.Game.HandleSkullSwap(newSkull);
+        newSkull.subSkullData = data;
+        Destroy(gameObject);
+        Manager.Events.voidEventDic["skullSwapped"].RaiseEvent();
+        /*PlayerData temp = subSkullData;
+        subSkullData = data;
+        data = temp;*/
+    }
+
     protected virtual void SwapEffect() { }
 
     #endregion
@@ -322,6 +352,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         collider.GetComponent<IInteractable>().Interact();
     }
+
+    private void PickUpSkull(PlayerData skullData)
+    {
+        subSkullData = skullData;
+        Swap();
+        /*PlayerController newSkull = Instantiate(skullData.skullPrefab, transform.position, transform.rotation).GetComponent<PlayerController>();
+        Manager.Game.HandleSkullSwap(newSkull);
+        newSkull.subSkullData = data;
+        Destroy(gameObject);*/
+    }
+
     #endregion
 
     #region Inputs
@@ -344,7 +385,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isSwapping)
             return;
-        SwapEffect();
+        Swap();
     }
     private void OnAttack()
     {

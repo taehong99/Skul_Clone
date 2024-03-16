@@ -4,6 +4,8 @@ using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
+    const int playerBaseHP = 100;
+
     PlayerController player;
     public PlayerController Player => player;
 
@@ -20,7 +22,7 @@ public class GameManager : Singleton<GameManager>
         // Assign player
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject.GetComponent<PlayerController>();
-        playerHP = player.Data.baseHP;
+        playerHP = playerBaseHP;
 
         // Assign Camera Shaker
         shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
@@ -42,8 +44,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void Test()
+    public void HandleSkullSwap(PlayerController controller)
     {
-        Debug.Log(GetInstanceID());
+        player = controller;
     }
 }

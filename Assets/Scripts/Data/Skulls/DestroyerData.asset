@@ -12,23 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7930968ae634083af627d15df5f590, type: 3}
   m_Name: DestroyerData
   m_EditorClassIdentifier: 
-  baseHP: 0
-  baseDamage: 0
-  attackRange: 0
-  moveSpeed: 0
-  dashCount: 0
-  animatorController: {fileID: 0}
-  skill1Cooldown: 0
-  skill2Cooldown: 0
-  skullIcon: {fileID: 0}
-  skill1Icon: {fileID: 0}
-  skill2Icon: {fileID: 0}
+  damageMultiplier: 1.5
+  attackRange: 2
+  dashCount: 2
+  skullPrefab: {fileID: 3016267435482887828, guid: fb7ebda05ce55e449a13b09b6ac28797, type: 3}
+  animatorController: {fileID: 9100000, guid: 845cd1234e36e46d89dc6eed2bf440b8, type: 2}
+  skill1Cooldown: 8
+  skill2Cooldown: 6
+  portraitIcon: {fileID: 21300000, guid: 22230f76908cb4c0abe89f6c236e1a74, type: 3}
+  portraitPosition: {x: -51.6, y: 641.8}
+  mainIcon: {fileID: 21300000, guid: 85dc2669713754127949185db901b40d, type: 3}
+  subIcon: {fileID: 21300000, guid: fcf822ffa8c784fd0894f031dcb9d76e, type: 3}
+  skill1Icon: {fileID: 21300000, guid: 41fe97f6e7f6e124c8a86ed41e87acd4, type: 3}
+  skill2Icon: {fileID: 21300000, guid: 61b42a98333fff747a1f04d219ab9998, type: 3}
   skullName: Destroyer
-  type: 
-  rarity: 
-  swapTitle: 
-  swapDescription: 
-  skill1Name: 
-  skill1Description: 
-  skill2Name: 
-  skill2Description: 
+  type: Power
+  rarity: Legendary
+  intro: Turning everything to ash is the only way to set you free.
+  description: 'When enemies are defeated, increases casting speed by 10% for 5 seconds.
+    (Up to 200%)
+
+    When the maximum number of skill uses is reached, greatly reduces
+    the cooldown of the corresponding skill.'
+  skill1Name: Whirlwind
+  skill2Name: Spinning Ambush
+  swapTitle: Commence Hunting
+  skill1Description: 'Spins while advancing in the direction it is facing pulling
+    enemies in, dealing Physical Damage.
+
+    Pressing the button repeatedly enables
+    the skill to be used up to 7 times.
+
+    When the maxium number of skill uses
+    is reached, performs another spin, dealing Physical Damage over a wide area.'
+  skill2Description: 'Leaps forward and spins, dealing Physical Damage.
+
+    Pressing
+    the button repeatedly enables the skill to be used up to 5 times.
+
+    When the
+    maxium number of skill uses is reached, advances while quickly spinning, dealing
+    Physical Damage.'
+  swapDescription: 'When swapping, identifies enemies in a wide area as prey for
+    5 seconds.
+
+    Enemies identified as prey are slowed and receive 30% more damage.'
