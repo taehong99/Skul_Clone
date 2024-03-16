@@ -21,8 +21,9 @@ public class SkillCooldownUI : BaseUI
 
     private void Update()
     {
-        GetUI<Image>("Skill1Cooldown").fillAmount = player.CooldownRatio;
-        GetUI<Image>("Skill2Cooldown").enabled = !player.CanTeleport;
+        //TODO : Refactor player skill cooldown tracking
+        //GetUI<Image>("Skill1Cooldown").fillAmount = player.CooldownRatio;
+        //GetUI<Image>("Skill2Cooldown").enabled = !player.CanTeleport;
     }
 
     private void UpdateUI()

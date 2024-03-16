@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skull : MonoBehaviour
+public class SkulProjectile : MonoBehaviour
 {
     public enum Direction { Left, Right }
 

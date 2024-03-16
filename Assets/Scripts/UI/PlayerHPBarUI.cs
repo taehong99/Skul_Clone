@@ -6,13 +6,14 @@ using TMPro;
 
 public class PlayerHPBarUI : BaseUI
 {
-    [SerializeField] PlayerController player;
+    GameManager game;
     private int maxHP;
-
 
     private void Start()
     {
-        maxHP = player.HP;
+        game = Manager.Game;
+        maxHP = game.PlayerHP;
+        
         GetUI<Slider>("HealthUI").maxValue = maxHP;
         GetUI<Slider>("HealthUI").value = maxHP;
         GetUI<TextMeshProUGUI>("HealthText").text = $"{maxHP}/{maxHP}";
@@ -20,13 +21,13 @@ public class PlayerHPBarUI : BaseUI
 
     private void OnEnable()
     {
-        SetHP(player.HP);
-        player.OnHPChanged += SetHP;
+        SetHP(game.PlayerHP);
+        game.OnPlayerHPChanged += SetHP;
     }
 
     private void OnDisable()
     {
-        player.OnHPChanged -= SetHP;
+        game.OnPlayerHPChanged -= SetHP;
     }
 
     public void SetHP(int hp)

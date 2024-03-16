@@ -17,11 +17,11 @@ public class JumpState : IState
         // play animation depending on y velocity
         if (player.Rb2d.velocity.y > 0.1f)
         {
-            player.Animator.Play("SkulJump");
+            player.Animator.Play("Jump");
         }
         else if (player.Rb2d.velocity.y < -0.1f)
         {
-            player.Animator.Play("SkulFall");
+            player.Animator.Play("Fall");
         }
         lastYVel = player.Rb2d.velocity.y;
     }
@@ -33,11 +33,11 @@ public class JumpState : IState
         {
             if (player.Rb2d.velocity.y > 0.1f)
             {
-                player.Animator.Play("SkulJump");
+                player.Animator.Play("Jump");
             }
             else
             {
-                player.Animator.Play("SkulFall");
+                player.Animator.Play("Fall");
             }
         }
         lastYVel = player.Rb2d.velocity.y;

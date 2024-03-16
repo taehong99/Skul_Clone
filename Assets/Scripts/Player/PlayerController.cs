@@ -13,8 +13,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
     [Header("Player State Machine")]
-    [SerializeField] StateMachine playerSM;
+    protected StateMachine playerSM;
     public StateMachine fsm => playerSM; // Properties for the states
+    public PlayerData Data => data;
     public Rigidbody2D Rb2d => rb2d;
     public Animator Animator => animator;
     public Vector2 MoveDir => moveDir;
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
     [Header("Player Stats")]
-    [SerializeField] int startingHP;
+    [SerializeField] PlayerData data;
     private int hp;
     public int HP { get { return hp; } private set { hp = value; OnHPChanged?.Invoke(value); } }
     public UnityAction<int> OnHPChanged;
@@ -62,20 +63,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     public bool isAttacking;
 
     [Header("Player Skills")]
-    [SerializeField] GameObject skullPrefab;
-    [SerializeField] float skullCooldown;
-    [SerializeField] LayerMask skullMask;
-    [SerializeField] RuntimeAnimatorController defaultController;
-    [SerializeField] RuntimeAnimatorController headlessController;
-    float cooldownTimer = 0f;
-    public float CooldownRatio => cooldownTimer / skullCooldown; // TODO: refactor this
-    bool isSwapping;
-    bool canTeleport = false;
-    public bool CanTeleport => canTeleport; // TODO: refactor this
-
-    [Header("Player Swap")]
-    [SerializeField] float swapDuration;
-    [SerializeField] float swapSpeed;
+    
+    protected float cooldownTimer = 0f;
+    public float CooldownRatio => cooldownTimer / data.skill1Cooldown; // TODO: refactor this
+    protected bool isSwapping;
+ 
 
     [Header("Player Interact")]
     [SerializeField] float interactRange;
@@ -86,11 +78,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     PooledObject playerHitEffectPrefab;
 
     [Header("Player Mask")]
-    public LayerMask mask;
+    [SerializeField] private LayerMask playerMask;
+    public LayerMask Mask => playerMask;
 
     [Header("Misc")]
-    Rigidbody2D rb2d;
-    Animator animator;
+    protected Rigidbody2D rb2d;
+    protected Animator animator;
     Collider2D[] colliders = new Collider2D[15];
     Collider2D playerCollider;
     Collider2D platformCollider;
@@ -98,8 +91,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        hp = startingHP;
-
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
@@ -133,7 +124,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        animator.SetFloat("ySpeed", rb2d.velocity.y);
         if (isDashing)
             return;
         
@@ -143,24 +133,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     #region Collision
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (groundLayer.Contains(collision.gameObject.layer))
         {
-            animator.SetBool("isGrounded", true);
             isGrounded = true;
             remainingJumps = jumpCount;
-        }
-        if (skullMask.Contains(collision.gameObject.layer))
-        {
-            PickUpSkull();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (groundLayer.Contains(collision.gameObject.layer))
         {
-            animator.SetBool("isGrounded", false);
             isGrounded = false;
         }
     }
@@ -325,78 +309,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     #endregion
 
     #region Skills
-    Coroutine throwSkullRoutine;
-    GameObject thrownSkull = null;
 
-    private void ThrowSkull()
-    {
-        if (cooldownTimer > 0)
-            return;
-        animator.Play("SkulThrow");
-        throwSkullRoutine = StartCoroutine(ThrowSkullRoutine());
-    }
+    protected virtual void UseSkill1() { }
+    protected virtual void UseSkill2() { }
+    protected virtual void Swap() { }
 
-    private IEnumerator ThrowSkullRoutine()
-    {
-        cooldownTimer = skullCooldown;
-        animator.runtimeAnimatorController = headlessController;
-        Vector2 direction = (facingDir == FacingDir.Left) ? Vector2.left : Vector2.right;
-        thrownSkull = Instantiate(skullPrefab, transform.position, Quaternion.identity);
-        thrownSkull.GetComponent<Skull>().SetDirection(direction);
-        while (cooldownTimer > 0)
-        {
-            if(cooldownTimer < (skullCooldown  - 0.5))
-            {
-                canTeleport = true;
-            }
-            cooldownTimer -= Time.deltaTime;
-            yield return null;
-        }
-        Destroy(thrownSkull);
-        canTeleport = false;
-        cooldownTimer = 0;
-        animator.runtimeAnimatorController = defaultController;
-    }
-
-    private void TeleportToSkull()
-    {
-        if(canTeleport)
-        {
-            transform.position = thrownSkull.transform.position;
-            PickUpSkull();
-        }
-    }
-
-    private void PickUpSkull()
-    {
-        canTeleport = false;
-        StopCoroutine(throwSkullRoutine);
-        Destroy(thrownSkull);
-        cooldownTimer = 0;
-        animator.runtimeAnimatorController = defaultController;
-    }
-
-    private IEnumerator SwapAttack()
-    {
-        isSwapping = true;
-        playerSM.Trigger(TriggerType.SwapTrigger);
-        float time = 0;
-        float originalGravity = rb2d.gravityScale;
-        rb2d.gravityScale = 0;
-        rb2d.velocity = Vector3.zero;
-        Vector3 direction = (facingDir == FacingDir.Left) ? Vector2.left : Vector2.right;
-
-        while (time < swapDuration)
-        {
-            time += Time.deltaTime;
-            transform.Translate(direction * swapSpeed * Time.deltaTime);
-            yield return null;
-        }
-
-        //moveDir = Vector2.zero;
-        rb2d.gravityScale = originalGravity;
-        isSwapping = false;
-    }
     #endregion
 
     #region Interact
@@ -412,7 +329,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRange);
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
     #endregion
 
@@ -420,7 +337,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void OnMove(InputValue value)
     {
         moveDir = value.Get<Vector2>();
-        animator.SetFloat("xSpeed", Mathf.Abs(moveDir.x));
         Flip();
     }
     private void OnJump()
@@ -437,7 +353,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isSwapping)
             return;
-        StartCoroutine(SwapAttack());
+        Swap();
     }
     private void OnAttack()
     {
@@ -445,11 +361,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     private void OnSkill1()
     {
-        ThrowSkull();
+        UseSkill1();
     }
     private void OnSkill2()
     {
-        TeleportToSkull();
+        UseSkill2();
     }
     private void OnInteract()
     {

@@ -13,7 +13,7 @@ public class DashState : IState
 
     public void Enter()
     {
-        player.Animator.Play("SkulDash");
+        player.Animator.Play("Dash");
     }
 
     public void Update()

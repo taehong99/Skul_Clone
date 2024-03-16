@@ -1,12 +1,18 @@
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
     PlayerController player;
     public PlayerController Player => player;
+
     CameraShake shaker;
     public CameraShake Shaker => shaker;
+
+    private int hp;
+    public int PlayerHP { get { return hp; } set { hp = value; OnPlayerHPChanged?.Invoke(value); } }
+    public UnityAction<int> OnPlayerHPChanged;
 
     private void Start()
     {

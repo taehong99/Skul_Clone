@@ -27,7 +27,10 @@ public class StateMachine
         this.walkState = new WalkState(player);
         this.jumpState = new JumpState(player);
         this.idleState = new IdleState(player);
-        this.attackState = new AttackState(player);
+        if (player.Data.skullName == "Skul")
+            this.attackState = new AttackState(player);
+        else if (player.Data.skullName == "Destroyer")
+            this.attackState = new DestroyerAttackState(player);
         this.dashState = new DashState(player);
         this.swapState = new SwapState(player);
     }

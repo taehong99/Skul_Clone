@@ -13,7 +13,7 @@ public class WalkState : IState
 
     public void Enter()
     {
-        player.Animator.Play("SkulRun");
+        player.Animator.Play("Walk");
     }
 
     public void Update()

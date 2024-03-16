@@ -2,21 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : IState
+public class DestroyerAttackState : AttackState
 {
     private PlayerController player;
     private int remainingAttacks;
     private bool queuedAttack;
 
-    public AttackState(PlayerController player)
+    public DestroyerAttackState(PlayerController player) : base(player)
     {
         this.player = player;
     }
 
-    public virtual void Enter()
+    public override void Enter()
     {
         player.ToggleIsAttacking(true);
-
         queuedAttack = false;
         if (!player.IsGrounded)
         {
@@ -26,11 +25,11 @@ public class AttackState : IState
         else
         {
             player.Animator.Play("AttackA");
-            remainingAttacks = 1;
+            remainingAttacks = 2;
         }
     }
 
-    public virtual void Update()
+    public override void Update()
     {
         // fix for mysterious bug (jumpAttack doesn't work at highest point)
         if (player.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Jump")
@@ -41,7 +40,15 @@ public class AttackState : IState
         {
             if (queuedAttack)
             {
-                player.Animator.Play("AttackB");
+                if (remainingAttacks == 1)
+                {
+                    player.Animator.Play("AttackB");
+                }
+                else
+                {
+                    player.Animator.Play("AttackC");
+                }
+
                 queuedAttack = false;
                 return;
             }
@@ -49,14 +56,13 @@ public class AttackState : IState
         }
     }
 
-    public virtual void Exit()
+    public override void Exit()
     {
-        // Set isAttacking to false
         player.ToggleIsAttacking(false);
     }
 
-    public virtual void Trigger(TriggerType trigger)
-    {   
+    public override void Trigger(TriggerType trigger)
+    {
         switch (trigger)
         {
             case TriggerType.AttackTrigger:

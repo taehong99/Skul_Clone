@@ -13,7 +13,7 @@ public class SwapState : IState
 
     public void Enter()
     {
-        player.Animator.Play("SkulSwap");
+        player.Animator.Play("Swap");
     }
 
     public void Update()
