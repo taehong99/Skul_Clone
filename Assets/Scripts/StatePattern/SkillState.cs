@@ -2,26 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwapState : IState
+public class SkillState : IState
 {
     private PlayerController player;
 
-    public SwapState(PlayerController player)
+    public SkillState(PlayerController player)
     {
         this.player = player;
     }
 
+    //Do nothing
     public void Enter()
     {
-        player.Animator.Play("Swap");
+        
     }
 
     public void Update()
     {
-        if (!player.IsSwapping)
-        {
-            player.fsm.TransitionTo(player.fsm.idleState);
-        }
+        
     }
 
     public void Exit()

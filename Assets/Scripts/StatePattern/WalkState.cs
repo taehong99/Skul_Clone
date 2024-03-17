@@ -30,7 +30,7 @@ public class WalkState : IState
 
     public void Exit()
     {
-        // code that runs when we exit the state
+        
     }
 
     public void Trigger(TriggerType trigger)
@@ -43,8 +43,8 @@ public class WalkState : IState
             case TriggerType.DashTrigger:
                 player.fsm.TransitionTo(player.fsm.dashState);
                 break;
-            case TriggerType.SwapTrigger:
-                player.fsm.TransitionTo(player.fsm.swapState);
+            case TriggerType.SkillTrigger:
+                player.fsm.TransitionTo(player.fsm.skillState);
                 break;
         }
     }

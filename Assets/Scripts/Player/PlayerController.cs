@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected float skill1CooldownTimer = 0f;
     protected float skill2CooldownTimer = 0f;
     public float Skill1CooldownRatio => skill1CooldownTimer / data.skill1Cooldown;
-    public float Skill2CooldownRatio => skill1CooldownTimer / data.skill2Cooldown;
+    public float Skill2CooldownRatio => skill2CooldownTimer / data.skill2Cooldown;
 
     [Header("Player Swap")]
     protected PlayerData subSkullData;
@@ -129,8 +130,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        if (isDashing)
+        if(isDashing)
+        {
             return;
+        }
 
         Move();
         JumpFall();
@@ -140,6 +143,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
+        if(rb2d.velocity.y > 0)
+        {
+            return;
+        }
         if (groundLayer.Contains(collision.gameObject.layer))
         {
             isGrounded = true;
@@ -161,10 +168,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             platformCollider = collision.collider;
         }
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            fsm.TransitionTo(fsm.idleState);
-        }
+        //if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        //{
+        //    fsm.TransitionTo(fsm.idleState);
+        //}
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -272,7 +279,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
         yield return new WaitForSeconds(dashDuration);
         rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
-        Debug.Log(originalGravity);
         rb2d.gravityScale = originalGravity;
 
         // dash end

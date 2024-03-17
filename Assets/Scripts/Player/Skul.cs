@@ -105,7 +105,7 @@ public class Skul : PlayerController
     private IEnumerator SwapAttack()
     {
         isSwapping = true;
-        playerSM.Trigger(TriggerType.SwapTrigger);
+        playerSM.Trigger(TriggerType.SkillTrigger);
         float time = 0;
         float originalGravity = rb2d.gravityScale;
         rb2d.gravityScale = 0;

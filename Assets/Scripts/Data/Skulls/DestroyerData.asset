@@ -17,8 +17,8 @@ MonoBehaviour:
   dashCount: 2
   skullPrefab: {fileID: 3016267435482887828, guid: fb7ebda05ce55e449a13b09b6ac28797, type: 3}
   animatorController: {fileID: 9100000, guid: 845cd1234e36e46d89dc6eed2bf440b8, type: 2}
-  skill1Cooldown: 8
-  skill2Cooldown: 6
+  skill1Cooldown: 2
+  skill2Cooldown: 2
   portraitIcon: {fileID: 21300000, guid: 22230f76908cb4c0abe89f6c236e1a74, type: 3}
   portraitPosition: {x: -51.6, y: 641.8}
   mainIcon: {fileID: 21300000, guid: 85dc2669713754127949185db901b40d, type: 3}

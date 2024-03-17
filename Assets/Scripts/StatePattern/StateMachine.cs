@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum TriggerType { AttackTrigger, DashTrigger, SwapTrigger }
+public enum TriggerType { AttackTrigger, DashTrigger, SkillTrigger }
 [Serializable]
 public class StateMachine
 {
@@ -15,10 +15,7 @@ public class StateMachine
     public JumpState jumpState;
     public AttackState attackState;
     public DashState dashState;
-    public SwapState swapState;
-
-    // event to notify other objects of the state change
-    //public event Action<IState> stateChanged;
+    public SkillState skillState;
 
     // State Machine Constructor
     public StateMachine(PlayerController player)
@@ -32,7 +29,35 @@ public class StateMachine
         else if (player.Data.skullName == "Destroyer")
             this.attackState = new DestroyerAttackState(player);
         this.dashState = new DashState(player);
-        this.swapState = new SwapState(player);
+        this.skillState = new SkillState(player);
+    }
+
+    public string CurState()
+    {
+        switch (curState)
+        {
+            case IdleState:
+                return "Idle";
+                break;
+            case WalkState:
+                return "Walk";
+                break;
+            case JumpState:
+                return "Jump";
+                break;
+            case AttackState:
+                return "Attack";
+                break;
+            case DashState:
+                return "Dash";
+                break;
+            case SkillState:
+                return "Skill";
+                break;
+            default:
+                return "None";
+                break;
+        }
     }
 
     // set the starting state
@@ -40,21 +65,16 @@ public class StateMachine
     {
         curState = state;
         state.Enter();
-
-        // notify other objects that state has changed
-        //stateChanged?.Invoke(state);
     }
 
     // exit this state and enter another
     public void TransitionTo(IState nextState)
     {
-        //Debug.Log($"{curState} -> {nextState}");
         curState.Exit();
         curState = nextState;
         nextState.Enter();
 
-        // notify other objects that state has changed
-        //stateChanged?.Invoke(nextState);
+        Debug.Log($"Entered {nextState.GetType()}");
     }
 
     // allow the StateMachine to update this state

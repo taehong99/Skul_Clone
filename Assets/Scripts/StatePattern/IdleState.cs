@@ -43,8 +43,8 @@ public class IdleState : IState
             case TriggerType.DashTrigger:
                 player.fsm.TransitionTo(player.fsm.dashState);
                 break;
-            case TriggerType.SwapTrigger:
-                player.fsm.TransitionTo(player.fsm.swapState);
+            case TriggerType.SkillTrigger:
+                player.fsm.TransitionTo(player.fsm.skillState);
                 break;
         }
     }
