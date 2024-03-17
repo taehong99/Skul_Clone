@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Gate : MonoBehaviour, IInteractable
 {
+    [SerializeField] string sceneToLoad;
     Canvas canvas;
+    bool interacted;
 
     private void Start()
     {
@@ -23,6 +25,10 @@ public class Gate : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log("interacted with gate");
+        if (interacted)
+            return;
+
+        Manager.Scene.LoadScene(sceneToLoad);
+        interacted = true;
     }
 }

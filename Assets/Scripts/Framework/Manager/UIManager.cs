@@ -28,17 +28,15 @@ public class UIManager : Singleton<UIManager>
 
     private void Update()
     {
-        if (curPopUpUI != null && curPopUpUI.name != "InventoryUI")
+        if (curPopUpUI == null || (curPopUpUI != null && curPopUpUI.name != "InventoryUI"))
             return;
 
         if (Keyboard.current[Key.D].wasPressedThisFrame)
         {
-            Debug.Log("D Pressed this frame");
             ShowPopUpUI<DescriptionUI>();
         }
         else if (Keyboard.current[Key.D].wasReleasedThisFrame)
         {
-            Debug.Log("D released this frame");
             ClosePopUpUI();
         }
     }

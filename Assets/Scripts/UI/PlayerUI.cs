@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerUI : BaseUI
 {
-    [SerializeField] int skillSlot;
     PlayerController player;
 
     //private void Awake()
@@ -16,6 +15,7 @@ public class PlayerUI : BaseUI
 
     private void Start()
     {
+        Debug.Log("PLAYER UI START");
         player = Manager.Game.Player;
         Manager.Events.dataEventDic["skullPickedUp"].OnEventRaised += PickUpSkull;
         Manager.Events.voidEventDic["skullSwapped"].OnEventRaised += UpdateIcons;

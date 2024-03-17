@@ -51,7 +51,7 @@ public class Skul : PlayerController
         skill1CooldownTimer = data.skill1Cooldown;
         animator.runtimeAnimatorController = headlessController;
         Vector2 direction = (facingDir == FacingDir.Left) ? Vector2.left : Vector2.right;
-        thrownSkull = Instantiate(skullPrefab, transform.position, Quaternion.identity);
+        thrownSkull = Instantiate(skullPrefab, transform.position + Vector3.up, Quaternion.identity);
         thrownSkull.GetComponent<SkulProjectile>().SetDirection(direction);
         while (skill1CooldownTimer > 0)
         {

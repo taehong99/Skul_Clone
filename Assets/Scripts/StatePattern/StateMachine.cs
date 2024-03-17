@@ -38,25 +38,18 @@ public class StateMachine
         {
             case IdleState:
                 return "Idle";
-                break;
             case WalkState:
                 return "Walk";
-                break;
             case JumpState:
                 return "Jump";
-                break;
             case AttackState:
                 return "Attack";
-                break;
             case DashState:
                 return "Dash";
-                break;
             case SkillState:
                 return "Skill";
-                break;
             default:
                 return "None";
-                break;
         }
     }
 

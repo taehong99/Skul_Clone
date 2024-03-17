@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Lab_Movement.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/0.CastleScene.unity
+    path: Assets/Scenes/0.TitleScene.unity
+    guid: e3aead1099ce04092a509468fe603876
+  - enabled: 1
+    path: Assets/Scenes/1.CastleScene.unity
     guid: 8d7d3799f9bbc41058dc58629d340094
   - enabled: 1
-    path: Assets/Scenes/1.CastleLobby.unity
+    path: Assets/Scenes/2.CastleLobby.unity
     guid: 61979ceeedab7470c8637b16d1cf348e
+  - enabled: 1
+    path: Assets/Scenes/3.Field1.unity
+    guid: d6fb0d51fd88e444e9bb14c8c151ccf9
   m_configObjects: {}

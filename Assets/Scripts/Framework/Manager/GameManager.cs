@@ -17,15 +17,12 @@ public class GameManager : Singleton<GameManager>
     public UnityAction<int> OnPlayerHPChanged;
     public UnityAction OnPlayerDied;
 
-    private void Start()
+    public void StartGame()
     {
-        // Assign player
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        player = playerObject.GetComponent<PlayerController>();
-        playerHP = playerBaseHP;
+        Debug.Log("Game started");
 
-        // Assign Camera Shaker
-        shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
+        // Player Starting HP
+        playerHP = playerBaseHP;
 
         //Create pools
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/DashSmoke1"), 3, 5);
@@ -33,6 +30,19 @@ public class GameManager : Singleton<GameManager>
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect"), 2, 4);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyHitEffect"), 5, 8);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyEffect"), 5, 8);
+    }
+
+    public void SetPlayer(PlayerController player)
+    {
+        // Assign player to manager at start of every scene
+        Debug.Log("Player Assigned");
+        this.player = player;
+    }
+
+    public void AddCameraShaker()
+    {
+        // Assign Camera Shaker before boss fight
+        shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
     }
 
     public void PlayerTakeDamage(int damage)
