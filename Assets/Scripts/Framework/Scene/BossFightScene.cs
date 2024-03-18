@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Cinemachine;
+using UnityEngine;
 
-public class LobbyScene : BaseScene
+public class BossFightScene : BaseScene
 {
-    [SerializeField] GameObject player;
     [SerializeField] Vector2 playerSpawnPos;
     [SerializeField] GameObject playerUI;
     [SerializeField] CinemachineVirtualCamera vcam;
 
     public override IEnumerator LoadingRoutine()
     {
-        player = Instantiate(player, playerSpawnPos, Quaternion.identity);
+        GameObject player = Instantiate(Manager.Game.MainSkullData.skullPrefab, playerSpawnPos, Quaternion.identity);
         Manager.Game.SetPlayer(player.GetComponent<PlayerController>());
         Instantiate(playerUI);
-        vcam.ForceCameraPosition(player.transform.position, Quaternion.identity);
         vcam.m_Follow = player.transform;
+        Manager.Game.CreateCombatPools();
         Manager.Game.CreateSmokePools();
+        Manager.Game.AddCameraShaker();
         yield return null;
     }
 }

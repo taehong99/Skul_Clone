@@ -30,6 +30,7 @@ public class TitleScene : BaseScene
         if (Input.anyKeyDown)
         {
             Manager.Scene.LoadScene("1.CastleScene");
+            //Manager.Scene.LoadScene("3.Field1");
             loadStarted = true;
         }
     }

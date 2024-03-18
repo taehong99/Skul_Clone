@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04502a94b71a04bb3950af98514e1a38, type: 3}
   m_Name: KnightData
   m_EditorClassIdentifier: 
-  baseHP: 20
+  baseHP: 100
   moveSpeed: 5
   damage: 20
   knockbackForce: 0

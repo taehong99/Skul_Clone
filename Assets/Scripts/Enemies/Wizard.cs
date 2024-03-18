@@ -26,7 +26,7 @@ public class Wizard : Enemy
         animator.Play("Attack");
         for(int i = 0; i < 3; i++)
         {
-            Instantiate(fireballPrefab, fireballSpawnPoint);
+            Instantiate(fireballPrefab, fireballSpawnPoint.position, Quaternion.identity);
             yield return new WaitForSeconds(fireInterval);
         }
         isAttacking = false;

@@ -6,11 +6,15 @@ using UnityEngine.Events;
 public class EnemySpawner : MonoBehaviour
 {
     public UnityAction OnSpawnEnemies;
+    private bool spawned;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (spawned)
+            return;
         if (collision.CompareTag("Player"))
         {
+            spawned = true;
             StartCoroutine(SpawnRoutine());
         }
     }

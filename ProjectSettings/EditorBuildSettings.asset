@@ -20,4 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/3.Field1.unity
     guid: d6fb0d51fd88e444e9bb14c8c151ccf9
+  - enabled: 1
+    path: Assets/Scenes/4.Field2.unity
+    guid: c8a338f4f1e864dc2bdad94284fa5352
+  - enabled: 1
+    path: Assets/Scenes/BossEntrance.unity
+    guid: 46f5c7ccb747b49b197ae74dc343f824
+  - enabled: 1
+    path: Assets/Scenes/BossFight.unity
+    guid: 3396bc4b3e4f75446b58f53085cd9d75
   m_configObjects: {}

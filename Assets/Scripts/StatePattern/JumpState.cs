@@ -46,7 +46,6 @@ public class JumpState : IState
         // state transition
         if (player.IsGrounded)
         {
-            Debug.Log("entered");
             player.fsm.TransitionTo(player.fsm.idleState);
         }
     }

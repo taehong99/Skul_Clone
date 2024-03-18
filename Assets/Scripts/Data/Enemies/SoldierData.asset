@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04502a94b71a04bb3950af98514e1a38, type: 3}
   m_Name: SoldierData
   m_EditorClassIdentifier: 
-  baseHP: 10
+  baseHP: 60
   moveSpeed: 5
   damage: 10
   knockbackForce: 2

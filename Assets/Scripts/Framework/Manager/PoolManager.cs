@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PoolManager : Singleton<PoolManager>
 {
+    
     private Dictionary<int, ObjectPool> poolDic = new Dictionary<int, ObjectPool>();
 
     public void CreatePool(PooledObject prefab, int size, int capacity)

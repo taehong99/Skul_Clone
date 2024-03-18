@@ -7,18 +7,17 @@ using TMPro;
 public class PlayerHPBarUI : BaseUI
 {
     GameManager game;
-    private int maxHP;
+    const int maxHP = GameManager.playerBaseHP;
 
     private void Start()
     {
         game = Manager.Game;
-        maxHP = game.PlayerHP;
         SetHP(maxHP);
         game.OnPlayerHPChanged += SetHP;
 
         GetUI<Slider>("HealthUI").maxValue = maxHP;
-        GetUI<Slider>("HealthUI").value = maxHP;
-        GetUI<TextMeshProUGUI>("HealthText").text = $"{maxHP}/{maxHP}";
+        GetUI<Slider>("HealthUI").value = game.PlayerHP;
+        GetUI<TextMeshProUGUI>("HealthText").text = $"{game.PlayerHP}/{maxHP}";
     }
 
     private void OnEnable()

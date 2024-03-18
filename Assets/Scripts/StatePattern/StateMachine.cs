@@ -67,7 +67,7 @@ public class StateMachine
         curState = nextState;
         nextState.Enter();
 
-        Debug.Log($"Entered {nextState.GetType()}");
+        //Debug.Log($"Entered {nextState.GetType()}");
     }
 
     // allow the StateMachine to update this state

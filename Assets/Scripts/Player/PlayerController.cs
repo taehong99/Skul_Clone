@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected StateMachine playerSM;
     public StateMachine fsm => playerSM; // Properties for the states to access
     public PlayerData Data => data;
-    public PlayerData SubSkullData => subSkullData;
+    //public PlayerData SubSkullData => subSkullData;
     public Rigidbody2D Rb2d => rb2d;
     public Animator Animator => animator;
     public Vector2 MoveDir => moveDir;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         isAttacking = b;
     }
 
-    [Header("Player Stats")]
+    [Header("Player Data")]
     [SerializeField] protected PlayerData data;
 
     [Header("Player Move")]
@@ -112,7 +112,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Start()
     {
         playerSM.Initialize(playerSM.idleState);
-        Manager.Events.dataEventDic["skullPickedUp"].OnEventRaised += PickUpSkull;
     }
 
     private void Update()
@@ -330,26 +329,20 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected virtual void UseSkill1() { }
     protected virtual void UseSkill2() { }
     
-    private void Swap()
+    private void Swap() // Request swap to GameManager
     {
-        if (subSkullData == null)
+        if (Manager.Game.SubSkullData == null)
             return;
 
-        PlayerController newSkull = Instantiate(subSkullData.skullPrefab, transform.position, transform.rotation).GetComponent<PlayerController>();
-        Manager.Game.HandleSkullSwap(newSkull);
-        newSkull.subSkullData = data;
-        Destroy(gameObject);
-        Manager.Events.voidEventDic["skullSwapped"].RaiseEvent();
-        /*PlayerData temp = subSkullData;
-        subSkullData = data;
-        data = temp;*/
+        Manager.Game.SwapSkull();
     }
 
-    protected virtual void SwapEffect() { }
+    public virtual void SwapEffect() { }
 
     #endregion
 
     #region Interact
+
     private void Interact()
     {
         Collider2D collider = Physics2D.OverlapCircle(transform.position, interactRange, interactableMask);
@@ -357,16 +350,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             return;
 
         collider.GetComponent<IInteractable>().Interact();
-    }
-
-    private void PickUpSkull(PlayerData skullData)
-    {
-        subSkullData = skullData;
-        Swap();
-        /*PlayerController newSkull = Instantiate(skullData.skullPrefab, transform.position, transform.rotation).GetComponent<PlayerController>();
-        Manager.Game.HandleSkullSwap(newSkull);
-        newSkull.subSkullData = data;
-        Destroy(gameObject);*/
     }
 
     #endregion

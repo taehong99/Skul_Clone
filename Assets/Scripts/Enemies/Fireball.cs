@@ -7,6 +7,8 @@ public class Fireball : MonoBehaviour
     [SerializeField] LayerMask hittableMask;
     [SerializeField] float moveSpeed;
     [SerializeField] float shootDelay;
+    [SerializeField] float lifetime;
+    [SerializeField] int damage;
     private Rigidbody2D rb2d;
     private Coroutine coroutine;
 
@@ -18,6 +20,7 @@ public class Fireball : MonoBehaviour
     private void OnEnable()
     {
         coroutine = StartCoroutine(MoveTowardsTarget());
+        StartCoroutine(DestroyAfterX());
     }
 
     private void OnDisable()
@@ -36,7 +39,18 @@ public class Fireball : MonoBehaviour
     {
         if (hittableMask.Contains(collision.gameObject.layer))
         {
+            IDamageable[] damageables = collision.GetComponents<IDamageable>();
+            foreach(var damageable in damageables)
+            {
+                damageable.TakeDamage(damage);
+            }
             Destroy(gameObject);
         }
+    }
+
+    private IEnumerator DestroyAfterX()
+    {
+        yield return new WaitForSeconds(lifetime);
+        Destroy(gameObject);
     }
 }

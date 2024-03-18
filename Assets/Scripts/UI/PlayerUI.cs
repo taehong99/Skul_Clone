@@ -7,25 +7,23 @@ public class PlayerUI : BaseUI
 {
     PlayerController player;
 
-    //private void Awake()
-    //{
-    //    player = Manager.Game.Player;
-    //    GetUI<Image>("Skill1Cooldown").fillAmount = 0;
-    //}
-
     private void Start()
     {
-        Debug.Log("PLAYER UI START");
-        player = Manager.Game.Player;
-        Manager.Events.dataEventDic["skullPickedUp"].OnEventRaised += PickUpSkull;
+        UpdateIcons();
+        //Manager.Events.dataEventDic["skullPickedUp"].OnEventRaised += PickUpSkull;
         Manager.Events.voidEventDic["skullSwapped"].OnEventRaised += UpdateIcons;
+    }
+
+    private void OnDisable()
+    {
+        Manager.Events.voidEventDic["skullSwapped"].OnEventRaised -= UpdateIcons;
     }
 
     private void Update()
     {
-        GetUI<Image>("Skill1Cooldown").fillAmount = player.Skill1CooldownRatio;
-        GetUI<Image>("Skill2Cooldown").fillAmount = player.Skill2CooldownRatio;
-        GetUI<Image>("SwapCooldown").fillAmount = player.SwapCooldownRatio;
+        GetUI<Image>("Skill1Cooldown").fillAmount = Manager.Game.Player.Skill1CooldownRatio;
+        GetUI<Image>("Skill2Cooldown").fillAmount = Manager.Game.Player.Skill2CooldownRatio;
+        GetUI<Image>("SwapCooldown").fillAmount = Manager.Game.Player.SwapCooldownRatio;
     }
 
     private void PickUpSkull(PlayerData data)
@@ -35,10 +33,13 @@ public class PlayerUI : BaseUI
 
     private void UpdateIcons()
     {
-        player = Manager.Game.Player;
-        GetUI<Image>("MainSkullIcon").sprite = player.Data.mainIcon;
-        GetUI<Image>("SubSkullIcon").sprite = player.SubSkullData.subIcon;
-        GetUI<Image>("Skill1Icon").sprite = player.Data.skill1Icon;
-        GetUI<Image>("Skill2Icon").sprite = player.Data.skill2Icon;
+        GetUI<Image>("MainSkullIcon").sprite = Manager.Game.MainSkullData.mainIcon;
+        GetUI<Image>("Skill1Icon").sprite = Manager.Game.MainSkullData.skill1Icon;
+        GetUI<Image>("Skill2Icon").sprite = Manager.Game.MainSkullData.skill2Icon;
+
+        if (Manager.Game.SubSkullData != null)
+        {
+            GetUI<Image>("SubSkullIcon").sprite = Manager.Game.SubSkullData.subIcon;
+        }
     }
 }

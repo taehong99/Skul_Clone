@@ -97,7 +97,7 @@ public class Skul : PlayerController
 
     #region Swap
 
-    protected override void SwapEffect()
+    public override void SwapEffect()
     {
         StartCoroutine(SwapAttack());
     }

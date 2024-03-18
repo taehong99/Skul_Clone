@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1920865882681489677}
   - component: {fileID: 710542606308169559}
   m_Layer: 0
-  m_Name: fireball_0
+  m_Name: Fireball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,9 +50,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hittableMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 128
   moveSpeed: 10
   shootDelay: 1
+  lifetime: 3
+  damage: 5
 --- !u!212 &855160866827556008
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -93,7 +95,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1977611893, guid: 80d13e15266e24c5482252f1fbc823f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

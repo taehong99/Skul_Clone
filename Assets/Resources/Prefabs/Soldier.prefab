@@ -209,6 +209,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 982f291496c53439eaf952ecfdde4d09, type: 2}
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
   stanceDuration: 1
 --- !u!212 &2906864881160478847
 SpriteRenderer:

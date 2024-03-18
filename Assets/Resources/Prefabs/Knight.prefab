@@ -556,6 +556,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 5ad3f126a96f14f75a8822f1d7d56eb5, type: 2}
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
   stanceDuration: 1
   tackleTime: 2
   tackleSpeed: 10

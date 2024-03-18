@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("Data")]
     [SerializeField] protected EnemyData data;
+    [SerializeField] LayerMask playerMask;
 
     [Header("Patrol")]
     private bool playerInRange;
@@ -54,8 +55,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     protected virtual void Start()
     {
-        player = Manager.Game.Player;
-
         stateMachine.AddState(State.Idle, new IdleState(this));
         stateMachine.AddState(State.Patrol, new PatrolState(this));
         stateMachine.AddState(State.Chase, new ChaseState(this));
@@ -67,20 +66,21 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        player = Manager.Game.Player;
         stateMachine.Update();
         Flip();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (player.Mask.Contains(collision.gameObject.layer))
+        if (playerMask.Contains(collision.gameObject.layer))
         {
             playerInRange = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (player.Mask.Contains(collision.gameObject.layer))
+        if (playerMask.Contains(collision.gameObject.layer))
         {
             playerInRange = false;
         }
@@ -234,7 +234,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
     private void Die() {
-        GetComponent<Rigidbody2D>().excludeLayers = player.Mask;
+        GetComponent<Rigidbody2D>().excludeLayers = playerMask;
         Destroy(gameObject);
     }
 
@@ -262,7 +262,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            Debug.Log("Entered Idle");
             enemy.rb2d.velocity = Vector2.zero;
             enemy.animator.Play("Idle");
             timer = enemy.data.patienceTimer;
@@ -277,6 +276,11 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             if (timer <= 0)
             {
+                if(enemy.data.patrolTime == 0) // Wizard doesn't patrol
+                {
+                    ChangeState(State.Attack);
+                    return;
+                }
                 ChangeState(State.Patrol);
             }
         }
@@ -291,7 +295,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            Debug.Log("Entered Patrol");
             enemy.ledgeChecker.OnReachedEndOfLedge += ReachedEndOfLedge;
             enemy.animator.Play("Walk");
             enemy.StartPatrol();
@@ -336,7 +339,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            Debug.Log("Entered Chase");
             enemy.ledgeChecker.OnReachedEndOfLedge += ReachedEndOfLedge;
             enemy.animator.Play("Walk");
         }
@@ -367,7 +369,7 @@ public class Enemy : MonoBehaviour, IDamageable
         public override void Exit()
         {
             enemy.ledgeChecker.OnReachedEndOfLedge -= ReachedEndOfLedge;
-            enemy.StopPatrol();
+            //enemy.StopPatrol();
         }
 
         private void ReachedEndOfLedge()
@@ -385,7 +387,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            Debug.Log("Entered Attack");
             enemy.isAttacking = true;
             enemy.FacePlayer();
             enemy.Attack();
@@ -414,7 +415,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
-            Debug.Log("Entered Dead");
             DeathEffect();
             Manager.Events.voidEventDic["enemyKilled"].RaiseEvent();
         }
