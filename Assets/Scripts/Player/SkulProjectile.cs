@@ -6,6 +6,7 @@ public class SkulProjectile : MonoBehaviour
 {
     public enum Direction { Left, Right }
 
+    [SerializeField] int damage;
     [SerializeField] float rotateSpeed;
     [SerializeField] float flySpeed;
     [SerializeField] float bounceForce;
@@ -49,7 +50,7 @@ public class SkulProjectile : MonoBehaviour
         IDamageable[] damageables = collision.gameObject.GetComponents<IDamageable>();
         foreach (IDamageable damageable in damageables)
         {
-            damageable.TakeDamage(5); // TODO: add damage variable
+            damageable.TakeDamage(damage); // TODO: add damage variable
         }
 
         rb2d.gravityScale = 1f;

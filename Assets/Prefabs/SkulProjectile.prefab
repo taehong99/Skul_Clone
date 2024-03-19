@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de180f065f5bf4f0085bcb372ca1b40e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 40
   rotateSpeed: 20
   flySpeed: 15
   bounceForce: 7
@@ -91,7 +92,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: be8bd5b080d90cf4c8a03f38f4697bca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

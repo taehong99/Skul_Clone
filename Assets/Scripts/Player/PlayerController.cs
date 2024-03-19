@@ -293,7 +293,9 @@ public class PlayerController : MonoBehaviour, IDamageable
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
             foreach (IDamageable damageable in damageables)
             {
-                damageable.TakeDamage(Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier));
+                int multipliedDamage = Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier);
+                int randomizedDamage = Mathf.CeilToInt(multipliedDamage * Random.Range(0.9f, 1.1f));
+                damageable.TakeDamage(randomizedDamage);
             }
         }
     }
@@ -307,6 +309,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isDashing)
             return;
+
         Manager.Pool.GetPool(playerHitEffectPrefab, transform.position, Quaternion.identity);
         Manager.Game.PlayerTakeDamage(damage);
     }
