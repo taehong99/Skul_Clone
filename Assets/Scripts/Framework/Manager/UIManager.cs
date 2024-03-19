@@ -62,6 +62,11 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    public void Return()
+    {
+        ClosePopUpUI();
+    }
+
     private void OnTab()
     {
         if (popUpStack.Count == 0)

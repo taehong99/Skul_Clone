@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             foreach (IDamageable damageable in damageables)
             {
                 int multipliedDamage = Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier);
-                int randomizedDamage = Mathf.CeilToInt(multipliedDamage * Random.Range(0.9f, 1.1f));
+                int randomizedDamage = Mathf.CeilToInt(multipliedDamage * Random.Range(0.7f, 1.3f));
                 damageable.TakeDamage(randomizedDamage);
             }
         }
