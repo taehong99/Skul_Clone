@@ -19,7 +19,6 @@ public class UIManager : Singleton<UIManager>
     private Stack<PopUpUI> popUpStack = new Stack<PopUpUI>();
     private float prevTimeScale;
     private InGameUI curInGameUI;
-    private PopUpUI curPopUpUI;
 
     private void Start()
     {
@@ -28,30 +27,34 @@ public class UIManager : Singleton<UIManager>
 
     private void Update()
     {
-        if (curPopUpUI == null || (curPopUpUI != null && curPopUpUI.name != "InventoryUI"))
+        if (popUpStack.Count == 0)
             return;
 
-        if (Keyboard.current[Key.D].wasPressedThisFrame)
+        if(popUpStack.Peek().name == "InventoryUI(Clone)")
         {
-            ShowPopUpUI<DescriptionUI>();
+            if (Keyboard.current[Key.D].wasPressedThisFrame)
+            {
+                ShowPopUpUI<DescriptionUI>();
+            }
         }
-        else if (Keyboard.current[Key.D].wasReleasedThisFrame)
+        else if (popUpStack.Peek().name == "DescriptionUI(Clone)")
         {
-            ClosePopUpUI();
+            if (Keyboard.current[Key.D].wasReleasedThisFrame)
+            {
+                ClosePopUpUI();
+            }
         }
     }
 
     private void OnEscape()
     {
-        if (curPopUpUI == null)
+        if (popUpStack.Count == 0)
         {
             ShowPopUpUI<PauseUI>();
-            curPopUpUI = Load<PauseUI>($"UI/PopUp/PauseUI");
         }
-        else if (curPopUpUI.name == "PauseUI")
+        else if (popUpStack.Peek().name == "PauseUI(Clone)")
         {
             ClosePopUpUI();
-            curPopUpUI = null;
         }
         else
         {
@@ -61,15 +64,17 @@ public class UIManager : Singleton<UIManager>
 
     private void OnTab()
     {
-        if (curPopUpUI == null)
+        if (popUpStack.Count == 0)
         {
             ShowPopUpUI<InventoryUI>();
-            curPopUpUI = Load<InventoryUI>($"UI/PopUp/InventoryUI");
         }
-        else if (curPopUpUI.name == "InventoryUI")
+        else if (popUpStack.Peek().name == "InventoryUI(Clone)")
         {
             ClosePopUpUI();
-            curPopUpUI = null;
+        }
+        else if (popUpStack.Peek().name == "DescriptionUI(Clone)")
+        {
+            ClearPopUpUI();
         }
         else
         {

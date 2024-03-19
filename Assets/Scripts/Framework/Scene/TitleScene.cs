@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class TitleScene : BaseScene
 {
@@ -15,11 +16,13 @@ public class TitleScene : BaseScene
     private void OnEnable()
     {
         pulseRoutine = StartCoroutine(TextPulseRoutine());
+        Manager.UI.GetComponent<PlayerInput>().enabled = false;
     }
 
     private void OnDisable()
     {
         StopCoroutine(pulseRoutine);
+        Manager.UI.GetComponent<PlayerInput>().enabled = true;
     }
 
     private void Update()
