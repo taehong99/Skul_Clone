@@ -16,7 +16,7 @@ public class BossFightScene : BaseScene
         Instantiate(playerUI);
         vcam.m_Follow = player.transform;
         Manager.Game.CreateCombatPools();
-        Manager.Game.CreateSmokePools(); // uncomment this
+        Manager.Game.CreateSmokePools();
         Manager.Game.AddCameraShaker(vcam);
         yield return null;
     }

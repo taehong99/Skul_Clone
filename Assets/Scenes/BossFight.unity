@@ -505,12 +505,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37bcf0cdedfc064408c6e793e591b629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHP: 300
+  startingHP: 500
   phase1SweepCD: 1
   phase1SlamCD: 1
   phase2SweepCD: 0.2
   phase2SlamCD: 0.2
-  specialAttackDuration: 3
+  specialAttackDuration: 5
 --- !u!4 &453443369
 Transform:
   m_ObjectHideFlags: 0
