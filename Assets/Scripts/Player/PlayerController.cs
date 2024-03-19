@@ -166,11 +166,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     #endregion
 
+    public bool isSlashing;
     #region Movement
     private void Move()
     {
-        if (isFlying)
+        if (isFlying || isSlashing)
             return;
+
         Vector2 newVel = rb2d.velocity;
         newVel.x = moveDir.x * controllerData.moveSpeed;
 

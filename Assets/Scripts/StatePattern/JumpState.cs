@@ -29,6 +29,9 @@ public class JumpState : IState
     public void Update()
     {
         // change animation depending on y velocity
+        if (player.isSlashing)
+            return;
+
         if(Mathf.Sign(player.Rb2d.velocity.y) != Mathf.Sign(lastYVel))
         {
             if (player.Rb2d.velocity.y > 0.1f)

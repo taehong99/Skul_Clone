@@ -14,9 +14,8 @@ public class Destroyer : PlayerController
     private bool attackQueued;
     private int attackCount;
 
-    [Header("Swap Effect")] // Slows time for everything except himself
-    [SerializeField] float slowAmount;
-    [SerializeField] float slowDuration;
+    [Header("Effects")]
+    //[SerializeField] PooledObject whirlwindEffectPrefab;
 
     Coroutine whirlwindRoutine;
 
@@ -43,6 +42,8 @@ public class Destroyer : PlayerController
 
     private IEnumerator WhirlwindRoutine()
     {
+        isSlashing = true;
+        rb2d.velocity = Vector2.zero;
         attackCount = 0;
         while (attackQueued)
         {
@@ -55,9 +56,16 @@ public class Destroyer : PlayerController
             yield return StartCoroutine(Whirlwind());
             yield return null;
         }
+
+        //if(attackCount == whirlwindMaxAttacks) //special effect
+        //{
+        //    Manager.Pool.GetPool(whirlwindEffectPrefab, transform.position, Quaternion.identity);
+        //}
+
         Debug.Log($"Finished at attackQueued:{attackQueued}, attackCount:{attackCount}");
         attackStarted = false;
         StartCoroutine(WhirlwindCooldown());
+        isSlashing = false;
     }
 
     private IEnumerator Whirlwind()
@@ -175,7 +183,7 @@ public class Destroyer : PlayerController
 
     #endregion
 
-    public void PlaySlashSound(int i)
+    public void PlaySlashSound(int i) // to add to attack animations
     {
         switch (i)
         {

@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect"), 2, 4);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyHitEffect"), 5, 8);
         Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/EnemyEffect"), 5, 8);
+        Manager.Pool.CreatePool(Manager.Resource.Load<PooledObject>("Prefabs/WhirlwindFinishEffect"), 1, 2);
     }
 
     public void SetPlayer(PlayerController player) // Assign player to manager at start of every scene
