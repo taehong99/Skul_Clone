@@ -79,6 +79,7 @@ public class BossHead : BossBodyPart
         yield return StartCoroutine(LerpWithOffset(transform, new Vector2(0, -nodOffset), nodSpeed));
 
         // scream
+        Manager.Sound.PlaySFX(Manager.Sound.Data.bossScreamSFX);
         yield return StartCoroutine(ScreamRoutine());
     }
 

@@ -20,11 +20,13 @@ public class AttackState : IState
         queuedAttack = false;
         if (!player.IsGrounded)
         {
+            Manager.Sound.PlaySFX(Manager.Sound.Data.jumpAttackSFX);
             player.Animator.Play("JumpAttack");
             remainingAttacks = 0;
         }
         else
         {
+            Manager.Sound.PlaySFX(Manager.Sound.Data.attackASFX);
             player.Animator.Play("AttackA");
             remainingAttacks = 1;
         }
@@ -41,6 +43,7 @@ public class AttackState : IState
         {
             if (queuedAttack)
             {
+                Manager.Sound.PlaySFX(Manager.Sound.Data.attackBSFX);
                 player.Animator.Play("AttackB");
                 queuedAttack = false;
                 return;

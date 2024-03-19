@@ -44,6 +44,7 @@ public class Skul : PlayerController
 
         animator.Play("Skill1");
         throwSkullRoutine = StartCoroutine(ThrowSkullRoutine());
+        Manager.Sound.PlaySFX(Manager.Sound.Data.attackASFX);
     }
 
     private IEnumerator ThrowSkullRoutine()
@@ -69,6 +70,7 @@ public class Skul : PlayerController
             return;
 
         StartCoroutine(TeleportRoutine());
+        Manager.Sound.PlaySFX(Manager.Sound.Data.teleportSFX);
     }
 
     private IEnumerator TeleportRoutine()

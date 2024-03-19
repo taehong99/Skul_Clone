@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434992a5f08734054830cf178a0ce32d, type: 3}
+  m_Name: AudioClips
+  m_EditorClassIdentifier: 
+  titleBGM: {fileID: 8300000, guid: f26218abedfdc4a8792b8915d31475bb, type: 3}
+  castleBGM: {fileID: 8300000, guid: 294f3df2838eb4e3fa71db942547adbd, type: 3}
+  fieldBGM: {fileID: 8300000, guid: 7bb22729a7d9140e08e2a733a0d0545d, type: 3}
+  bossBGM: {fileID: 8300000, guid: babddf594a97042bd83ab3be7c300698, type: 3}
+  attackASFX: {fileID: 8300000, guid: e43b16e3aba144dfb9855d3627dc21a9, type: 3}
+  attackBSFX: {fileID: 8300000, guid: 88af7e9088f564427a91739aecb75fe8, type: 3}
+  jumpAttackSFX: {fileID: 8300000, guid: 82e61734143454990ab34c182bc56b04, type: 3}
+  jumpSFX: {fileID: 8300000, guid: 09e7ebf9b8b5b466ba4ff4657f28522a, type: 3}
+  doubleJumpSFX: {fileID: 8300000, guid: 10149dcd416dc43419ad78fc33554a7f, type: 3}
+  dashSFX: {fileID: 8300000, guid: 53c29096443b84184b6815456622fb80, type: 3}
+  swapSFX: {fileID: 8300000, guid: 33ce57eb8a8de4b2a8c6364a3fd6d695, type: 3}
+  teleportSFX: {fileID: 8300000, guid: 086ee582793764943bfb48558e83e623, type: 3}
+  hitSFX: {fileID: 8300000, guid: 683e974d61fa74b29a1fbb347ce0ae4d, type: 3}
+  bossGrabSFX: {fileID: 8300000, guid: f26db971c51fc48389e2728505b3fbea, type: 3}
+  bossSweepSFX: {fileID: 8300000, guid: ac4cfe03aaac04b2ba82b0786b92ff21, type: 3}
+  bossSlamSFX: {fileID: 8300000, guid: a2c3cf5f5ef43463084534982e14a523, type: 3}
+  bossScreamSFX: {fileID: 8300000, guid: 28218ba5dcbc14d1a803bb18c1d1b844, type: 3}
+  bossRoarSFX: {fileID: 8300000, guid: ee674a64fa8f7459fb1fe0934eb5880b, type: 3}
+  bossChargeSFX: {fileID: 8300000, guid: af5fe72b9f2044326b10eaaaad22089f, type: 3}
+  bossFireSFX: {fileID: 8300000, guid: 0addc6587f55f424398fded79d7a9930, type: 3}
+  bossBreakSFX: {fileID: 8300000, guid: 28f540048e9054bc2b49fda06183e15e, type: 3}
+  bossCleanseSFX: {fileID: 8300000, guid: de3de9903a80f4011991cbb06de06988, type: 3}

@@ -18,6 +18,7 @@ public class LobbyScene : BaseScene
         vcam.ForceCameraPosition(player.transform.position, Quaternion.identity);
         vcam.m_Follow = player.transform;
         Manager.Game.CreateSmokePools();
+        Manager.Sound.PlayBGM(Manager.Sound.Data.fieldBGM);
         yield return null;
     }
 }

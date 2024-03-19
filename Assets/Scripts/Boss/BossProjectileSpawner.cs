@@ -40,6 +40,7 @@ public class BossProjectileSpawner : MonoBehaviour
 
             // instantiate projectile
             Instantiate(projectile, spawnPos, Quaternion.identity);
+            Manager.Sound.PlaySFX(Manager.Sound.Data.bossFireSFX);
         }
     }
 }

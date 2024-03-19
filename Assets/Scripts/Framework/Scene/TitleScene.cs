@@ -17,6 +17,7 @@ public class TitleScene : BaseScene
     {
         pulseRoutine = StartCoroutine(TextPulseRoutine());
         Manager.UI.GetComponent<PlayerInput>().enabled = false;
+        Manager.Sound.PlayBGM(Manager.Sound.Data.titleBGM);
     }
 
     private void OnDisable()

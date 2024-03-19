@@ -120,6 +120,8 @@ public class BossController : MonoBehaviour, IDamageable
 
         public override void Enter()
         {
+            Manager.Sound.StopSFX();
+            Manager.Sound.PlayBGM(Manager.Sound.Data.bossBGM);
             boss.head.SetHurtBox(true);
             phase1Routine = boss.StartCoroutine(Phase1Routine());
         }
@@ -218,6 +220,7 @@ public class BossController : MonoBehaviour, IDamageable
             yield return boss.StartCoroutine(boss.hands.TransitionSlamRoutine());
             Manager.Events.voidEventDic["whiteFlash"].RaiseEvent();
             Manager.Events.voidEventDic["phase2Started"].RaiseEvent();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.bossScreamSFX);
             yield return boss.StartCoroutine(boss.head.ScreamRoutine());
             yield return new WaitForSeconds(1);
             ChangeState(State.Phase2);
@@ -317,6 +320,7 @@ public class BossController : MonoBehaviour, IDamageable
                 yield return boss.StartCoroutine(boss.head.Duck());
 
                 // start charging animation while shaking head
+                Manager.Sound.PlaySFX(Manager.Sound.Data.bossChargeSFX);
                 yield return boss.StartCoroutine(boss.head.Charge());
                 yield return new WaitForSeconds(0.3f);
 
@@ -343,6 +347,8 @@ public class BossController : MonoBehaviour, IDamageable
         }
         public override void Enter()
         {
+            Manager.Sound.StopSFX();
+            Manager.Sound.StopBGM();
             boss.head.SetHurtBox(false);
             boss.StartCoroutine(DeadRoutine());
         }
@@ -361,6 +367,7 @@ public class BossController : MonoBehaviour, IDamageable
             yield return new WaitForSeconds(3f);
 
             // Flash Screen
+            Manager.Sound.PlaySFX(Manager.Sound.Data.bossBreakSFX);
             boss.shinies.TurnOff();
             Manager.Events.voidEventDic["whiteFlash"].RaiseEvent();
             Manager.Events.voidEventDic["bossDefeated"].RaiseEvent();
@@ -372,6 +379,7 @@ public class BossController : MonoBehaviour, IDamageable
             yield return boss.StartCoroutine(boss.body.FallDown());
 
             // Shake
+            Manager.Sound.PlaySFX(Manager.Sound.Data.bossCleanseSFX);
             Manager.Game.Shaker.Shake(0.5f);
         }
     }

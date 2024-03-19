@@ -211,12 +211,19 @@ public class PlayerController : MonoBehaviour, IDamageable
             StartCoroutine(TemporaryIgnoreCollision());
             return;
         }
-
         if (coyoteTimeCounter <= 0 && remainingJumps == 0)
             return;
-        if (remainingJumps == 1) // double jump smoke effect
-            smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Jump);
 
+        if (remainingJumps == 1)// double jump smoke effect
+        {
+            smokeSpawner.SpawnSmoke(SmokeSpawner.SmokeType.Jump);
+            Manager.Sound.PlaySFX(Manager.Sound.Data.doubleJumpSFX);
+        }
+        else
+        {
+            Manager.Sound.PlaySFX(Manager.Sound.Data.jumpSFX);
+        }
+            
         remainingJumps--;
         coyoteTimeCounter = 0;
         rb2d.velocity = new Vector2(rb2d.velocity.x, controllerData.jumpPower);
@@ -251,6 +258,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             yield break;
 
         // dash start
+        Manager.Sound.PlaySFX(Manager.Sound.Data.dashSFX);
         if (dashCooldownRoutine != null)
             StopCoroutine(dashCooldownRoutine); // reset cooldown routine
         dashCooldownRoutine = StartCoroutine(DashCooldownRoutine());
@@ -293,6 +301,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
             foreach (IDamageable damageable in damageables)
             {
+                Manager.Sound.PlaySFX(Manager.Sound.Data.hitSFX);
                 int multipliedDamage = Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier);
                 int randomizedDamage = Mathf.CeilToInt(multipliedDamage * Random.Range(0.7f, 1.3f));
                 damageable.TakeDamage(randomizedDamage);

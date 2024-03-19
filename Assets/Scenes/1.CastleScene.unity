@@ -3492,6 +3492,7 @@ MonoBehaviour:
   playerSpawnPos: {x: 2, y: 0}
   playerUI: {fileID: 8911393115012194386, guid: 2e57e4d63c915490fa473432c848b40d, type: 3}
   vcam: {fileID: 724316487}
+  bgm: {fileID: 8300000, guid: 294f3df2838eb4e3fa71db942547adbd, type: 3}
 --- !u!61 &1295951666
 BoxCollider2D:
   m_ObjectHideFlags: 0

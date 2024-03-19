@@ -33,7 +33,7 @@ public class CastleScene : BaseScene
         Manager.Game.SetPlayer(player.GetComponent<PlayerController>());
         Instantiate(playerUI);
         vcam.m_Follow = player.transform;
-        
+        Manager.Sound.PlayBGM(Manager.Sound.Data.castleBGM);
         yield return null;
     }
 }

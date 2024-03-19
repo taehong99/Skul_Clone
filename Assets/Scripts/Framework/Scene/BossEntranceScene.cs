@@ -16,6 +16,7 @@ public class BossEntranceScene : BaseScene
         Instantiate(playerUI);
         vcam.m_Follow = player.transform;
         Manager.Game.CreateSmokePools();
+        Manager.Sound.StopBGM();
         yield return null;
     }
 }

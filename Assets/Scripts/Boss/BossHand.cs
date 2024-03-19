@@ -107,6 +107,7 @@ public class BossHand : BossBodyPart
         animator.Play("Rest");
         spriter.sortingLayerID = SortingLayer.NameToID("Default");
         Manager.Game.Shaker.Shake(grabShakeDuration);
+        Manager.Sound.PlaySFX(Manager.Sound.Data.bossGrabSFX);
     }
 
     public IEnumerator SpawnSlideRoutine()
@@ -170,6 +171,9 @@ public class BossHand : BossBodyPart
     }
     public IEnumerator SweepRoutine()
     {
+        Manager.Sound.PlaySFX(Manager.Sound.Data.bossSweepSFX);
+        Manager.Sound.PlaySFX(Manager.Sound.Data.bossRoarSFX);
+
         hitbox.enabled = true;
 
         Vector2 origin = transform.position;
@@ -203,11 +207,13 @@ public class BossHand : BossBodyPart
             Vector2 destination = transform.position;
             destination.y = -1;
             yield return StartCoroutine(LerpToDestination(transform, destination, slamSpeed));
+            Manager.Sound.PlaySFX(Manager.Sound.Data.bossSlamSFX);
             yield break;
         }
 
         yield return StartCoroutine(LerpToDestination(transform, targetPos, slamSpeed));
         Manager.Game.Shaker.Shake(slamShakeDuration);
+        Manager.Sound.PlaySFX(Manager.Sound.Data.bossSlamSFX);
 
         Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.Mask);
         IDamageable[] damageables = collider.transform.GetComponents<PlayerController>();
