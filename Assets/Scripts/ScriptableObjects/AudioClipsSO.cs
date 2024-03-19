@@ -15,6 +15,7 @@ public class AudioClipsSO : ScriptableObject
     public AudioClip attackASFX;
     public AudioClip attackBSFX;
     public AudioClip jumpAttackSFX;
+    public AudioClip hitSFX;
 
     public AudioClip jumpSFX;
     public AudioClip doubleJumpSFX;
@@ -24,8 +25,21 @@ public class AudioClipsSO : ScriptableObject
 
     public AudioClip teleportSFX;
 
+    [Header("Destroyer SFX")]
+    public AudioClip heavySlash1;
+    public AudioClip heavySlash2;
+    public AudioClip heavySlashUp1;
+    public AudioClip heavySlashUp2;
+    public AudioClip heavySlashDown;
+    public AudioClip heavySwoosh;
+    public AudioClip bladeHitSFX;
+
     [Header("Enemy SFX")]
-    public AudioClip hitSFX;
+    public AudioClip soldierCry;
+    public AudioClip soldierAttack;
+    public AudioClip knightCry;
+    public AudioClip knightSlam;
+    public AudioClip wizardFire;
 
     [Header("Boss SFX")]
     public AudioClip bossGrabSFX;
@@ -37,4 +51,11 @@ public class AudioClipsSO : ScriptableObject
     public AudioClip bossFireSFX;
     public AudioClip bossBreakSFX;
     public AudioClip bossCleanseSFX;
+
+    [Header("UI SFX")]
+    public AudioClip pauseUIOpen;
+    public AudioClip pauseUIMove;
+    public AudioClip inventoryUIOpen;
+    public AudioClip inventoryUIClose;
+    public AudioClip detailsUIToggle;
 }

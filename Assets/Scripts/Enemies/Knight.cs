@@ -32,8 +32,10 @@ public class Knight : Enemy
     private IEnumerator AttackARoutine() // Hammer Attack
     {
         animator.Play("StanceA");
+        Manager.Sound.PlaySFX(Manager.Sound.Data.knightCry);
         yield return new WaitForSeconds(stanceDuration);
         animator.Play("AttackA");
+        Manager.Sound.PlaySFX(Manager.Sound.Data.knightSlam);
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;
@@ -45,6 +47,7 @@ public class Knight : Enemy
     private IEnumerator AttackBRoutine() // Tackle Attack
     {
         animator.Play("StanceB");
+        Manager.Sound.PlaySFX(Manager.Sound.Data.knightCry);
         Vector3 targetDir = player.transform.position.x < transform.position.x ? Vector3.left : Vector3.right;
         yield return new WaitForSeconds(stanceDuration);
 

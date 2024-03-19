@@ -46,6 +46,7 @@ public class UIManager : Singleton<UIManager>
             if (Keyboard.current[Key.D].wasPressedThisFrame)
             {
                 ShowPopUpUI<DescriptionUI>();
+                Manager.Sound.PlaySFX(Manager.Sound.Data.detailsUIToggle);
             }
         }
         else if (popUpStack.Peek().name == "DescriptionUI(Clone)")
@@ -53,6 +54,7 @@ public class UIManager : Singleton<UIManager>
             if (Keyboard.current[Key.D].wasReleasedThisFrame)
             {
                 ClosePopUpUI();
+                Manager.Sound.PlaySFX(Manager.Sound.Data.detailsUIToggle);
             }
         }
     }
@@ -62,10 +64,12 @@ public class UIManager : Singleton<UIManager>
         if (popUpStack.Count == 0)
         {
             ShowPopUpUI<PauseUI>();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.pauseUIOpen);
         }
         else if (popUpStack.Peek().name == "PauseUI(Clone)")
         {
             ClosePopUpUI();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.pauseUIOpen);
         }
         else
         {
@@ -83,14 +87,17 @@ public class UIManager : Singleton<UIManager>
         if (popUpStack.Count == 0)
         {
             ShowPopUpUI<InventoryUI>();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.inventoryUIOpen);
         }
         else if (popUpStack.Peek().name == "InventoryUI(Clone)")
         {
             ClosePopUpUI();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.inventoryUIClose);
         }
         else if (popUpStack.Peek().name == "DescriptionUI(Clone)")
         {
             ClearPopUpUI();
+            Manager.Sound.PlaySFX(Manager.Sound.Data.inventoryUIClose);
         }
         else
         {

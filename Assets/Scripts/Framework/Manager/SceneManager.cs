@@ -55,6 +55,7 @@ public class SceneManager : Singleton<SceneManager>
             loadingBar.value = oper.progress;
             yield return null;
         }
+        yield return new WaitForSecondsRealtime(0.5f);
 
         Manager.UI.EnsureEventSystem();
 

@@ -19,8 +19,10 @@ public class Soldier : Enemy
     private IEnumerator AttackRoutine()
     {
         animator.Play("Stance");
+        Manager.Sound.PlaySFX(Manager.Sound.Data.soldierCry);
         yield return new WaitForSeconds(stanceDuration);
         animator.Play("Attack");
+        Manager.Sound.PlaySFX(Manager.Sound.Data.soldierAttack);
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;

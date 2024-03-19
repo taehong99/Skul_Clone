@@ -33,6 +33,7 @@ public class PauseUI : PopUpUI
 
             texts[selectedIndex].color = unselectedColor;
             texts[++selectedIndex].color = selectedColor;
+            Manager.Sound.PlaySFX(Manager.Sound.Data.pauseUIMove);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -41,9 +42,11 @@ public class PauseUI : PopUpUI
 
             texts[selectedIndex].color = unselectedColor;
             texts[--selectedIndex].color = selectedColor;
+            Manager.Sound.PlaySFX(Manager.Sound.Data.pauseUIMove);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
         {
+            Manager.Sound.PlaySFX(Manager.Sound.Data.detailsUIToggle);
             switch (selectedIndex)
             {
                 case 0:

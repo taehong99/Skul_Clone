@@ -301,7 +301,15 @@ public class PlayerController : MonoBehaviour, IDamageable
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
             foreach (IDamageable damageable in damageables)
             {
-                Manager.Sound.PlaySFX(Manager.Sound.Data.hitSFX);
+                if(Manager.Game.MainSkullData.skullName == "Skul")
+                {
+                    Manager.Sound.PlaySFX(Manager.Sound.Data.hitSFX);
+                }
+                else
+                {
+                    Manager.Sound.PlaySFX(Manager.Sound.Data.bladeHitSFX);
+                }
+                
                 int multipliedDamage = Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier);
                 int randomizedDamage = Mathf.CeilToInt(multipliedDamage * Random.Range(0.7f, 1.3f));
                 damageable.TakeDamage(randomizedDamage);

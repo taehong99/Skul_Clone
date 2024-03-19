@@ -61,10 +61,11 @@ public class Destroyer : PlayerController
     }
 
     private IEnumerator Whirlwind()
-    {   
+    {
         animator.Play("Skill1");
         while (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Skill1")
             yield return null;
+
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;
@@ -173,4 +174,29 @@ public class Destroyer : PlayerController
     }
 
     #endregion
+
+    public void PlaySlashSound(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySlash1);
+                break;
+            case 1:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySlash2);
+                break;
+            case 2:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySlashDown);
+                break;
+            case 3:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySlashUp1);
+                break;
+            case 4:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySlashUp2);
+                break;
+            case 5:
+                Manager.Sound.PlaySFX(Manager.Sound.Data.heavySwoosh);
+                break;
+        }
+    }
 }

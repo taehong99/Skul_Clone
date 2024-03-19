@@ -19,12 +19,24 @@ MonoBehaviour:
   attackASFX: {fileID: 8300000, guid: e43b16e3aba144dfb9855d3627dc21a9, type: 3}
   attackBSFX: {fileID: 8300000, guid: 88af7e9088f564427a91739aecb75fe8, type: 3}
   jumpAttackSFX: {fileID: 8300000, guid: 82e61734143454990ab34c182bc56b04, type: 3}
+  hitSFX: {fileID: 8300000, guid: 683e974d61fa74b29a1fbb347ce0ae4d, type: 3}
   jumpSFX: {fileID: 8300000, guid: 09e7ebf9b8b5b466ba4ff4657f28522a, type: 3}
   doubleJumpSFX: {fileID: 8300000, guid: 10149dcd416dc43419ad78fc33554a7f, type: 3}
   dashSFX: {fileID: 8300000, guid: 53c29096443b84184b6815456622fb80, type: 3}
   swapSFX: {fileID: 8300000, guid: 33ce57eb8a8de4b2a8c6364a3fd6d695, type: 3}
   teleportSFX: {fileID: 8300000, guid: 086ee582793764943bfb48558e83e623, type: 3}
-  hitSFX: {fileID: 8300000, guid: 683e974d61fa74b29a1fbb347ce0ae4d, type: 3}
+  heavySlash1: {fileID: 8300000, guid: 883954b713fbc4295b4f0c5fac4f833b, type: 3}
+  heavySlash2: {fileID: 8300000, guid: 1fd329d4c6bcb498ca469b759419990b, type: 3}
+  heavySlashUp1: {fileID: 8300000, guid: 7104c3e559128402c9424972b247162f, type: 3}
+  heavySlashUp2: {fileID: 8300000, guid: 2f7aeaa81af174fea98b124de0848be1, type: 3}
+  heavySlashDown: {fileID: 8300000, guid: 745cc4b6fca3f495d89ae2f8d7ac2816, type: 3}
+  heavySwoosh: {fileID: 8300000, guid: fd1552b5b36b7434096b4f8ce138bff6, type: 3}
+  bladeHitSFX: {fileID: 8300000, guid: def4de51c666e49e6a34993472f0a228, type: 3}
+  soldierCry: {fileID: 8300000, guid: 5f5ba3a31d0b04813b5e08996e1fd371, type: 3}
+  soldierAttack: {fileID: 8300000, guid: d61fccd3d13e44b97a74ed384fdf9f96, type: 3}
+  knightCry: {fileID: 8300000, guid: 439b866b52b594bf5bdf3a3c7d14b71e, type: 3}
+  knightSlam: {fileID: 8300000, guid: 449c75b5d1609466091d39081a368979, type: 3}
+  wizardFire: {fileID: 8300000, guid: 00907b970921a4780a604fc57365787c, type: 3}
   bossGrabSFX: {fileID: 8300000, guid: f26db971c51fc48389e2728505b3fbea, type: 3}
   bossSweepSFX: {fileID: 8300000, guid: ac4cfe03aaac04b2ba82b0786b92ff21, type: 3}
   bossSlamSFX: {fileID: 8300000, guid: a2c3cf5f5ef43463084534982e14a523, type: 3}
@@ -34,3 +46,8 @@ MonoBehaviour:
   bossFireSFX: {fileID: 8300000, guid: 0addc6587f55f424398fded79d7a9930, type: 3}
   bossBreakSFX: {fileID: 8300000, guid: 28f540048e9054bc2b49fda06183e15e, type: 3}
   bossCleanseSFX: {fileID: 8300000, guid: de3de9903a80f4011991cbb06de06988, type: 3}
+  pauseUIOpen: {fileID: 8300000, guid: 5d8e623e93d914c758fa0bea665435bc, type: 3}
+  pauseUIMove: {fileID: 8300000, guid: 43bbf45eef8164fb1821e8c5da7f0acc, type: 3}
+  inventoryUIOpen: {fileID: 8300000, guid: 3e00553466a86437ba521d9b149afb21, type: 3}
+  inventoryUIClose: {fileID: 8300000, guid: 31275fdb7fa6f496293d8f6b9608a1c7, type: 3}
+  detailsUIToggle: {fileID: 8300000, guid: cc58b06745b724e30b0efe73204eb8c8, type: 3}
