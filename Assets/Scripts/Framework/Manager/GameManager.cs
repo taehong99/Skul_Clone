@@ -63,9 +63,11 @@ public class GameManager : Singleton<GameManager>
         Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.Follow = player.transform;
     }
 
-    public void AddCameraShaker() // Assign Camera Shaker for boss fight
+    public void AddCameraShaker(CinemachineVirtualCamera vcam) // Assign Camera Shaker for boss fight
     {
-        shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
+        Debug.Log(Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera == null);
+        shaker = vcam.GetComponent<CameraShake>();
+        //shaker = Camera.main.GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject.GetComponent<CameraShake>();
     }
 
     public void PlayerTakeDamage(int damage)

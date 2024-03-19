@@ -63,6 +63,8 @@ public class Destroyer : PlayerController
     private IEnumerator Whirlwind()
     {   
         animator.Play("Skill1");
+        while (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Skill1")
+            yield return null;
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
             yield return null;
@@ -106,6 +108,7 @@ public class Destroyer : PlayerController
 
     private IEnumerator SpinningAmbushRoutine()
     {
+        isFlying = true;
         attackCount = 0;
         while (attackQueued)
         {
@@ -122,6 +125,7 @@ public class Destroyer : PlayerController
         attackStarted = false;
         playerSM.TransitionTo(playerSM.idleState);
         StartCoroutine(SpinningAmbushCooldown());
+        isFlying = false;
     }
 
     private IEnumerator SpinningAmbush()
@@ -129,7 +133,7 @@ public class Destroyer : PlayerController
         //Jump Part
         animator.Play("Skill2Jump");
         rb2d.velocity = Vector2.up * ambushJumpForce;
-        while (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Idle")
+        while (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Skill2Jump")
             yield return null;
 
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
@@ -148,7 +152,6 @@ public class Destroyer : PlayerController
         
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
-            Debug.Log(rb2d.velocity);
             yield return null;
         }
         rb2d.velocity = Vector2.zero;

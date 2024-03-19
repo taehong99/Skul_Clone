@@ -166,7 +166,9 @@ public class BossBody : BossBodyPart
     // Body Phase Transition
     public void TransitionFreezeRoutine()
     {
+        StopAllCoroutines();
         transform.position = idleTargetPos;
+        transform.rotation = Quaternion.identity;
     }
 
     // Body Dead Transition

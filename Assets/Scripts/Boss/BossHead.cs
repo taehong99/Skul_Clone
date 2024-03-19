@@ -57,7 +57,7 @@ public class BossHead : BossBodyPart
     public void StopCoroutines()
     {
         StopAllCoroutines();
-        gem.StopAllCoroutines();
+        gem.EndAttack();
     }
 
     public void SetHurtBox(bool b)

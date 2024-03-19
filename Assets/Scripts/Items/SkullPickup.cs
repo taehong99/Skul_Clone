@@ -15,7 +15,7 @@ public class SkullPickup : MonoBehaviour, IInteractable
     {
         sprite = transform.GetChild(0);
         canvas = GetComponentInChildren<Canvas>(true);
-        bounceRoutine = StartCoroutine(Bounce());
+        bounceRoutine = StartCoroutine(SpawnRoutine());
     }
 
     private void OnDisable()
@@ -31,6 +31,36 @@ public class SkullPickup : MonoBehaviour, IInteractable
     private void OnTriggerExit2D(Collider2D collision)
     {
         canvas.gameObject.SetActive(false);
+    }
+
+    private IEnumerator SpawnRoutine()
+    {
+        float time = 0;
+        float duration = 0.2f;
+        float height = 2f;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + Vector3.up * height;
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = endPos;
+
+        startPos = transform.position;
+        endPos = startPos - Vector3.up * height;
+        time = 0f;
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = endPos;
+
+        StartCoroutine(Bounce());
     }
 
     private IEnumerator Bounce()

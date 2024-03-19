@@ -7,9 +7,7 @@ using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
-    const float interactRange = 1f;
     const float swapCooldown = 5f;
-    const float baseMoveSpeed = 5f;
 
     public enum FacingDir
     {
@@ -35,32 +33,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("Player Data")]
     [SerializeField] protected PlayerData data;
+    [SerializeField] protected PlayerControllerDataSO controllerData;
 
     [Header("Player Move")]
     Vector2 moveDir;
     public FacingDir facingDir;
 
     [Header("Player Jump")]
-    [SerializeField] float jumpPower;
-    [SerializeField] int jumpCount;
-    [SerializeField] float fallMultiplier = 2.5f;
-    [SerializeField] float coyoteTime;
-    [SerializeField] LayerMask groundLayer;
     int remainingJumps;
     Vector2 jumpVec;
     float coyoteTimeCounter;
     bool isGrounded;
 
     [Header("Player Dash")]
-    [SerializeField] int dashCount;
-    [SerializeField] float dashPower;
-    [SerializeField] float dashDuration;
-    [SerializeField] float dashCooldown;
     bool isDashing;
 
     [Header("Player Attack")]
-    [SerializeField] int baseDamage;
-    [SerializeField] LayerMask hittableMask;
     public bool isAttacking;
 
     [Header("Player Skills")]
@@ -68,6 +56,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected float skill2CooldownTimer = 0f;
     public float Skill1CooldownRatio => skill1CooldownTimer / data.skill1Cooldown;
     public float Skill2CooldownRatio => skill2CooldownTimer / data.skill2Cooldown;
+    protected bool isFlying;
 
     [Header("Player Swap")]
     protected PlayerData subSkullData;
@@ -75,16 +64,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     protected float swapCooldownTimer = 0f;
     public float SwapCooldownRatio => swapCooldownTimer / swapCooldown;
 
-    [Header("Player Interact")]
-    [SerializeField] LayerMask interactableMask;
-
     [Header("Effects")]
     SmokeSpawner smokeSpawner;
     PooledObject playerHitEffectPrefab;
 
-    [Header("Player Mask")]
-    [SerializeField] private LayerMask playerMask;
-    public LayerMask Mask => playerMask;
+    public LayerMask Mask => controllerData.playerMask;
 
     [Header("Misc")]
     protected Rigidbody2D rb2d;
@@ -101,10 +85,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         smokeSpawner = GetComponentInChildren<SmokeSpawner>();
         playerCollider = GetComponent<BoxCollider2D>();
         playerHitEffectPrefab = Manager.Resource.Load<PooledObject>("Prefabs/PlayerHitEffect");
-        dashesLeft = dashCount;
+        dashesLeft = controllerData.dashCount;
 
         // Cache jump vector once to prevent repetitive math operations
-        jumpVec = Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.fixedDeltaTime;
+        jumpVec = Vector2.up * Physics2D.gravity.y * controllerData.fallMultiplier * Time.fixedDeltaTime;
 
         playerSM = new StateMachine(this);
     }
@@ -118,7 +102,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isGrounded)
         {
-            coyoteTimeCounter = coyoteTime;
+            coyoteTimeCounter = controllerData.coyoteTime;
         }
         else
         {
@@ -146,15 +130,15 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             return;
         }
-        if (groundLayer.Contains(collision.gameObject.layer))
+        if (controllerData.groundMask.Contains(collision.gameObject.layer))
         {
             isGrounded = true;
-            remainingJumps = jumpCount;
+            remainingJumps = controllerData.jumpCount;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (groundLayer.Contains(collision.gameObject.layer))
+        if (controllerData.groundMask.Contains(collision.gameObject.layer))
         {
             isGrounded = false;
         }
@@ -185,8 +169,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     #region Movement
     private void Move()
     {
+        if (isFlying)
+            return;
         Vector2 newVel = rb2d.velocity;
-        newVel.x = moveDir.x * baseMoveSpeed;
+        newVel.x = moveDir.x * controllerData.moveSpeed;
 
         if ((isAttacking && isGrounded) || isSwapping) // prevent movement while attacking
         {
@@ -233,7 +219,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         remainingJumps--;
         coyoteTimeCounter = 0;
-        rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower);
+        rb2d.velocity = new Vector2(rb2d.velocity.x, controllerData.jumpPower);
     }
 
     // TODO: STUDY THIS https://www.youtube.com/watch?v=7KiK0Aqtmzc&t=518s
@@ -275,8 +261,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         // dash physics
         float originalGravity = rb2d.gravityScale;
         rb2d.gravityScale = 0;
-        rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * dashPower;
-        yield return new WaitForSeconds(dashDuration);
+        rb2d.velocity = ((facingDir == FacingDir.Left) ? Vector2.left : Vector2.right) * controllerData.dashPower;
+        yield return new WaitForSeconds(controllerData.dashDuration);
         rb2d.velocity = new Vector3(0, rb2d.velocity.y, 0); // prevent sliding
         rb2d.gravityScale = originalGravity;
 
@@ -288,8 +274,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     Coroutine dashCooldownRoutine;
     private IEnumerator DashCooldownRoutine()
     {
-        yield return new WaitForSeconds(dashCooldown);
-        dashesLeft = dashCount;
+        yield return new WaitForSeconds(controllerData.dashCooldown);
+        dashesLeft = controllerData.dashCount;
     }
 
     #endregion
@@ -301,13 +287,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     public void Attack()
     {
-        int count = Physics2D.OverlapCircleNonAlloc(transform.position, data.attackRange, colliders, hittableMask);
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, data.attackRange, colliders, controllerData.hittableMask);
         for (int i = 0; i < count; i++)
         {
             IDamageable[] damageables = colliders[i].GetComponents<IDamageable>();
             foreach (IDamageable damageable in damageables)
             {
-                damageable.TakeDamage(Mathf.CeilToInt(baseDamage * data.damageMultiplier));
+                damageable.TakeDamage(Mathf.CeilToInt(controllerData.baseDamage * data.damageMultiplier));
             }
         }
     }
@@ -319,6 +305,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
+        if (isDashing)
+            return;
         Manager.Pool.GetPool(playerHitEffectPrefab, transform.position, Quaternion.identity);
         Manager.Game.PlayerTakeDamage(damage);
     }
@@ -345,7 +333,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Interact()
     {
-        Collider2D collider = Physics2D.OverlapCircle(transform.position, interactRange, interactableMask);
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, controllerData.interactRange, controllerData.interactableMask);
         if (collider == null || collider.GetComponent<IInteractable>() == null)
             return;
 

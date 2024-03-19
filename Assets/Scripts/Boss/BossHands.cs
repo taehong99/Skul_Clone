@@ -18,8 +18,9 @@ public class BossHands : MonoBehaviour
 
     public void StopCoroutines()
     {
-        leftHand.StopAllCoroutines();
-        rightHand.StopAllCoroutines();
+        StopAllCoroutines();
+        leftHand.StopCoroutines();
+        rightHand.StopCoroutines();
     }
 
     // Hands Spawn

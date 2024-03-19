@@ -19,6 +19,12 @@ public class CameraShake : MonoBehaviour
         StartCoroutine(ShakeRoutine(duration));
     }
 
+    public void StopShake()
+    {
+        StopAllCoroutines();
+        vcam.m_AmplitudeGain = 0;
+    }
+
     public void ToggleShake()
     {
         float curAmp = vcam.m_AmplitudeGain;
@@ -30,10 +36,12 @@ public class CameraShake : MonoBehaviour
         {
             vcam.m_AmplitudeGain = 0;
         }
+        
     }
 
     private IEnumerator ShakeRoutine(float duration)
     {
+        Debug.Log($"Shake routine duration: {duration}");
         vcam.m_AmplitudeGain = shakeAmplitude;
         yield return new WaitForSeconds(duration);
         vcam.m_AmplitudeGain = 0;

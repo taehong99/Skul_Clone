@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7930968ae634083af627d15df5f590, type: 3}
   m_Name: SkulData
   m_EditorClassIdentifier: 
-  damageMultiplier: 1
+  damageMultiplier: 100
   attackRange: 1
   dashCount: 2
   skullPrefab: {fileID: 8062794162657783318, guid: 72dfbfe4df78ff7469a73953fdd2eefc, type: 3}

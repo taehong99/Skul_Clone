@@ -19,6 +19,9 @@ public class BossProjectileSpawner : MonoBehaviour
 
     public void StopSpawning()
     {
+        if (spawnRoutine == null)
+            return;
+
         StopCoroutine(spawnRoutine);
     }
 

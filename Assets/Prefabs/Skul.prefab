@@ -231,29 +231,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: a3e0a295185854ba6b1bb6e180286e70, type: 2}
+  controllerData: {fileID: 11400000, guid: 65af44617304a4928ba6c2f731f2b502, type: 2}
   facingDir: 0
-  jumpPower: 10
-  jumpCount: 2
-  fallMultiplier: 2.5
-  coyoteTime: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2112
-  dashCount: 2
-  dashPower: 18
-  dashDuration: 0.2
-  dashCooldown: 1
-  baseDamage: 10
-  hittableMask:
-    serializedVersion: 2
-    m_Bits: 512
   isAttacking: 0
-  interactableMask:
-    serializedVersion: 2
-    m_Bits: 4096
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 128
   skullPrefab: {fileID: 7068983112045292226, guid: 3e6756e0912924357b133ae17e78aa53, type: 3}
   skullMask:
     serializedVersion: 2

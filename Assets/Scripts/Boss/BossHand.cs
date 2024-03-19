@@ -60,6 +60,13 @@ public class BossHand : BossBodyPart
         Manager.Events.voidEventDic["bossDefeated"].OnEventRaised += TransformDead;
     }
 
+    public void StopCoroutines()
+    {
+        StopAllCoroutines();
+        hitbox.enabled = false;
+        Manager.Game.Shaker.StopShake();
+    }
+
     public void TransformP2()
     {
         animator.runtimeAnimatorController = phase2Controller;

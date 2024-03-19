@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5cfa6863cbbb493fa1b3cd85cd65719, type: 3}
+  m_Name: PlayerControllerData
+  m_EditorClassIdentifier: 
+  moveSpeed: 7
+  jumpPower: 11
+  jumpCount: 2
+  fallMultiplier: 2.5
+  coyoteTime: 0.2
+  dashCount: 2
+  dashPower: 18
+  dashDuration: 0.2
+  dashCooldown: 1
+  interactRange: 1
+  baseDamage: 10
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 2112
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  hittableMask:
+    serializedVersion: 2
+    m_Bits: 512

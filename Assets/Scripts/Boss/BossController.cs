@@ -127,7 +127,8 @@ public class BossController : MonoBehaviour, IDamageable
         public override void Exit()
         {
             boss.StopAllCoroutines();
-            boss.hands.StopAllCoroutines();
+            boss.hands.StopCoroutines();
+            boss.head.StopCoroutines();
         }
 
         Coroutine phase1Routine;
@@ -249,6 +250,7 @@ public class BossController : MonoBehaviour, IDamageable
             boss.StopAllCoroutines();
             boss.hands.StopCoroutines();
             boss.head.StopCoroutines();
+            boss.projectileSpawner.StopSpawning();
         }
 
         Coroutine phase2Routine;
@@ -366,8 +368,11 @@ public class BossController : MonoBehaviour, IDamageable
             yield return new WaitForSeconds(1f);
 
             // Fall down
-            boss.StartCoroutine(boss.body.FallDown());
             boss.head.DeathTransition();
+            yield return boss.StartCoroutine(boss.body.FallDown());
+
+            // Shake
+            Manager.Game.Shaker.Shake(0.5f);
         }
     }
 }
