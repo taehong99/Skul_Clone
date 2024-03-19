@@ -18,7 +18,6 @@ public class GameManager : Singleton<GameManager>
     private int playerHP;
     public int PlayerHP { get { return playerHP; } set { playerHP = value; OnPlayerHPChanged?.Invoke(value); } }
     public UnityAction<int> OnPlayerHPChanged;
-    public UnityAction OnPlayerDied;
 
     CameraShake shaker;
     public CameraShake Shaker => shaker;
@@ -73,7 +72,7 @@ public class GameManager : Singleton<GameManager>
         PlayerHP -= damage;
         if (PlayerHP <= 0)
         {
-            OnPlayerDied?.Invoke();
+            Manager.Events.voidEventDic["playerDied"].RaiseEvent();
         }
     }
 

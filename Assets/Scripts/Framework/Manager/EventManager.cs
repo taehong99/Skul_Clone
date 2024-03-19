@@ -17,8 +17,9 @@ public class EventManager : Singleton<EventManager>
         // enemy events
         voidEventDic.Add("enemySpawned", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemySpawnedEvent"));
         voidEventDic.Add("enemyKilled", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/EnemyKilledEvent"));
-        
+
         // player events
+        voidEventDic.Add("playerDied", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/PlayerDeathEvent"));
         dataEventDic.Add("skullPickedUp", Manager.Resource.Load<PlayerDataEventSO>("Data/EventChannels/SkullPickupEvent"));
         voidEventDic.Add("skullSwapped", Manager.Resource.Load<VoidEventChannelSO>("Data/EventChannels/SkullSwappedEvent"));
     }

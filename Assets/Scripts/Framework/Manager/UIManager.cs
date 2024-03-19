@@ -23,6 +23,17 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         EnsureEventSystem();
+        Manager.Events.voidEventDic["playerDied"].OnEventRaised += ShowGameOverUI;
+    }
+
+    private void OnDisable()
+    {
+        Manager.Events.voidEventDic["playerDied"].OnEventRaised -= ShowGameOverUI;
+    }
+
+    private void ShowGameOverUI()
+    {
+        ShowPopUpUI<GameOverUI>();
     }
 
     private void Update()

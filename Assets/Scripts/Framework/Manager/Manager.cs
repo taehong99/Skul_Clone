@@ -29,7 +29,7 @@ public static class Manager
         ResourceManager.CreateInstance();
         SceneManager.CreateInstance();
         SoundManager.CreateInstance();
-        UIManager.CreateInstance();
         EventManager.CreateInstance();
+        UIManager.CreateInstance();
     }
 }
