@@ -309,9 +309,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (isDashing)
             return;
-
+        
         Manager.Pool.GetPool(playerHitEffectPrefab, transform.position, Quaternion.identity);
         Manager.Game.PlayerTakeDamage(damage);
+        GetComponent<DamageTextSpawner>().TakeDamage(damage);
     }
     #endregion
 

@@ -3489,7 +3489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8062794162657783318, guid: 72dfbfe4df78ff7469a73953fdd2eefc, type: 3}
-  playerSpawnPos: {x: 2, y: -1}
+  playerSpawnPos: {x: 2, y: 0}
   playerUI: {fileID: 8911393115012194386, guid: 2e57e4d63c915490fa473432c848b40d, type: 3}
   vcam: {fileID: 724316487}
 --- !u!61 &1295951666

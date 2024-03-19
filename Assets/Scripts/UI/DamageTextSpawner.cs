@@ -13,6 +13,11 @@ public class DamageTextSpawner : MonoBehaviour, IDamageable
         damageText = Manager.Resource.Load<DamageText>("Prefabs/DamageText");
     }
 
+    private void Start()
+    {
+        
+    }
+
     public void TakeDamage(int damage)
     {
         Spawn(damage);

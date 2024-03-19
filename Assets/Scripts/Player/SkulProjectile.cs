@@ -50,7 +50,7 @@ public class SkulProjectile : MonoBehaviour
         IDamageable[] damageables = collision.gameObject.GetComponents<IDamageable>();
         foreach (IDamageable damageable in damageables)
         {
-            damageable.TakeDamage(damage); // TODO: add damage variable
+            damageable.TakeDamage(damage);
         }
 
         rb2d.gravityScale = 1f;

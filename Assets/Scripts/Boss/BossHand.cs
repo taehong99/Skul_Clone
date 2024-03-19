@@ -80,7 +80,7 @@ public class BossHand : BossBodyPart
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        IDamageable[] damageables = collision.transform.GetComponents<IDamageable>();
+        IDamageable[] damageables = collision.transform.GetComponents<PlayerController>();
         foreach(IDamageable damageable in damageables)
         {
             damageable.TakeDamage(damage);
@@ -210,7 +210,7 @@ public class BossHand : BossBodyPart
         Manager.Game.Shaker.Shake(slamShakeDuration);
 
         Collider2D collider = Physics2D.OverlapCircle(transform.position, slamColliderRadius, Manager.Game.Player.Mask);
-        IDamageable[] damageables = collider.transform.GetComponents<IDamageable>();
+        IDamageable[] damageables = collider.transform.GetComponents<PlayerController>();
         foreach(IDamageable damageable in damageables)
         {
             damageable.TakeDamage(damage);

@@ -39,7 +39,7 @@ public class Fireball : MonoBehaviour
     {
         if (hittableMask.Contains(collision.gameObject.layer))
         {
-            IDamageable[] damageables = collision.GetComponents<IDamageable>();
+            IDamageable[] damageables = collision.GetComponents<PlayerController>();
             foreach(var damageable in damageables)
             {
                 damageable.TakeDamage(damage);
